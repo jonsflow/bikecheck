@@ -55,7 +55,20 @@ struct ServiceView: View {
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(
                 leading: profileImage,
-                trailing: addButton
+                trailing: HStack {
+                    // Hidden test button for UI testing background task logic
+                    if ProcessInfo.processInfo.arguments.contains("UI_TESTING") {
+                        Button("Test BG Task") {
+                            Task {
+                                await BackgroundTaskManager.shared.executeTaskLogicForTesting(identifier: .checkServiceInterval)
+                            }
+                        }
+                        .font(.caption2)
+                        .foregroundColor(.clear) // Hidden but accessible
+                        .accessibilityIdentifier("TestBackgroundTask")
+                    }
+                    addButton
+                }
             )
             .sheet(isPresented: $showingServiceIntervalView, onDismiss: {
                 viewModel.loadServiceIntervals()

@@ -160,4 +160,42 @@ class BackgroundTaskManager {
         }
         logger.info("Reset task manager tracking data for testing")
     }
+    
+    /// For testing: Execute background task logic directly
+    func executeTaskLogicForTesting(identifier: TaskIdentifier) async {
+        guard isTestingMode else {
+            logger.warning("executeTaskLogicForTesting called but not in testing mode")
+            return
+        }
+        
+        logger.info("Executing task logic for testing: \(identifier.rawValue)")
+        
+        switch identifier {
+        case .checkServiceInterval:
+            // Execute the same logic as handleServiceIntervalTask
+            if await StravaService.shared.isSignedIn ?? false {
+                logger.info("Test execution: checkServiceInterval started")
+                await StravaService.shared.checkServiceIntervals()
+                logger.info("Test execution: checkServiceInterval completed")
+            } else {
+                logger.info("Test execution: Skipping checkServiceInterval - user not signed in")
+            }
+            
+        case .fetchActivities:
+            // Execute the same logic as handleFetchActivitiesTask
+            logger.info("Test execution: fetchActivities started")
+            await withCheckedContinuation { continuation in
+                StravaService.shared.fetchActivities { result in
+                    switch result {
+                    case .success:
+                        self.logger.info("Test execution: Activity fetch completed successfully")
+                    case .failure(let error):
+                        self.logger.error("Test execution: Activity fetch failed: \(error.localizedDescription)")
+                    }
+                    continuation.resume()
+                }
+            }
+            logger.info("Test execution: fetchActivities completed")
+        }
+    }
 }
