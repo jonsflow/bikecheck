@@ -53,6 +53,9 @@ struct HomeView: View {
                     requestNotificationPermission()
                 }
             }
+            .onOpenURL { url in
+                handleDeepLink(url)
+            }
             
             if onboardingViewModel.showTour {
                 OnboardingTourOverlay(onboardingViewModel: onboardingViewModel, selectedTab: $selectedTab)
@@ -97,6 +100,33 @@ struct HomeView: View {
             } else {
                 print("Notification permissions granted")
             }
+        }
+    }
+    
+    private func handleDeepLink(_ url: URL) {
+        print("Received deep link: \(url)")
+        
+        // Handle bikecheck://service-interval/[UUID]
+        if url.scheme == "bikecheck" && url.host == "service-interval" {
+            let pathComponents = url.pathComponents
+            if pathComponents.count >= 2, let uuidString = pathComponents.last, let uuid = UUID(uuidString: uuidString) {
+                navigateToServiceInterval(id: uuid)
+            }
+        }
+    }
+    
+    private func navigateToServiceInterval(id: UUID) {
+        // Switch to Service Intervals tab
+        selectedTab = 0
+        
+        // Give the tab switch time to complete, then trigger service interval navigation
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            // Post notification to ServiceView to navigate to specific interval
+            NotificationCenter.default.post(
+                name: NSNotification.Name("ShowServiceIntervalDetail"),
+                object: nil,
+                userInfo: ["serviceIntervalID": id]
+            )
         }
     }
 }

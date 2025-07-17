@@ -260,4 +260,45 @@ final class bikecheckUITests: BikeCheckUITestCase {
         let servicesCells = app.cells
         XCTAssertTrue(servicesCells.firstMatch.waitForExistence(timeout: 3))
     }
+    
+    func test8_BackgroundTaskExecution() throws {
+        // Test that background task logic executes without crashing
+        
+        navigateToTab("Service Intervals")
+        XCTAssertTrue(verifyNavigationBar("Service Intervals"))
+        
+        // Find and tap the hidden test button to execute background task logic
+        let testButton = app.buttons["TestBackgroundTask"]
+        XCTAssertTrue(testButton.waitForExistence(timeout: 5), "Test background task button should exist in UI testing mode")
+        
+        // Tap the button to execute the background task logic
+        testButton.tap()
+        
+        // Wait for the async task to complete
+        sleep(2)
+        
+        // Verify that the app remains stable after background task execution
+        let tabBar = app.tabBars["Tab Bar"]
+        XCTAssertTrue(tabBar.exists, "App should remain stable after background task execution")
+        
+        // Verify service intervals are still displayed correctly
+        let serviceList = app.collectionViews.firstMatch
+        XCTAssertTrue(serviceList.waitForExistence(timeout: 5), "Service intervals should still be displayed")
+        
+        // Test multiple executions to ensure stability
+        testButton.tap()
+        sleep(1)
+        testButton.tap()
+        sleep(1)
+        
+        // App should still be functional
+        XCTAssertTrue(tabBar.exists, "App should remain stable after multiple background task executions")
+        
+        // Verify navigation still works
+        navigateToTab("Bikes")
+        XCTAssertTrue(verifyNavigationBar("Bikes"))
+        
+        navigateToTab("Service Intervals")
+        XCTAssertTrue(verifyNavigationBar("Service Intervals"))
+    }
 }
