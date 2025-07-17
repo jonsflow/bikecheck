@@ -84,8 +84,8 @@ class BackgroundTaskManager {
     /// Schedule a background task
     /// - Parameters:
     ///   - identifier: The task identifier to schedule
-    ///   - delay: The delay in minutes before the task should run
-    func scheduleBackgroundTask(identifier: TaskIdentifier, delay: Int = 6) {
+    ///   - delay: The delay in hours before the task should run (default: 24 hours)
+    func scheduleBackgroundTask(identifier: TaskIdentifier, delay: Int = 24) {
         let taskId = identifier.rawValue
         logger.info("Scheduling background task: \(taskId)")
         
@@ -94,7 +94,7 @@ class BackgroundTaskManager {
         
         // For testing, we might want to skip actual scheduling
         if testMode {
-            let mockDate = Calendar.current.date(byAdding: .minute, value: delay, to: Date())!
+            let mockDate = Calendar.current.date(byAdding: .hour, value: delay, to: Date())!
             
             // Thread-safe update of scheduled tasks
             taskQueue.async(flags: .barrier) {
@@ -107,7 +107,7 @@ class BackgroundTaskManager {
         
         // Real scheduling
         let request = BGAppRefreshTaskRequest(identifier: taskId)
-        request.earliestBeginDate = Calendar.current.date(byAdding: .minute, value: delay, to: Date())
+        request.earliestBeginDate = Calendar.current.date(byAdding: .hour, value: delay, to: Date())
         
         do {
             try BGTaskScheduler.shared.submit(request)
