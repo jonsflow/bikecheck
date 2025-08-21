@@ -43,6 +43,7 @@
 		A3AB084F2DA1EE1300935BB8 /* ServiceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AB083E2DA1EE1300935BB8 /* ServiceView.swift */; };
 		A3AB08502DA1EE1300935BB8 /* BikesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AB08342DA1EE1300935BB8 /* BikesViewModel.swift */; };
 		A3C2EC792C237B7500BA2BC8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A365B0042B44D34A00FF712E /* Assets.xcassets */; };
+		A3C3E62F2E56E1E400083A7B /* AdContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3C3E62E2E56E1E300083A7B /* AdContainerView.swift */; };
 		A3E742952B46FDEE00C5191F /* Athlete.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E742922B46FDEE00C5191F /* Athlete.swift */; };
 		A3E742962B46FDEE00C5191F /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E742932B46FDEE00C5191F /* Activity.swift */; };
 		A3E742972B46FDEE00C5191F /* Bike.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E742942B46FDEE00C5191F /* Bike.swift */; };
@@ -105,6 +106,7 @@
 		A3AB083C2DA1EE1300935BB8 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		A3AB083D2DA1EE1300935BB8 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		A3AB083E2DA1EE1300935BB8 /* ServiceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceView.swift; sourceTree = "<group>"; };
+		A3C3E62E2E56E1E300083A7B /* AdContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdContainerView.swift; sourceTree = "<group>"; };
 		A3E742922B46FDEE00C5191F /* Athlete.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Athlete.swift; sourceTree = "<group>"; usesTabs = 0; };
 		A3E742932B46FDEE00C5191F /* Activity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Activity.swift; sourceTree = "<group>"; };
 		A3E742942B46FDEE00C5191F /* Bike.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bike.swift; sourceTree = "<group>"; };
@@ -248,6 +250,7 @@
 				A31DDB512DFCEB4700E16E4B /* OnboardingTourOverlay.swift */,
 				A31DDB472DFCDA4300E16E4B /* OnboardingOverlay.swift */,
 				A3AB08382DA1EE1300935BB8 /* ActivitiesView.swift */,
+				A3C3E62E2E56E1E300083A7B /* AdContainerView.swift */,
 				A3AB08392DA1EE1300935BB8 /* AddServiceIntervalView.swift */,
 				A3AB083A2DA1EE1300935BB8 /* BikeDetailView.swift */,
 				A3AB083B2DA1EE1300935BB8 /* BikesView.swift */,
@@ -421,6 +424,7 @@
 				A365B0012B44D34900FF712E /* bikecheckApp.swift in Sources */,
 				A365B0312B44D37300FF712E /* TokenInfo.swift in Sources */,
 				A3E742962B46FDEE00C5191F /* Activity.swift in Sources */,
+				A3C3E62F2E56E1E400083A7B /* AdContainerView.swift in Sources */,
 				A365B00D2B44D34A00FF712E /* bikecheck.xcdatamodeld in Sources */,
 				A3E742952B46FDEE00C5191F /* Athlete.swift in Sources */,
 				A31DDB4E2DFCEB2600E16E4B /* TourStep.swift in Sources */,
