@@ -1,0 +1,7 @@
+// Test.xcconfig
+// Test configuration with mock credentials for unit testing
+
+STRAVA_CLIENT_ID = test_client_id_12345
+STRAVA_CLIENT_SECRET = test_client_secret_abcdef123456789
+
+// Test-specific settings can go here
