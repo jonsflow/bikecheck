@@ -37,24 +37,19 @@ struct ServiceView: View {
                                 tag: serviceInterval,
                                 selection: $selectedServiceInterval
                             ) {
-                                VStack(alignment: .leading) {
-                                    Text(serviceInterval.bike.name)
-                                        .font(.subheadline)
-                                    
-                                    let timeUntilService = viewModel.calculateTimeUntilService(for: serviceInterval)
-                                    
-                                    HStack {
-                                        Text("service \(serviceInterval.part.lowercased())")
-                                            .font(.subheadline)
-                                            .italic()
-                                        Spacer()
-                                        Text("in \(String(format: "%.2f", timeUntilService)) hrs")
-                                            .foregroundColor(timeUntilService <= 0 ? .red : .primary)
-                                    }
-                                }
+                                ServiceIntervalCardView(serviceInterval: serviceInterval, viewModel: viewModel)
                             }
+                            .listRowSeparator(.hidden)
+                            .listRowBackground(Color.clear)
+                            .listRowInsets(EdgeInsets())
                         }
+                        
+                        AdContainerView()
+                            .listRowSeparator(.hidden)
+                            .listRowBackground(Color.clear)
+                            .listRowInsets(EdgeInsets())
                     }
+                    .listStyle(.plain)
                 }
             }
             .navigationTitle("Service Intervals")
@@ -137,3 +132,140 @@ struct ServiceView: View {
         }
     }
 }
+
+struct ServiceIntervalCardView: View {
+    let serviceInterval: ServiceInterval
+    let viewModel: ServiceViewModel
+    
+    var body: some View {
+        let timeUntilService = viewModel.calculateTimeUntilService(for: serviceInterval)
+        let isOverdue = timeUntilService <= 0
+        let urgencyLevel = getUrgencyLevel(timeUntilService: timeUntilService)
+        
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(serviceInterval.bike.name)
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.primary)
+                    
+                    Text("Service \(serviceInterval.part.lowercased())")
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                }
+                
+                Spacer()
+                
+                Image(systemName: getIconName(for: serviceInterval.part))
+                    .font(.title3)
+                    .foregroundColor(urgencyLevel.color)
+                    .frame(width: 24, height: 24)
+                    .background(urgencyLevel.color.opacity(0.1))
+                    .clipShape(Circle())
+            }
+            
+            HStack(spacing: 16) {
+                VStack(alignment: .leading, spacing: 1) {
+                    Text(isOverdue ? "OVERDUE" : "DUE IN")
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                        .textCase(.uppercase)
+                    Text(isOverdue ? 
+                         "\(String(format: "%.1f", abs(timeUntilService))) hrs ago" : 
+                         "\(String(format: "%.1f", timeUntilService)) hrs")
+                        .font(.caption)
+                        .fontWeight(.medium)
+                        .foregroundColor(urgencyLevel.color)
+                }
+                
+                Divider()
+                    .frame(height: 20)
+                
+                VStack(alignment: .leading, spacing: 1) {
+                    Text("Status")
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                        .textCase(.uppercase)
+                    HStack(spacing: 3) {
+                        Circle()
+                            .fill(urgencyLevel.color)
+                            .frame(width: 5, height: 5)
+                        Text(urgencyLevel.statusText)
+                            .font(.caption)
+                            .fontWeight(.medium)
+                    }
+                }
+            }
+        }
+        .padding(8)
+        .background(
+            RoundedRectangle(cornerRadius: 10)
+                .fill(Color(.systemBackground))
+                .shadow(color: Color.black.opacity(0.05), radius: 6, x: 0, y: 1)
+        )
+        .padding(.horizontal, 4)
+        .padding(.vertical, 2)
+    }
+    
+    private func getUrgencyLevel(timeUntilService: Double) -> UrgencyLevel {
+        if timeUntilService <= 0 {
+            return .overdue
+        } else if timeUntilService <= 5 {
+            return .urgent
+        } else if timeUntilService <= 10 {
+            return .warning
+        } else {
+            return .good
+        }
+    }
+    
+    private func getIconName(for part: String) -> String {
+        switch part.lowercased() {
+        case let p where p.contains("chain"):
+            return "link"
+        case let p where p.contains("brake"):
+            return "brake.signal"
+        case let p where p.contains("tire"), let p where p.contains("wheel"):
+            return "circle.dotted"
+        case let p where p.contains("oil"), let p where p.contains("fluid"):
+            return "drop.fill"
+        case let p where p.contains("filter"):
+            return "air.purifier"
+        default:
+            return "gear"
+        }
+    }
+}
+
+
+enum UrgencyLevel {
+    case good, warning, urgent, overdue
+    
+    var color: Color {
+        switch self {
+        case .good:
+            return .green
+        case .warning:
+            return .orange
+        case .urgent:
+            return .red
+        case .overdue:
+            return .red
+        }
+    }
+    
+    var statusText: String {
+        switch self {
+        case .good:
+            return "Good"
+        case .warning:
+            return "Soon"
+        case .urgent:
+            return "Now"
+        case .overdue:
+            return "Overdue"
+        }
+    }
+}
+
