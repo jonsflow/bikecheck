@@ -11,14 +11,14 @@ jobs:
   test:
     name: Test
     runs-on: macos-latest
-    defaults:
-      xcode-version: '18'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       
-      - name: Set up Xcode
-        run: xcode-select -p
+      - name: Setup Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '16.4'
       
       - name: List available simulators
         run: xcrun simctl list devices available
