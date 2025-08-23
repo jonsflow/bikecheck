@@ -18,12 +18,15 @@ jobs:
       - name: Set up Xcode
         run: xcode-select -p
       
+      - name: List available simulators
+        run: xcrun simctl list devices available
+      
       - name: Run Unit tests
         run: |
           xcodebuild test \
             -project bikecheck.xcodeproj \
             -scheme bikecheck \
-            -destination 'platform=iOS Simulator,name=Any iOS Simulator Device' \
+            -destination 'platform=iOS Simulator,name=iPhone 15' \
             -only-testing:bikecheckTests
       
       - name: Run UI tests
@@ -31,5 +34,5 @@ jobs:
           xcodebuild test \
             -project bikecheck.xcodeproj \
             -scheme bikecheck \
-            -destination 'platform=iOS Simulator,name=Any iOS Simulator Device' \
+            -destination 'platform=iOS Simulator,name=iPhone 15' \
             -only-testing:bikecheckUITests
