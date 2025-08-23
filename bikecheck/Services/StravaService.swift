@@ -26,8 +26,8 @@ class StravaService: ObservableObject {
     
     private let urlScheme: String = "bikecheck"
     private let callbackUrl: String = "bikecheck-callback"
-    private let clientSecret: String = Bundle.main.object(forInfoDictionaryKey: "StravaClientSecret") as? String ?? ""
-    private let clientId: String = Bundle.main.object(forInfoDictionaryKey: "StravaClientId") as? String ?? ""
+    private let clientSecret: String = "539be89a897a8f1096d36bb98182fdc9f08d211a"
+    private let clientId: String = "54032"
     private let responseType = "code"
     private let scope = "read,profile:read_all,activity:read_all"
     

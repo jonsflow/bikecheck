@@ -29,9 +29,5 @@
 		<string>fetch</string>
 		<string>processing</string>
 	</array>
-	<key>StravaClientId</key>
-	<string>$(STRAVA_CLIENT_ID)</string>
-	<key>StravaClientSecret</key>
-	<string>$(STRAVA_CLIENT_SECRET)</string>
 </dict>
 </plist>

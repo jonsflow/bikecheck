@@ -50,10 +50,6 @@ struct BikeDetailView: View {
                         )
                     }
                 }
-                
-                Section {
-                    AdContainerView()
-                }
             }
         }
         .navigationTitle("Bike Details")
@@ -71,4 +67,3 @@ struct BikeDetailView: View {
         }
     }
 }
-
