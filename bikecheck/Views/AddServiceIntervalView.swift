@@ -94,6 +94,10 @@ struct AddServiceIntervalView: View {
                         }
                     }
                 }
+            
+            Section {
+                AdContainerView()
+            }
             }
             .navigationBarItems(
                 leading: viewModel.serviceInterval == nil ? Button("Cancel") {
