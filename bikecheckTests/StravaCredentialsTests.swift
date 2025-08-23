@@ -25,8 +25,9 @@ class StravaCredentialsTests: XCTestCase {
     }
     
     func testStravaServiceUsesConfiguredCredentials() {
-        // Test that StravaService properly reads the credentials
-        let stravaService = StravaService()
+        // Use MockPersistenceController to avoid Core Data conflicts
+        let mockController = MockPersistenceController()
+        let stravaService = StravaService(context: mockController.container.viewContext)
         
         // Access the private properties through reflection or create a test-accessible method
         // For now, we'll test indirectly by ensuring the service initializes properly
