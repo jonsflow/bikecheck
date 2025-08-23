@@ -23,7 +23,7 @@ jobs:
           xcodebuild test \
             -project bikecheck.xcodeproj \
             -scheme bikecheck \
-            -destination 'platform=iOS Simulator,name=iPhone 16 Pro,OS=latest' \
+            -destination 'platform=iOS Simulator,name=Any iOS Simulator Device' \
             -only-testing:bikecheckTests
       
       - name: Run UI tests
@@ -31,5 +31,5 @@ jobs:
           xcodebuild test \
             -project bikecheck.xcodeproj \
             -scheme bikecheck \
-            -destination 'platform=iOS Simulator,name=iPhone 16 Pro,OS=latest' \
+            -destination 'platform=iOS Simulator,name=Any iOS Simulator Device' \
             -only-testing:bikecheckUITests
