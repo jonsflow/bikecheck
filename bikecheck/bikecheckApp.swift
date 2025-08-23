@@ -44,7 +44,7 @@ struct bikecheckApp: App {
     
     private func handleServiceIntervalTask(_ task: BGTask) {
         Task {
-            if await stravaService.isSignedIn ?? false {
+            if stravaService.isSignedIn ?? false {
                 logger.info("Background task checkServiceInterval executed")
                 await stravaService.checkServiceIntervals()
                 logger.info("Service interval check completed")
@@ -64,7 +64,7 @@ struct bikecheckApp: App {
         Task {
             logger.info("Background task fetchActivities executed")
             
-            await stravaService.fetchActivities { result in
+            stravaService.fetchActivities { result in
                 switch result {
                 case .success:
                     logger.info("Activity fetch completed successfully")

@@ -5,11 +5,10 @@ struct ServiceView: View {
     @EnvironmentObject var stravaService: StravaService
     @EnvironmentObject var viewModel: ServiceViewModel
     @State private var showingServiceIntervalView = false
-    @State private var selectedServiceInterval: ServiceInterval?
-    @State private var showingServiceIntervalDetail = false
+    @State private var navigationPath = NavigationPath()
     
     var body: some View {
-        NavigationView {
+        NavigationStack(path: $navigationPath) {
             Group {
                 if viewModel.isLoading {
                     ProgressView("Loading service intervals...")
@@ -32,11 +31,7 @@ struct ServiceView: View {
                 } else {
                     List {
                         ForEach(viewModel.serviceIntervals, id: \.self) { serviceInterval in
-                            NavigationLink(
-                                destination: AddServiceIntervalView(serviceInterval: serviceInterval),
-                                tag: serviceInterval,
-                                selection: $selectedServiceInterval
-                            ) {
+                            NavigationLink(value: serviceInterval) {
                                 ServiceIntervalCardView(serviceInterval: serviceInterval, viewModel: viewModel)
                             }
                             .listRowSeparator(.hidden)
@@ -79,6 +74,9 @@ struct ServiceView: View {
             .onAppear {
                 viewModel.loadServiceIntervals()
             }
+            .navigationDestination(for: ServiceInterval.self) { serviceInterval in
+                AddServiceIntervalView(serviceInterval: serviceInterval)
+            }
             .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("ShowServiceIntervalDetail"))) { notification in
                 // Handle navigation to specific service interval detail
                 if let serviceIntervalID = notification.userInfo?["serviceIntervalID"] as? UUID {
@@ -116,8 +114,8 @@ struct ServiceView: View {
     private func navigateToServiceIntervalDetail(id: UUID) {
         // Find the service interval with the matching ID
         if let serviceInterval = viewModel.serviceIntervals.first(where: { $0.id == id }) {
-            // Set the selected service interval to trigger navigation
-            selectedServiceInterval = serviceInterval
+            // Add to navigation path to trigger navigation
+            navigationPath.append(serviceInterval)
         } else {
             print("Service interval with ID \(id) not found")
             // Reload service intervals in case they haven't loaded yet
@@ -126,7 +124,7 @@ struct ServiceView: View {
             // Try again after a short delay
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 if let serviceInterval = viewModel.serviceIntervals.first(where: { $0.id == id }) {
-                    selectedServiceInterval = serviceInterval
+                    navigationPath.append(serviceInterval)
                 }
             }
         }

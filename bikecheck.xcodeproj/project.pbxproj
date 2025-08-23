@@ -112,6 +112,7 @@
 		A3C3E6322E59364B00083A7B /* Test.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Test.xcconfig; sourceTree = "<group>"; };
 		A3C3E63A2E5937B800083A7B /* StravaCredentialsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StravaCredentialsTests.swift; sourceTree = "<group>"; };
 		A3C3E63C2E594D6D00083A7B /* AdContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdContainerView.swift; sourceTree = "<group>"; };
+		A3C3E63E2E596C6B00083A7B /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 		A3E742922B46FDEE00C5191F /* Athlete.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Athlete.swift; sourceTree = "<group>"; usesTabs = 0; };
 		A3E742932B46FDEE00C5191F /* Activity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Activity.swift; sourceTree = "<group>"; };
 		A3E742942B46FDEE00C5191F /* Bike.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bike.swift; sourceTree = "<group>"; };
@@ -147,9 +148,7 @@
 		A365AFF42B44D34900FF712E = {
 			isa = PBXGroup;
 			children = (
-				A3C3E6302E59364B00083A7B /* Debug.xcconfig */,
-				A3C3E6312E59364B00083A7B /* Release.xcconfig */,
-				A3C3E6322E59364B00083A7B /* Test.xcconfig */,
+				A3C3E6332E59364B00083A7B /* Config */,
 				A3F2D2872E1318A20079E9FA /* bikecheck.xctestplan */,
 				A365AFFF2B44D34900FF712E /* bikecheck */,
 				A365B0152B44D34A00FF712E /* bikecheckTests */,
@@ -268,6 +267,17 @@
 				A3AB083E2DA1EE1300935BB8 /* ServiceView.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		A3C3E6332E59364B00083A7B /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				A3C3E63E2E596C6B00083A7B /* Secrets.xcconfig */,
+				A3C3E6302E59364B00083A7B /* Debug.xcconfig */,
+				A3C3E6312E59364B00083A7B /* Release.xcconfig */,
+				A3C3E6322E59364B00083A7B /* Test.xcconfig */,
+			);
+			path = Config;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
