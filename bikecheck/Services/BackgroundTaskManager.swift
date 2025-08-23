@@ -173,7 +173,7 @@ class BackgroundTaskManager {
         switch identifier {
         case .checkServiceInterval:
             // Execute the same logic as handleServiceIntervalTask
-            if await StravaService.shared.isSignedIn ?? false {
+            if StravaService.shared.isSignedIn ?? false {
                 logger.info("Test execution: checkServiceInterval started")
                 await StravaService.shared.checkServiceIntervals()
                 logger.info("Test execution: checkServiceInterval completed")
