@@ -161,7 +161,8 @@
                         android:layout_height="56dp"
                         android:layout_marginBottom="8dp"
                         android:text="Create Default Service Intervals"
-                        android:textColor="@color/purple_500" />
+                        android:textColor="@color/purple_500"
+                        android:textSize="16sp" />
 
                     <Button
                         android:id="@+id/buttonAddServiceInterval"
@@ -170,7 +171,8 @@
                         android:layout_height="56dp"
                         android:layout_marginBottom="8dp"
                         android:text="Add Custom Service Interval"
-                        android:textColor="@color/purple_500" />
+                        android:textColor="@color/purple_500"
+                        android:textSize="16sp" />
 
                     <Button
                         android:id="@+id/buttonDeleteBike"
@@ -178,7 +180,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="56dp"
                         android:text="Delete Bike"
-                        android:textColor="@android:color/holo_red_dark" />
+                        android:textColor="@android:color/holo_red_dark"
+                        android:textSize="16sp" />
 
                 </LinearLayout>
 

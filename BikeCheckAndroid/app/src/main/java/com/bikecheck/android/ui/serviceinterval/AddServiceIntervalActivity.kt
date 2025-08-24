@@ -57,6 +57,9 @@ class AddServiceIntervalActivity : AppCompatActivity() {
                 )
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 binding.spinnerBike.adapter = adapter
+                
+                // Disable bike selection in edit mode
+                binding.spinnerBike.isEnabled = !isEditMode
             }
         }
         
