@@ -18,4 +18,6 @@
     <color name="onboarding_gradient_start">#667eea</color>
     <color name="onboarding_gradient_end">#764ba2</color>
     <color name="onboarding_overlay">#80000000</color>
+
+    <color name="holo_red_dark">#CC0000</color>
 </resources>
