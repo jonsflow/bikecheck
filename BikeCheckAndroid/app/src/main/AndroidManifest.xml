@@ -55,10 +55,6 @@
             android:exported="false"
             android:theme="@style/Theme.BikeCheck.NoActionBar" />
             
-        <activity
-            android:name=".ui.activities.ActivitiesActivity"
-            android:exported="false"
-            android:parentActivityName=".ui.home.HomeActivity" />
             
         <activity
             android:name=".ui.onboarding.OnboardingActivity"
