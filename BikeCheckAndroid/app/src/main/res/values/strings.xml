@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">BikeCheck</string>
     <string name="sign_in_with_strava">Sign in with Strava</string>
-    <string name="insert_test_data">Insert Test Data</string>
+    <string name="insert_test_data">Demo Mode</string>
     <string name="logo_description">BikeCheck Logo</string>
     <string name="welcome_message">Welcome to BikeCheck!</string>
     <string name="home_subtitle">Authentication successful. Future features will be implemented here.</string>

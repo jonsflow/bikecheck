@@ -11,6 +11,7 @@ import com.bikecheck.android.data.database.entities.ActivityEntity
 import com.bikecheck.android.data.database.entities.AthleteEntity
 import com.bikecheck.android.data.database.entities.BikeEntity
 import com.bikecheck.android.data.database.entities.ServiceIntervalEntity
+import com.bikecheck.android.data.database.entities.ServiceIntervalWithBike
 import com.bikecheck.android.data.repository.StravaRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -34,7 +35,7 @@ class HomeViewModel @Inject constructor(
     
     val currentAthlete: Flow<AthleteEntity?> = athleteDao.getCurrentAthlete()
     val bikes: Flow<List<BikeEntity>> = bikeDao.getAllBikes()
-    val serviceIntervals: Flow<List<ServiceIntervalEntity>> = serviceIntervalDao.getAllServiceIntervals()
+    val serviceIntervals: Flow<List<ServiceIntervalWithBike>> = serviceIntervalDao.getAllServiceIntervalsWithBikes()
     val activities: Flow<List<ActivityEntity>> = activityDao.getAllActivities()
     
     fun signOut() {

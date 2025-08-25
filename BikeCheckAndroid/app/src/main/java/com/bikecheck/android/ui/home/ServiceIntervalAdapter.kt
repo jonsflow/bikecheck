@@ -5,10 +5,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bikecheck.android.data.database.entities.ServiceIntervalEntity
+import com.bikecheck.android.data.database.entities.ServiceIntervalWithBike
 import com.bikecheck.android.databinding.ItemServiceIntervalBinding
 
-class ServiceIntervalAdapter : ListAdapter<ServiceIntervalEntity, ServiceIntervalAdapter.ServiceIntervalViewHolder>(ServiceIntervalDiffCallback()) {
+class ServiceIntervalAdapter : ListAdapter<ServiceIntervalWithBike, ServiceIntervalAdapter.ServiceIntervalViewHolder>(ServiceIntervalDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ServiceIntervalViewHolder {
         val binding = ItemServiceIntervalBinding.inflate(
@@ -24,7 +24,8 @@ class ServiceIntervalAdapter : ListAdapter<ServiceIntervalEntity, ServiceInterva
     }
 
     class ServiceIntervalViewHolder(private val binding: ItemServiceIntervalBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(serviceInterval: ServiceIntervalEntity) {
+        fun bind(serviceInterval: ServiceIntervalWithBike) {
+            binding.textViewBikeName.text = serviceInterval.bikeName
             binding.textViewPartName.text = serviceInterval.part
             binding.textViewInterval.text = "${serviceInterval.intervalTime.toInt()} hours"
             binding.textViewNotifications.text = if (serviceInterval.notify) "Notifications: ON" else "Notifications: OFF"
@@ -39,12 +40,12 @@ class ServiceIntervalAdapter : ListAdapter<ServiceIntervalEntity, ServiceInterva
         }
     }
 
-    private class ServiceIntervalDiffCallback : DiffUtil.ItemCallback<ServiceIntervalEntity>() {
-        override fun areItemsTheSame(oldItem: ServiceIntervalEntity, newItem: ServiceIntervalEntity): Boolean {
+    private class ServiceIntervalDiffCallback : DiffUtil.ItemCallback<ServiceIntervalWithBike>() {
+        override fun areItemsTheSame(oldItem: ServiceIntervalWithBike, newItem: ServiceIntervalWithBike): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: ServiceIntervalEntity, newItem: ServiceIntervalEntity): Boolean {
+        override fun areContentsTheSame(oldItem: ServiceIntervalWithBike, newItem: ServiceIntervalWithBike): Boolean {
             return oldItem == newItem
         }
     }
