@@ -14,20 +14,9 @@ struct AdContainerView: View {
                     .foregroundColor(.secondary)
             }
             
-            VStack(spacing: 12) {
-                Text("Your Ad Here")
-                    .font(.subheadline)
-                    .fontWeight(.medium)
-                    .foregroundColor(.secondary)
-                
-                Text("Promote your cycling business or product")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                    .multilineTextAlignment(.center)
-                    .lineLimit(2)
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 20)
+            // AdMob Banner Ad
+            AdBannerView()
+                .frame(height: 50)
         }
         .padding(12)
         .background(

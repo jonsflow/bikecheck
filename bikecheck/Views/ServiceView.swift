@@ -50,7 +50,7 @@ struct ServiceView: View {
             .navigationTitle("Service Intervals")
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(
-                leading: profileImage,
+                leading: ProfileImageView(),
                 trailing: HStack {
                     // Hidden test button for UI testing background task logic
                     if ProcessInfo.processInfo.arguments.contains("UI_TESTING") {
@@ -86,22 +86,6 @@ struct ServiceView: View {
         }
     }
     
-    var profileImage: some View {
-        Group {
-            if let image = stravaService.profileImage {
-                Image(uiImage: image)
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: 36, height: 36)
-                    .clipShape(Circle())
-            } else {
-                Image(systemName: "person.crop.circle")
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: 36, height: 36)
-            }
-        }
-    }
     
     var addButton: some View {
         Button(action: {

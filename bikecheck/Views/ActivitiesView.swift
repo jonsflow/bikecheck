@@ -33,29 +33,13 @@ struct ActivitiesView: View {
             }
             .navigationTitle("Activities")
             .navigationBarTitleDisplayMode(.inline)
-            .navigationBarItems(leading: profileImage)
+            .navigationBarItems(leading: ProfileImageView())
             .onAppear {
                 viewModel.loadActivities()
             }
         }
     }
     
-    var profileImage: some View {
-        Group {
-            if let image = stravaService.profileImage {
-                Image(uiImage: image)
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: 36, height: 36)
-                    .clipShape(Circle())
-            } else {
-                Image(systemName: "person.crop.circle")
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: 36, height: 36)
-            }
-        }
-    }
 }
 
 struct ActivityCardView: View {
