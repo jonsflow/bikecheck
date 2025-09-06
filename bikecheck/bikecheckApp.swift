@@ -22,7 +22,7 @@ struct bikecheckApp: App {
         configureBackgroundTasks()
         
         // Initialize AdMob SDK
-        GADMobileAds.sharedInstance().start(completionHandler: nil)
+        MobileAds.shared.start(completionHandler: nil)
         
         // this is still needed for some reason, stravaService doesnt init without it
     }

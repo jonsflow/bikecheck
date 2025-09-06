@@ -44,6 +44,7 @@
 		A3AB08502DA1EE1300935BB8 /* BikesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AB08342DA1EE1300935BB8 /* BikesViewModel.swift */; };
 		A3B565BE2E69503200C438BD /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B565BB2E69503200C438BD /* ProfileView.swift */; };
 		A3B565C22E6BF9D800C438BD /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = A3B565C12E6BF9D800C438BD /* GoogleMobileAds */; };
+		A3B565C42E6BFBA900C438BD /* AdBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B565C32E6BFBA900C438BD /* AdBannerView.swift */; };
 		A3C2EC792C237B7500BA2BC8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A365B0042B44D34A00FF712E /* Assets.xcassets */; };
 		A3C3E63B2E5937B800083A7B /* StravaCredentialsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3C3E63A2E5937B800083A7B /* StravaCredentialsTests.swift */; };
 		A3C3E63D2E594D6D00083A7B /* AdContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3C3E63C2E594D6D00083A7B /* AdContainerView.swift */; };
@@ -110,6 +111,7 @@
 		A3AB083D2DA1EE1300935BB8 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		A3AB083E2DA1EE1300935BB8 /* ServiceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceView.swift; sourceTree = "<group>"; };
 		A3B565BB2E69503200C438BD /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		A3B565C32E6BFBA900C438BD /* AdBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdBannerView.swift; sourceTree = "<group>"; };
 		A3C3E6302E59364B00083A7B /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
 		A3C3E6312E59364B00083A7B /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
 		A3C3E6322E59364B00083A7B /* Test.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Test.xcconfig; sourceTree = "<group>"; };
@@ -259,6 +261,7 @@
 		A3AB083F2DA1EE1300935BB8 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				A3B565C32E6BFBA900C438BD /* AdBannerView.swift */,
 				A3C3E63C2E594D6D00083A7B /* AdContainerView.swift */,
 				A31DDB512DFCEB4700E16E4B /* OnboardingTourOverlay.swift */,
 				A31DDB472DFCDA4300E16E4B /* OnboardingOverlay.swift */,
@@ -447,6 +450,7 @@
 				A3AB084F2DA1EE1300935BB8 /* ServiceView.swift in Sources */,
 				A3AB08502DA1EE1300935BB8 /* BikesViewModel.swift in Sources */,
 				A3E742972B46FDEE00C5191F /* Bike.swift in Sources */,
+				A3B565C42E6BFBA900C438BD /* AdBannerView.swift in Sources */,
 				A3B565BE2E69503200C438BD /* ProfileView.swift in Sources */,
 				A365B0012B44D34900FF712E /* bikecheckApp.swift in Sources */,
 				A365B0312B44D37300FF712E /* TokenInfo.swift in Sources */,

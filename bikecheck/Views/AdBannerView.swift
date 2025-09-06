@@ -9,14 +9,14 @@ import SwiftUI
 import GoogleMobileAds
 
 struct AdBannerView: UIViewRepresentable {
-    @State private var bannerView = GADBannerView()
+    @State private var bannerView = BannerView()
     
-    func makeUIView(context: Context) -> GADBannerView {
+    func makeUIView(context: Context) -> BannerView {
         // Test Ad Unit ID - replace with your real one when you create AdMob account
         bannerView.adUnitID = "ca-app-pub-3940256099942544/2934735716"
         
         // Set banner size
-        bannerView.adSize = GADAdSizeBanner
+        bannerView.adSize = AdSizeBanner
         
         // Set the root view controller
         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
@@ -27,9 +27,9 @@ struct AdBannerView: UIViewRepresentable {
         return bannerView
     }
     
-    func updateUIView(_ uiView: GADBannerView, context: Context) {
+    func updateUIView(_ uiView: BannerView, context: Context) {
         // Load the ad
-        let request = GADRequest()
+        let request = Request()
         uiView.load(request)
     }
 }

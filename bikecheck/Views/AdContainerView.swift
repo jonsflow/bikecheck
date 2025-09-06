@@ -1,4 +1,5 @@
 import SwiftUI
+import GoogleMobileAds
 
 struct AdContainerView: View {
     var body: some View {
