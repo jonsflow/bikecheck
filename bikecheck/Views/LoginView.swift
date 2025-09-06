@@ -41,7 +41,7 @@ struct LoginView: View {
                         Button(action: {
                             loginViewModel.enterDemoMode()
                         }) {
-                            Text("Try Demo Mode")
+                            Text("Demo Mode")
                                 .frame(width: 280, height: 60)
                                 .background(Color.green)
                                 .foregroundColor(.white)
