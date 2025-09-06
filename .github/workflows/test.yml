@@ -1,4 +1,4 @@
-name: Run Tests
+name: Run CI Tests
 
 on:
   push:
@@ -18,17 +18,29 @@ jobs:
       - name: Setup Xcode
         uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: '16.4'
+          xcode-version: 'latest-stable'
       
       - name: List available simulators
         run: xcrun simctl list devices available
+      
+      - name: Find available iPhone simulator
+        id: find-simulator
+        run: |
+          # Find first available iPhone simulator
+          DEVICE_ID=$(xcrun simctl list devices available | grep iPhone | head -1 | grep -o '[A-F0-9-]\{36\}')
+          if [ -z "$DEVICE_ID" ]; then
+            echo "No iPhone simulator found, falling back to any iOS device"
+            DEVICE_ID=$(xcrun simctl list devices available | grep iOS | head -1 | grep -o '[A-F0-9-]\{36\}')
+          fi
+          echo "device_id=$DEVICE_ID" >> $GITHUB_OUTPUT
+          echo "Using simulator device ID: $DEVICE_ID"
       
       - name: Run Unit tests
         run: |
           xcodebuild test \
             -project bikecheck.xcodeproj \
             -scheme bikecheck \
-            -destination 'platform=iOS Simulator,name=iPhone 16 Pro,OS=18.4' \
+            -destination "platform=iOS Simulator,id=${{ steps.find-simulator.outputs.device_id }}" \
             -only-testing:bikecheckTests
       
       - name: Run UI tests
@@ -36,5 +48,5 @@ jobs:
           xcodebuild test \
             -project bikecheck.xcodeproj \
             -scheme bikecheck \
-            -destination 'platform=iOS Simulator,name=iPhone 16 Pro,OS=18.4' \
+            -destination "platform=iOS Simulator,id=${{ steps.find-simulator.outputs.device_id }}" \
             -only-testing:bikecheckUITests
