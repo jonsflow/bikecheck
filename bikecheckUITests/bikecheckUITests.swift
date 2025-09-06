@@ -31,7 +31,7 @@ final class bikecheckUITests: BikeCheckUITestCase {
 //        app.launch()
 //                
 //        XCTAssertTrue(app.buttons["Sign in with Strava"].waitForExistence(timeout: 5))
-//        XCTAssertTrue(app.buttons["Insert Test Data"].waitForExistence(timeout: 5))
+//        XCTAssertTrue(app.buttons["Demo Mode"].waitForExistence(timeout: 5))
 //
 //    }
     

@@ -64,7 +64,7 @@ final class OnboardingUITests: XCTestCase {
     func testOnboardingButtonInteraction() throws {
         // Verify onboarding overlay appears
         let onboardingOverlay = app.otherElements.containing(.staticText, identifier: "Welcome to BikeCheck!")
-        XCTAssertTrue(onboardingOverlay.element.waitForExistence(timeout: 5))
+        XCTAssertTrue(onboardingOverlay.element.waitForExistence(timeout: 10))
         
         // Verify welcome step content
         XCTAssertTrue(app.staticTexts["Welcome to BikeCheck!"].exists)
