@@ -546,6 +546,30 @@ class StravaService: ObservableObject {
         }
     }
     
+    func logout() {
+        // Only clear authentication tokens, keep all other data
+        let viewContext = managedObjectContext
+        let tokenRequest: NSFetchRequest<NSFetchRequestResult> = TokenInfo.fetchRequest()
+        let tokenDelete = NSBatchDeleteRequest(fetchRequest: tokenRequest)
+        
+        do {
+            // Only delete token info
+            try viewContext.execute(tokenDelete)
+            try viewContext.save()
+            
+            // Reset authentication state but keep data
+            DispatchQueue.main.async {
+                self.isSignedIn = false
+                self.tokenInfo = nil
+                self.profileImage = nil
+                // Keep: athlete, bikes, activities - they remain for potential re-login
+            }
+            
+        } catch {
+            print("Failed to logout: \(error)")
+        }
+    }
+    
     // Helper methods for creating test data
     private func createBike(id: String, name: String, distance: Int, in context: NSManagedObjectContext) -> Bike {
         let bike = Bike(context: context)

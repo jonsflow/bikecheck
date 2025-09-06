@@ -16,7 +16,7 @@ class LoginViewModel: ObservableObject {
         }
     }
     
-    func insertTestData() {
+    func enterDemoMode() {
         stravaService.insertTestData()
     }
     

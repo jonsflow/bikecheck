@@ -40,29 +40,13 @@ struct BikesView: View {
             }
             .navigationTitle("Bikes")
             .navigationBarTitleDisplayMode(.inline)
-            .navigationBarItems(leading: profileImage)
+            .navigationBarItems(leading: ProfileImageView())
             .onAppear {
                 viewModel.loadBikes()
             }
         }
     }
     
-    var profileImage: some View {
-        Group {
-            if let image = stravaService.profileImage {
-                Image(uiImage: image)
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: 36, height: 36)
-                    .clipShape(Circle())
-            } else {
-                Image(systemName: "person.crop.circle")
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: 36, height: 36)
-            }
-        }
-    }
 }
 
 struct BikeCardView: View {

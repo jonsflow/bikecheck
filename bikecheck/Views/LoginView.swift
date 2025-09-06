@@ -39,9 +39,9 @@ struct LoginView: View {
                         
                         #if DEBUG
                         Button(action: {
-                            loginViewModel.insertTestData()
+                            loginViewModel.enterDemoMode()
                         }) {
-                            Text("Insert Test Data")
+                            Text("Demo Mode")
                                 .frame(width: 280, height: 60)
                                 .background(Color.green)
                                 .foregroundColor(.white)

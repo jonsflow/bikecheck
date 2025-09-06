@@ -17,9 +17,9 @@ class BikeCheckUITestCase: XCTestCase {
             app.buttons["Skip Tour"].tap()
         }
         
-        // Use Insert Test Data button to load test data and sign in
-        if app.buttons["Insert Test Data"].waitForExistence(timeout: 3) {
-            app.buttons["Insert Test Data"].tap()
+        // Use Demo Mode button to load test data and sign in
+        if app.buttons["Demo Mode"].waitForExistence(timeout: 3) {
+            app.buttons["Demo Mode"].tap()
             
             // Wait for main app to be visible
             _ = app.tabBars["Tab Bar"].waitForExistence(timeout: 10)
