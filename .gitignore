@@ -3,8 +3,5 @@ xcuserdata/
 DerivedData/
 .DS_Store
 
-# Android specific
-BikeCheckAndroid/local.properties
-BikeCheckAndroid/app/google-services.json
 # iOS secrets
 Config/Secrets.xcconfig
