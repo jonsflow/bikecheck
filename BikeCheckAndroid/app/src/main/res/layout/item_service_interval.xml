@@ -14,36 +14,47 @@
         android:padding="16dp">
 
         <TextView
+            android:id="@+id/textViewPartName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Part Name"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/primary_text" />
+
+        <TextView
             android:id="@+id/textViewBikeName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
             android:text="Bike Name"
             android:textSize="12sp"
-            android:textStyle="italic"
             android:textColor="@color/secondary_text" />
+
+        <!-- Removed service subtext; part is shown above in bold -->
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:orientation="horizontal">
+            android:layout_marginTop="6dp"
+            android:orientation="vertical">
 
             <TextView
-                android:id="@+id/textViewServiceLabel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="service part"
-                android:textSize="16sp"
-                android:textStyle="italic"
-                android:textColor="@color/primary_text" />
-
-            <TextView
-                android:id="@+id/textViewTimeUntil"
+                android:id="@+id/textViewDueLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="in 0.00 hrs"
-                android:textSize="16sp"
+                android:text="DUE IN"
+                android:textAllCaps="true"
+                android:textSize="12sp"
+                android:textColor="@color/secondary_text" />
+
+            <TextView
+                android:id="@+id/textViewDueValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0.0 hrs"
+                android:textSize="12sp"
+                android:textStyle="bold"
                 android:textColor="@color/primary_text" />
 
         </LinearLayout>

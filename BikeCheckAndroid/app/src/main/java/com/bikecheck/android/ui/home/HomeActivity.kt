@@ -14,6 +14,12 @@ import com.bikecheck.android.ui.bikes.BikesFragment
 import com.bikecheck.android.ui.login.LoginActivity
 import com.bikecheck.android.ui.service.ServiceFragment
 import dagger.hilt.android.AndroidEntryPoint
+import coil.load
+import coil.transform.CircleCropTransformation
+import coil.imageLoader
+import coil.request.ImageRequest
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
@@ -29,6 +35,8 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var bikesFragment: BikesFragment
     private lateinit var activitiesFragment: ActivitiesFragment
     private lateinit var homeViewModel: HomeViewModel
+    private var profileImageView: android.widget.ImageView? = null
+    private var latestProfileUrl: String? = null
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,8 +65,7 @@ class HomeActivity : AppCompatActivity() {
         supportActionBar?.title = "BikeCheck"
         // Set popup theme programmatically for visible menu text
         binding.toolbar.popupTheme = androidx.appcompat.R.style.ThemeOverlay_AppCompat_Light
-        // Inflate menu programmatically to avoid XML namespace issues
-        binding.toolbar.inflateMenu(R.menu.home_menu)
+        // Menu is provided via onCreateOptionsMenu
         // Ensure overflow menu icon is visible
         binding.toolbar.overflowIcon?.setTint(getColor(android.R.color.white))
         
@@ -76,6 +83,13 @@ class HomeActivity : AppCompatActivity() {
                     true
                 }
                 else -> false
+            }
+        }
+
+        lifecycleScope.launch {
+            homeViewModel.currentAthlete.collect { athlete ->
+                latestProfileUrl = athlete?.profile
+                applyProfileImage()
             }
         }
     }
@@ -125,6 +139,11 @@ class HomeActivity : AppCompatActivity() {
     
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.home_menu, menu)
+        // Use navigation icon area for profile on the left
+        binding.toolbar.setNavigationOnClickListener {
+            // Placeholder: settings/profile
+        }
+        applyProfileImage()
         return true
     }
     
@@ -155,5 +174,27 @@ class HomeActivity : AppCompatActivity() {
             TAB_BIKES -> binding.bottomNavigation.selectedItemId = R.id.navigation_bikes
             TAB_ACTIVITIES -> binding.bottomNavigation.selectedItemId = R.id.navigation_activities
         }
+    }
+
+    private fun applyProfileImage() {
+        val data: Any = latestProfileUrl?.takeUnless { it.isBlank() }
+            ?: R.drawable.profile_placeholder_circle
+        val request = ImageRequest.Builder(this)
+            .data(data)
+            .crossfade(true)
+            .transformations(CircleCropTransformation())
+            .target(
+                onSuccess = { drawable ->
+                    binding.toolbar.navigationIcon = drawable
+                    // Avoid tinting the profile image (clear any applied tint)
+                    // try { binding.toolbar.navigationIcon?.setTintList(null) } catch (_: Exception) {}
+                },
+                onError = { drawable ->
+                    binding.toolbar.navigationIcon = drawable
+                    //try { binding.toolbar.navigationIcon?.setTintList(null) } catch (_: Exception) {}
+                }
+            )
+            .build()
+        this.imageLoader.enqueue(request)
     }
 }

@@ -34,6 +34,7 @@ class ServiceIntervalAdapter : ListAdapter<ServiceIntervalWithBike, ServiceInter
     class ServiceIntervalViewHolder(private val binding: ItemServiceIntervalBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(serviceInterval: ServiceIntervalWithBike, activities: List<ActivityEntity>) {
             binding.textViewBikeName.text = serviceInterval.bikeName
+            binding.textViewPartName.text = serviceInterval.part
             // Compute time until service based on activities
             val totalSeconds = activities.asSequence()
                 .filter { it.gearId == serviceInterval.bikeId }
@@ -44,11 +45,11 @@ class ServiceIntervalAdapter : ListAdapter<ServiceIntervalWithBike, ServiceInter
 
             val ctx = binding.root.context
             val color = com.bikecheck.android.R.color.primary_text
-            // List row mirrors iOS: left label "service <part>", right value "in X.XX hrs"
-            binding.textViewServiceLabel.text = "service ${serviceInterval.part.lowercase()}"
-            binding.textViewServiceLabel.setTextColor(ctx.getColor(color))
-            binding.textViewTimeUntil.setTextColor(ctx.getColor(color))
-            binding.textViewTimeUntil.text = "in ${String.format("%.2f", timeRemaining)} hrs"
+            // Part shown above in bold; no italics
+            // DUE IN value: show non-negative hours
+            val dueHours = if (timeRemaining < 0.0) 0.0 else timeRemaining
+            binding.textViewDueValue.setTextColor(ctx.getColor(color))
+            binding.textViewDueValue.text = "${String.format("%.2f", dueHours)} hrs"
             
             binding.root.setOnClickListener {
                 val context = binding.root.context
