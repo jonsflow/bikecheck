@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Night variants for readability -->
+    <color name="primary_text">#FFFFFFFF</color>
+    <color name="secondary_text">#B3FFFFFF</color>
+</resources>

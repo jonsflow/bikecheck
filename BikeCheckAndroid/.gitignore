@@ -1,0 +1,7 @@
+# Android
+.gradle
+/build
+/captures
+.DS_Store
+.idea
+local.properties

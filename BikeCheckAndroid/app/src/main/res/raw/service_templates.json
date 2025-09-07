@@ -1,0 +1,18 @@
+{
+  "default": [
+    { "part": "chain", "hours": 5 },
+    { "part": "Fork Lowers", "hours": 10 },
+    { "part": "Shock", "hours": 15 }
+  ],
+  "hardtail": [
+    { "part": "chain", "hours": 5 },
+    { "part": "Fork Lowers", "hours": 10 }
+  ],
+  "gravel": [
+    { "part": "chain", "hours": 5 }
+  ],
+  "road": [
+    { "part": "chain", "hours": 5 }
+  ]
+}
+
