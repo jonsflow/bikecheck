@@ -8,5 +8,7 @@ data class AthleteResponse(
     @SerializedName("firstname")
     val firstname: String,
     @SerializedName("profile")
-    val profile: String?
+    val profile: String?,
+    @SerializedName("bikes")
+    val bikes: List<BikeResponse>?
 )

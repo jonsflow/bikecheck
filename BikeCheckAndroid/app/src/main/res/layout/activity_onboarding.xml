@@ -85,7 +85,7 @@
 
                 <Button
                     android:id="@+id/buttonSkipTour"
-                    style="@style/Widget.Material3.Button.TextButton"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:layout_width="200dp"
                     android:layout_height="56dp"
                     android:text="Skip Tour"

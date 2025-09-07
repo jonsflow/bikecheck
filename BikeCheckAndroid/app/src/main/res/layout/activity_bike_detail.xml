@@ -72,6 +72,26 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:text="Type"
+                            android:textColor="@color/secondary_text" />
+
+                        <Spinner
+                            android:id="@+id/spinnerBikeType"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:text="Distance"
                             android:textColor="@color/secondary_text" />
 
@@ -156,31 +176,34 @@
 
                     <Button
                         android:id="@+id/buttonCreateDefaultIntervals"
-                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        style="@style/Widget.BikeCheck.Button.OutlinedButton"
                         android:layout_width="match_parent"
                         android:layout_height="56dp"
                         android:layout_marginBottom="8dp"
+                        android:backgroundTint="@color/white"
                         android:text="Create Default Service Intervals"
-                        android:textColor="@color/purple_500"
+                        android:textColor="@color/bikecheck_black"
                         android:textSize="16sp" />
 
                     <Button
                         android:id="@+id/buttonAddServiceInterval"
-                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        style="@style/Widget.BikeCheck.Button.OutlinedButton"
                         android:layout_width="match_parent"
                         android:layout_height="56dp"
                         android:layout_marginBottom="8dp"
+                        android:backgroundTint="@color/white"
                         android:text="Add Custom Service Interval"
-                        android:textColor="@color/purple_500"
+                        android:textColor="@color/bikecheck_black"
                         android:textSize="16sp" />
 
                     <Button
                         android:id="@+id/buttonDeleteBike"
-                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        style="@style/Widget.BikeCheck.Button.OutlinedButton"
                         android:layout_width="match_parent"
                         android:layout_height="56dp"
+                        android:backgroundTint="@color/bikecheck_light_gray"
                         android:text="Delete Bike"
-                        android:textColor="@android:color/holo_red_dark"
+                        android:textColor="@color/bikecheck_black"
                         android:textSize="16sp" />
 
                 </LinearLayout>

@@ -38,6 +38,19 @@ class HomeViewModel @Inject constructor(
     val serviceIntervals: Flow<List<ServiceIntervalWithBike>> = serviceIntervalDao.getAllServiceIntervalsWithBikes()
     val activities: Flow<List<ActivityEntity>> = activityDao.getAllActivities()
     
+    fun refreshData() {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                stravaRepository.syncDataFromStrava()
+            } catch (e: Exception) {
+                // Handle error silently or emit error state
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+    
     fun signOut() {
         viewModelScope.launch {
             _isLoading.value = true

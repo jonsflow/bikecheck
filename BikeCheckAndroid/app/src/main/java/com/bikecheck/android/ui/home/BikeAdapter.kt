@@ -28,6 +28,14 @@ class BikeAdapter : ListAdapter<BikeEntity, BikeAdapter.BikeViewHolder>(BikeDiff
     class BikeViewHolder(private val binding: ItemBikeBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(bike: BikeEntity) {
             binding.textViewBikeName.text = bike.name
+            // Show type if available
+            val typeText = bike.type?.let { it.trim() }.orEmpty()
+            if (typeText.isNotEmpty()) {
+                binding.textViewBikeType.visibility = android.view.View.VISIBLE
+                binding.textViewBikeType.text = typeText.replaceFirstChar { c -> c.titlecase() }
+            } else {
+                binding.textViewBikeType.visibility = android.view.View.GONE
+            }
             binding.textViewBikeDistance.text = "${String.format("%.1f", bike.distance / 1000)} km"
             
             binding.root.setOnClickListener {

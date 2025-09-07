@@ -5,10 +5,18 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bikecheck.android.data.database.entities.ActivityEntity
 import com.bikecheck.android.data.database.entities.ServiceIntervalWithBike
 import com.bikecheck.android.databinding.ItemServiceIntervalBinding
 
 class ServiceIntervalAdapter : ListAdapter<ServiceIntervalWithBike, ServiceIntervalAdapter.ServiceIntervalViewHolder>(ServiceIntervalDiffCallback()) {
+
+    private var activities: List<ActivityEntity> = emptyList()
+
+    fun updateActivities(newActivities: List<ActivityEntity>) {
+        activities = newActivities
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ServiceIntervalViewHolder {
         val binding = ItemServiceIntervalBinding.inflate(
@@ -20,15 +28,27 @@ class ServiceIntervalAdapter : ListAdapter<ServiceIntervalWithBike, ServiceInter
     }
 
     override fun onBindViewHolder(holder: ServiceIntervalViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), activities)
     }
 
     class ServiceIntervalViewHolder(private val binding: ItemServiceIntervalBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(serviceInterval: ServiceIntervalWithBike) {
+        fun bind(serviceInterval: ServiceIntervalWithBike, activities: List<ActivityEntity>) {
             binding.textViewBikeName.text = serviceInterval.bikeName
-            binding.textViewPartName.text = serviceInterval.part
-            binding.textViewInterval.text = "${serviceInterval.intervalTime.toInt()} hours"
-            binding.textViewNotifications.text = if (serviceInterval.notify) "Notifications: ON" else "Notifications: OFF"
+            // Compute time until service based on activities
+            val totalSeconds = activities.asSequence()
+                .filter { it.gearId == serviceInterval.bikeId }
+                .sumOf { it.movingTime }
+            val totalRideHours = totalSeconds / 3600.0
+            val timeUsedSinceStart = totalRideHours - serviceInterval.startTime
+            val timeRemaining = serviceInterval.intervalTime - timeUsedSinceStart
+
+            val ctx = binding.root.context
+            val color = com.bikecheck.android.R.color.primary_text
+            // List row mirrors iOS: left label "service <part>", right value "in X.XX hrs"
+            binding.textViewServiceLabel.text = "service ${serviceInterval.part.lowercase()}"
+            binding.textViewServiceLabel.setTextColor(ctx.getColor(color))
+            binding.textViewTimeUntil.setTextColor(ctx.getColor(color))
+            binding.textViewTimeUntil.text = "in ${String.format("%.2f", timeRemaining)} hrs"
             
             binding.root.setOnClickListener {
                 val context = binding.root.context

@@ -33,7 +33,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="bikecheck" />
+                <data android:scheme="bikecheck://bikecheck-callback" android:host="callback" />
             </intent-filter>
         </activity>
         
@@ -46,7 +46,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="bikecheck" android:host="callback" />
+                <data android:scheme="bikecheck" android:host="bikecheck-callback" />
             </intent-filter>
         </activity>
         

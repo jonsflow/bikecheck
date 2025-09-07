@@ -7,14 +7,6 @@ import androidx.room.PrimaryKey
 
 @Entity(
     tableName = "token_info",
-    foreignKeys = [
-        ForeignKey(
-            entity = AthleteEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["athleteId"],
-            onDelete = ForeignKey.CASCADE
-        )
-    ],
     indices = [Index("athleteId")]
 )
 data class TokenInfoEntity(

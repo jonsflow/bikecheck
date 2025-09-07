@@ -37,4 +37,5 @@ interface StravaApiService {
         @Query("per_page") perPage: Int = 30,
         @Query("type") type: String = "Ride"
     ): Response<List<ActivityResponse>>
+    
 }

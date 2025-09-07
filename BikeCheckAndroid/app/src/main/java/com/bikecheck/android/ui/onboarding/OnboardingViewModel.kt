@@ -89,9 +89,11 @@ class OnboardingViewModel @Inject constructor(
     }
     
     private fun markOnboardingComplete() {
+        android.util.Log.d("OnboardingViewModel", "Marking onboarding as complete, setting is_first_launch = false")
         sharedPreferences.edit()
             .putBoolean("is_first_launch", false)
             .apply()
+        android.util.Log.d("OnboardingViewModel", "Onboarding marked as complete")
     }
     
     private fun clearTestData() {

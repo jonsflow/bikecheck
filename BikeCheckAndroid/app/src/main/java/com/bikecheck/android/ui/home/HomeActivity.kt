@@ -17,6 +17,12 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
+    companion object {
+        const val EXTRA_SELECT_TAB = "select_tab"
+        const val TAB_SERVICE = "service"
+        const val TAB_BIKES = "bikes"
+        const val TAB_ACTIVITIES = "activities"
+    }
     
     private lateinit var binding: ActivityHomeWithNavBinding
     private lateinit var serviceFragment: ServiceFragment
@@ -35,12 +41,15 @@ class HomeActivity : AppCompatActivity() {
         setupToolbar()
         setupFragments()
         setupBottomNavigation()
-        
+
         // Show service fragment by default
         if (savedInstanceState == null) {
             showFragment(serviceFragment)
             binding.bottomNavigation.selectedItemId = R.id.navigation_service
         }
+
+        // Handle initial intent tab selection
+        handleSelectTabIntent(intent)
     }
     
     private fun setupToolbar() {
@@ -57,7 +66,7 @@ class HomeActivity : AppCompatActivity() {
         binding.toolbar.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 R.id.action_refresh -> {
-                    // Handle refresh action
+                    homeViewModel.refreshData()
                     true
                 }
                 R.id.action_logout -> {
@@ -102,10 +111,6 @@ class HomeActivity : AppCompatActivity() {
         // Set the menu for the bottom navigation
         binding.bottomNavigation.menu.clear()
         binding.bottomNavigation.inflateMenu(R.menu.bottom_navigation_menu)
-        
-        // Set colors
-        binding.bottomNavigation.itemIconTintList = getColorStateList(R.color.bikecheck_black)
-        binding.bottomNavigation.itemTextColor = getColorStateList(R.color.bikecheck_black)
     }
     
     private fun showFragment(fragment: Fragment) {
@@ -126,7 +131,7 @@ class HomeActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_refresh -> {
-                // Handle refresh action
+                homeViewModel.refreshData()
                 true
             }
             R.id.action_logout -> {
@@ -136,6 +141,19 @@ class HomeActivity : AppCompatActivity() {
                 true
             }
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        if (intent != null) handleSelectTabIntent(intent)
+    }
+
+    private fun handleSelectTabIntent(intent: Intent) {
+        when (intent.getStringExtra(EXTRA_SELECT_TAB)) {
+            TAB_SERVICE -> binding.bottomNavigation.selectedItemId = R.id.navigation_service
+            TAB_BIKES -> binding.bottomNavigation.selectedItemId = R.id.navigation_bikes
+            TAB_ACTIVITIES -> binding.bottomNavigation.selectedItemId = R.id.navigation_activities
         }
     }
 }

@@ -18,6 +18,7 @@ A comprehensive Android bike maintenance tracking application built with modern 
 - Track maintenance intervals for bike components
 - Set custom time intervals for different parts
 - Notification support for upcoming maintenance
+ - Default interval templates loaded from `res/raw/service_templates.json`
 
 ### 📊 Activity Tracking
 - Display recent cycling activities
@@ -111,6 +112,17 @@ app/src/main/java/com/bikecheck/android/
 2. Open in Android Studio
 3. Update Strava API credentials in `Constants.kt`
 4. Build and run the application
+
+### Editing Default Service Templates
+- Location: `app/src/main/res/raw/service_templates.json`
+- Format: per-type lists with `part` and `hours` fields. Example:
+  {
+    "default": [{"part":"chain","hours":5},{"part":"Fork Lowers","hours":10},{"part":"Shock","hours":15}],
+    "hardtail": [{"part":"chain","hours":5},{"part":"Fork Lowers","hours":10}],
+    "gravel": [{"part":"chain","hours":5}],
+    "road": [{"part":"chain","hours":5}]
+  }
+- Behavior: when creating defaults, the app uses the bike's `type` (road, gravel, hardtail, full suspension). If missing, it falls back to `default`.
 
 ### Testing
 - Use "Insert Test Data" button for demo data

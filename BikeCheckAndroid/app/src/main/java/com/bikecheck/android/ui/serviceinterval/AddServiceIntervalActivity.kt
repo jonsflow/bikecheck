@@ -19,7 +19,7 @@ class AddServiceIntervalActivity : AppCompatActivity() {
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         binding = ActivityAddServiceIntervalBinding.inflate(layoutInflater)
         setContentView(binding.root)
         
@@ -31,6 +31,9 @@ class AddServiceIntervalActivity : AppCompatActivity() {
         setupObservers()
         setupClickListeners()
         
+        // Show the computed "Time until service" only in edit mode
+        binding.layoutTimeUntilService.visibility = if (isEditMode) android.view.View.VISIBLE else android.view.View.GONE
+
         if (isEditMode && serviceIntervalId != null) {
             viewModel.loadServiceInterval(serviceIntervalId)
         } else {
@@ -102,12 +105,8 @@ class AddServiceIntervalActivity : AppCompatActivity() {
             viewModel.timeUntilService.collect { timeUntilService ->
                 if (isEditMode) {
                     binding.textViewTimeUntilService.text = "${timeUntilService.toInt()} hrs"
-                    binding.textViewTimeUntilService.setTextColor(
-                        if (timeUntilService <= 0) 
-                            getColor(android.R.color.holo_red_dark)
-                        else 
-                            getColor(android.R.color.primary_text_light)
-                    )
+                    // Use app primary text color to respect light/dark mode
+                    binding.textViewTimeUntilService.setTextColor(getColor(com.bikecheck.android.R.color.primary_text))
                 }
             }
         }

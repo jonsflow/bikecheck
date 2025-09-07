@@ -160,29 +160,31 @@
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
                     android:layout_marginBottom="8dp"
-                    android:backgroundTint="@color/purple_500"
+                    android:backgroundTint="@color/bikecheck_black"
                     android:text="Save"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/white"
                     android:textSize="16sp" />
 
                 <Button
                     android:id="@+id/buttonReset"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    style="@style/Widget.BikeCheck.Button.OutlinedButton"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
                     android:layout_marginBottom="8dp"
+                    android:backgroundTint="@color/white"
                     android:text="Reset Interval"
-                    android:textColor="@color/purple_500"
+                    android:textColor="@color/bikecheck_black"
                     android:textSize="16sp"
                     android:visibility="gone" />
 
                 <Button
                     android:id="@+id/buttonDelete"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    style="@style/Widget.BikeCheck.Button.OutlinedButton"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
+                    android:backgroundTint="@color/bikecheck_light_gray"
                     android:text="Delete"
-                    android:textColor="@color/holo_red_dark"
+                    android:textColor="@color/bikecheck_black"
                     android:textSize="16sp"
                     android:visibility="gone" />
 

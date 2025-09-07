@@ -61,6 +61,12 @@ class ServiceFragment : Fragment() {
                     View.VISIBLE else View.GONE
             }
         }
+
+        lifecycleScope.launch {
+            viewModel.activities.collect { activities ->
+                serviceIntervalAdapter.updateActivities(activities)
+            }
+        }
     }
     
     override fun onDestroyView() {

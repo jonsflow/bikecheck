@@ -180,7 +180,7 @@ class AddServiceIntervalViewModel @Inject constructor(
     fun deleteInterval() {
         currentServiceInterval?.let { interval ->
             viewModelScope.launch {
-                serviceIntervalDao.deleteAllServiceIntervals() // Simplified for demo
+                serviceIntervalDao.deleteServiceIntervalById(interval.id)
                 _saveResult.value = Result.success(true)
             }
         }

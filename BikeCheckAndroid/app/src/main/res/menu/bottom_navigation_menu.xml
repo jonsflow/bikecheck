@@ -3,16 +3,16 @@
     <item
         android:id="@+id/navigation_service"
         android:enabled="true"
-        android:icon="@drawable/ic_build_24"
+        android:icon="@drawable/ic_timer_24"
         android:title="Service" />
     <item
         android:id="@+id/navigation_bikes"
         android:enabled="true"
-        android:icon="@drawable/ic_bike_24"
+        android:icon="@drawable/ic_pedal_bike_24"
         android:title="Bikes" />
     <item
         android:id="@+id/navigation_activities"
         android:enabled="true"
-        android:icon="@drawable/ic_activity_24"
+        android:icon="@drawable/ic_browse_activity_24"
         android:title="Activities" />
 </menu>

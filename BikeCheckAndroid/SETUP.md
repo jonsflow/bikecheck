@@ -8,8 +8,8 @@ To run the Android app, you need to configure your Strava API credentials:
 2. Add your Strava credentials:
 
 ```
-strava.client.id=YOUR_ACTUAL_CLIENT_ID
-strava.client.secret=YOUR_ACTUAL_CLIENT_SECRET
+STRAVA_CLIENT_ID=YOUR_ACTUAL_CLIENT_ID
+STRAVA_CLIENT_SECRET=YOUR_ACTUAL_CLIENT_SECRET
 ```
 
 3. Update `BikeCheckAndroid/app/build.gradle` to read from local.properties:
@@ -22,8 +22,8 @@ if (rootProject.file('local.properties').exists()) {
     localProperties.load(rootProject.file('local.properties').newDataInputStream())
 }
 
-buildConfigField "String", "STRAVA_CLIENT_ID", "\"${localProperties.getProperty('strava.client.id', 'YOUR_STRAVA_CLIENT_ID')}\""
-buildConfigField "String", "STRAVA_CLIENT_SECRET", "\"${localProperties.getProperty('strava.client.secret', 'YOUR_STRAVA_CLIENT_SECRET')}\""
+buildConfigField "String", "STRAVA_CLIENT_ID", "\"${localProperties.getProperty('STRAVA_CLIENT_ID', 'YOUR_STRAVA_CLIENT_ID')}\""
+buildConfigField "String", "STRAVA_CLIENT_SECRET", "\"${localProperties.getProperty('STRAVA_CLIENT_SECRET', 'YOUR_STRAVA_CLIENT_SECRET')}\""
 ```
 
 ## Security Notes

@@ -22,5 +22,6 @@ data class BikeEntity(
     val id: String,
     val name: String,
     val distance: Double,
-    val athleteId: Long
+    val athleteId: Long,
+    val type: String? = null
 )

@@ -2,24 +2,30 @@ package com.bikecheck.android.ui.bikedetail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import android.content.Context
 import com.bikecheck.android.data.database.dao.ActivityDao
 import com.bikecheck.android.data.database.dao.BikeDao
 import com.bikecheck.android.data.database.dao.ServiceIntervalDao
 import com.bikecheck.android.data.database.entities.BikeEntity
 import com.bikecheck.android.data.database.entities.ServiceIntervalEntity
+import com.bikecheck.android.R
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 @HiltViewModel
 class BikeDetailViewModel @Inject constructor(
     private val bikeDao: BikeDao,
     private val activityDao: ActivityDao,
-    private val serviceIntervalDao: ServiceIntervalDao
+    private val serviceIntervalDao: ServiceIntervalDao,
+    @ApplicationContext private val appContext: Context
 ) : ViewModel() {
     
     private val _bike = MutableStateFlow<BikeEntity?>(null)
@@ -42,6 +48,20 @@ class BikeDetailViewModel @Inject constructor(
     
     private val _defaultIntervalsCreated = MutableStateFlow(false)
     val defaultIntervalsCreated: StateFlow<Boolean> = _defaultIntervalsCreated
+
+    // Minimal JSON template loader
+    private data class TemplateItem(val part: String, val hours: Double)
+    private val templates: Map<String, List<TemplateItem>> by lazy {
+        try {
+            appContext.resources.openRawResource(R.raw.service_templates).use { input ->
+                val json = input.bufferedReader().readText()
+                val type = object : TypeToken<Map<String, List<TemplateItem>>>() {}.type
+                Gson().fromJson<Map<String, List<TemplateItem>>>(json, type) ?: emptyMap()
+            }
+        } catch (e: Exception) {
+            emptyMap()
+        }
+    }
     
     fun loadBike(bikeId: String) {
         viewModelScope.launch {
@@ -87,41 +107,19 @@ class BikeDetailViewModel @Inject constructor(
                     val bikeActivities = activities.filter { it.gearId == bike.id }
                     val currentRideTime = bikeActivities.sumOf { it.movingTime.toDouble() } / 3600.0
                     
-                    // Create default service intervals
-                    val defaultIntervals = listOf(
+                    // Create default service intervals from templates (fallback to "default")
+                    val typeKey = bike.type?.lowercase()?.trim()
+                    val items = templates[typeKey] ?: templates["default"] ?: emptyList()
+                    val defaultIntervals = items.map {
                         ServiceIntervalEntity(
                             id = UUID.randomUUID().toString(),
-                            part = "Chain",
+                            part = it.part,
                             startTime = currentRideTime,
-                            intervalTime = 100.0, // 100 hours
-                            notify = true,
-                            bikeId = bike.id
-                        ),
-                        ServiceIntervalEntity(
-                            id = UUID.randomUUID().toString(),
-                            part = "Brake Pads",
-                            startTime = currentRideTime,
-                            intervalTime = 200.0, // 200 hours
-                            notify = true,
-                            bikeId = bike.id
-                        ),
-                        ServiceIntervalEntity(
-                            id = UUID.randomUUID().toString(),
-                            part = "Fork Service",
-                            startTime = currentRideTime,
-                            intervalTime = 300.0, // 300 hours
-                            notify = true,
-                            bikeId = bike.id
-                        ),
-                        ServiceIntervalEntity(
-                            id = UUID.randomUUID().toString(),
-                            part = "Full Tune-up",
-                            startTime = currentRideTime,
-                            intervalTime = 500.0, // 500 hours
+                            intervalTime = it.hours,
                             notify = true,
                             bikeId = bike.id
                         )
-                    )
+                    }
                     
                     // Insert all default intervals
                     defaultIntervals.forEach { interval ->
@@ -146,6 +144,16 @@ class BikeDetailViewModel @Inject constructor(
                 } catch (e: Exception) {
                     _deleteResult.value = Result.failure(e)
                 }
+            }
+        }
+    }
+
+    fun updateBikeType(type: String) {
+        _bike.value?.let { current ->
+            viewModelScope.launch {
+                val updated = current.copy(type = type)
+                bikeDao.upsertBikes(listOf(updated))
+                _bike.value = updated
             }
         }
     }

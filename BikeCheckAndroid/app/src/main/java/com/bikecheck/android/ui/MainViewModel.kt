@@ -12,4 +12,8 @@ class MainViewModel @Inject constructor(
 ) : ViewModel() {
     
     val isSignedIn: Flow<Boolean> = stravaRepository.isSignedIn
+    
+    suspend fun getTokenCount(): Int {
+        return stravaRepository.getTokenCount()
+    }
 }

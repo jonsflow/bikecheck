@@ -1,14 +1,12 @@
 package com.bikecheck.android.ui
 
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.bikecheck.android.ui.home.HomeActivity
 import com.bikecheck.android.ui.login.LoginActivity
-import com.bikecheck.android.ui.onboarding.OnboardingActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -18,32 +16,26 @@ import javax.inject.Inject
 class MainActivity : AppCompatActivity() {
 
     private val viewModel: MainViewModel by viewModels()
-    
-    @Inject
-    lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        android.util.Log.d("MainActivity", "onCreate started")
         
         // Handle deep links first
         if (handleDeepLink()) {
+            android.util.Log.d("MainActivity", "Deep link handled, returning early")
             return
         }
         
-        // Check if this is the first launch
-        val isFirstLaunch = sharedPreferences.getBoolean("is_first_launch", true)
+        android.util.Log.d("MainActivity", "Skipping onboarding, going directly to authentication check")
         
-        if (isFirstLaunch) {
-            // Show onboarding for first-time users
-            startActivity(Intent(this, OnboardingActivity::class.java))
-            finish()
-            return
-        }
-        
-        // Check authentication status and navigate accordingly for returning users
+        // Simply check if token exists in database and launch appropriate activity
         lifecycleScope.launch {
-            val isSignedIn = viewModel.isSignedIn.first()
-            val targetActivity = if (isSignedIn) {
+            val tokenCount = viewModel.getTokenCount()
+            val hasToken = tokenCount > 0
+            android.util.Log.d("MainActivity", "Token count: $tokenCount, hasToken: $hasToken")
+            
+            val targetActivity = if (hasToken) {
                 HomeActivity::class.java
             } else {
                 LoginActivity::class.java

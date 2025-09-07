@@ -23,4 +23,7 @@ interface ServiceIntervalDao {
     
     @Query("DELETE FROM service_intervals")
     suspend fun deleteAllServiceIntervals()
+
+    @Query("DELETE FROM service_intervals WHERE id = :id")
+    suspend fun deleteServiceIntervalById(id: String)
 }

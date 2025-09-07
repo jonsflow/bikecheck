@@ -30,6 +30,7 @@ class BikeDetailActivity : AppCompatActivity() {
         }
         
         setupToolbar()
+        setupTypeDropdown()
         setupObservers()
         setupClickListeners()
         
@@ -49,6 +50,8 @@ class BikeDetailActivity : AppCompatActivity() {
             viewModel.bike.collect { bike ->
                 bike?.let {
                     binding.textViewBikeName.text = it.name
+                    // Update spinner selection when bike changes
+                    updateTypeSelection(it.type)
                 }
             }
         }
@@ -101,7 +104,12 @@ class BikeDetailActivity : AppCompatActivity() {
                         .setTitle("Service Intervals Created")
                         .setMessage("Default service intervals have been created for this bike")
                         .setPositiveButton("OK") { _, _ ->
-                            // Navigate back to service intervals tab
+                            // Navigate back to Home and switch to Service tab
+                            val intent = Intent(this@BikeDetailActivity, com.bikecheck.android.ui.home.HomeActivity::class.java).apply {
+                                putExtra(com.bikecheck.android.ui.home.HomeActivity.EXTRA_SELECT_TAB, com.bikecheck.android.ui.home.HomeActivity.TAB_SERVICE)
+                                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                            }
+                            startActivity(intent)
                             finish()
                         }
                         .show()
@@ -109,7 +117,7 @@ class BikeDetailActivity : AppCompatActivity() {
             }
         }
     }
-    
+
     private fun setupClickListeners() {
         binding.buttonCreateDefaultIntervals.setOnClickListener {
             viewModel.createDefaultServiceIntervals()
@@ -129,6 +137,61 @@ class BikeDetailActivity : AppCompatActivity() {
                 }
                 .setNegativeButton("Cancel", null)
                 .show()
+        }
+    }
+
+    private var isInitializingType = false
+    private fun setupTypeDropdown() {
+        val types = listOf("Road", "Gravel", "Hardtail", "Full Suspension")
+        val adapter = android.widget.ArrayAdapter(
+            this,
+            android.R.layout.simple_spinner_item,
+            types
+        )
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spinnerBikeType.adapter = adapter
+        
+        binding.spinnerBikeType.onItemSelectedListener = object : android.widget.AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: android.widget.AdapterView<*>, view: android.view.View?, position: Int, id: Long) {
+                if (isInitializingType) return
+                val selectedDisplay = types[position]
+                val selectedValue = when (selectedDisplay) {
+                    "Road" -> "road"
+                    "Gravel" -> "gravel"
+                    "Hardtail" -> "hardtail"
+                    "Full Suspension" -> "full suspension"
+                    else -> null
+                }
+                selectedValue?.let { viewModel.updateBikeType(it) }
+            }
+            override fun onNothingSelected(parent: android.widget.AdapterView<*>) { /* no-op */ }
+        }
+    }
+
+    private fun updateTypeSelection(type: String?) {
+        val types = listOf("Road", "Gravel", "Hardtail", "Full Suspension")
+        val valueToIndex = mapOf(
+            "road" to 0,
+            "gravel" to 1,
+            "hardtail" to 2,
+            "full suspension" to 3
+        )
+        val index = valueToIndex[type?.lowercase()] ?: -1
+        if (index >= 0) {
+            if (binding.spinnerBikeType.selectedItemPosition != index) {
+                isInitializingType = true
+                binding.spinnerBikeType.setSelection(index)
+                isInitializingType = false
+            }
+        } else {
+            // Default to Road when type is unset or unrecognized
+            val defaultIndex = 0
+            if (binding.spinnerBikeType.selectedItemPosition != defaultIndex) {
+                isInitializingType = true
+                binding.spinnerBikeType.setSelection(defaultIndex)
+                isInitializingType = false
+            }
+            viewModel.updateBikeType("road")
         }
     }
     
