@@ -11,6 +11,10 @@ class ServiceViewModel: ObservableObject {
     private let stravaService = StravaService.shared
     private let context = PersistenceController.shared.container.viewContext
     
+    var serviceIntervalsByBike: [Bike: [ServiceInterval]] {
+        Dictionary(grouping: serviceIntervals, by: \.bike)
+    }
+    
     init() {
         loadServiceIntervals()
     }
