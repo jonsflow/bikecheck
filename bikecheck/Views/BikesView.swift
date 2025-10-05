@@ -22,8 +22,12 @@ struct BikesView: View {
                 } else {
                     List {
                         ForEach(viewModel.bikes, id: \.self) { bike in
-                            NavigationLink(destination: BikeDetailView(bike: bike, selectedTab: $selectedTab)) {
+                            ZStack {
                                 BikeCardView(bike: bike, viewModel: viewModel)
+                                NavigationLink(destination: BikeDetailView(bike: bike, selectedTab: $selectedTab)) {
+                                    EmptyView()
+                                }
+                                .opacity(0)
                             }
                             .listRowSeparator(.hidden)
                             .listRowBackground(Color.clear)
@@ -70,9 +74,9 @@ struct BikeCardView: View {
                 Spacer()
                 
                 Image(systemName: "bicycle")
-                    .font(.title3)
+                    .font(.callout)
                     .foregroundColor(.blue)
-                    .frame(width: 24, height: 24)
+                    .frame(width: 28, height: 28)
                     .background(Color.blue.opacity(0.1))
                     .clipShape(Circle())
             }

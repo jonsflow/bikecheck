@@ -8,28 +8,62 @@ struct ServiceView: View {
     @State private var navigationPath = NavigationPath()
     @State private var selectedTab = 0
     
-    private var sortedBikes: [Bike] {
-        Array(viewModel.serviceIntervalsByBike.keys).sorted { $0.name < $1.name }
+    private var displayServiceIntervals: [ServiceInterval] {
+        let intervalsByBike = Dictionary(grouping: viewModel.serviceIntervals, by: \.bike)
+        var result: [ServiceInterval] = []
+        
+        for bike in intervalsByBike.keys.sorted(by: { $0.name < $1.name }) {
+            guard let intervals = intervalsByBike[bike] else { continue }
+            
+            // Find overdue services (current usage >= interval time)
+            let overdueServices = intervals.filter { interval in
+                let currentUsage = getCurrentUsage(for: interval)
+                return currentUsage >= interval.intervalTime
+            }
+            
+            // Add all overdue services
+            result.append(contentsOf: overdueServices.sorted { interval1, interval2 in
+                let usage1 = getCurrentUsage(for: interval1)
+                let usage2 = getCurrentUsage(for: interval2)
+                return (usage1 - interval1.intervalTime) > (usage2 - interval2.intervalTime) // Most overdue first
+            })
+            
+            // If no overdue services, or we want to show next service regardless
+            let nonOverdueServices = intervals.filter { interval in
+                let currentUsage = getCurrentUsage(for: interval)
+                return currentUsage < interval.intervalTime
+            }
+            
+            if let nextService = nonOverdueServices.min(by: { interval1, interval2 in
+                let remaining1 = interval1.intervalTime - getCurrentUsage(for: interval1)
+                let remaining2 = interval2.intervalTime - getCurrentUsage(for: interval2)
+                return remaining1 < remaining2
+            }) {
+                result.append(nextService)
+            }
+        }
+        
+        return result
+    }
+    
+    private func getCurrentUsage(for serviceInterval: ServiceInterval) -> Double {
+        let totalRideTime = serviceInterval.bike.rideTime(context: viewContext)
+        return totalRideTime - serviceInterval.startTime
     }
     
     private var serviceIntervalsList: some View {
         List {
-            ForEach(sortedBikes, id: \.self) { bike in
-                Section {
-                    ForEach(intervalsForBike(bike), id: \.self) { serviceInterval in
-                        NavigationLink(value: serviceInterval) {
-                            ServiceIntervalRowView(serviceInterval: serviceInterval, viewModel: viewModel)
-                        }
-                        .listRowSeparator(.hidden)
-                        .listRowBackground(Color.clear)
-                        .listRowInsets(EdgeInsets())
+            ForEach(displayServiceIntervals, id: \.self) { serviceInterval in
+                ZStack {
+                    ServiceIntervalCardView(serviceInterval: serviceInterval, viewModel: viewModel)
+                    NavigationLink(value: serviceInterval) {
+                        EmptyView()
                     }
-                } header: {
-                    BikeHeaderView(bike: bike)
-                        .onTapGesture {
-                            navigationPath.append(bike)
-                        }
+                    .opacity(0)
                 }
+                .listRowSeparator(.hidden)
+                .listRowBackground(Color.clear)
+                .listRowInsets(EdgeInsets())
             }
             
             AdContainerView()
@@ -40,9 +74,6 @@ struct ServiceView: View {
         .listStyle(.plain)
     }
     
-    private func intervalsForBike(_ bike: Bike) -> [ServiceInterval] {
-        return viewModel.serviceIntervalsByBike[bike] ?? []
-    }
     
     var body: some View {
         NavigationStack(path: $navigationPath) {
@@ -99,9 +130,6 @@ struct ServiceView: View {
             .navigationDestination(for: ServiceInterval.self) { serviceInterval in
                 AddServiceIntervalView(serviceInterval: serviceInterval)
             }
-            .navigationDestination(for: Bike.self) { bike in
-                BikeDetailView(bike: bike, selectedTab: $selectedTab)
-            }
             .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("ShowServiceIntervalDetail"))) { notification in
                 // Handle navigation to specific service interval detail
                 if let serviceIntervalID = notification.userInfo?["serviceIntervalID"] as? UUID {
@@ -140,87 +168,100 @@ struct ServiceView: View {
     }
 }
 
-struct BikeHeaderView: View {
-    let bike: Bike
-    
-    var body: some View {
-        HStack {
-            Text(bike.name)
-                .font(.subheadline)
-                .fontWeight(.semibold)
-                .foregroundColor(.primary)
-            
-            Spacer()
-            
-            Image(systemName: "chevron.right")
-                .font(.caption2)
-                .foregroundColor(.secondary)
-        }
-        .padding(.vertical, 6)
-        .padding(.horizontal, 12)
-        .background(Color(.systemGray6))
-        .cornerRadius(6)
-    }
-}
-
-struct ServiceIntervalRowView: View {
+struct ServiceIntervalCardView: View {
+    @Environment(\.managedObjectContext) private var viewContext
     let serviceInterval: ServiceInterval
     let viewModel: ServiceViewModel
     
-    var body: some View {
-        let timeUntilService = viewModel.calculateTimeUntilService(for: serviceInterval)
-        let isOverdue = timeUntilService <= 0
-        let urgencyLevel = getUrgencyLevel(timeUntilService: timeUntilService)
-        
-        HStack(spacing: 12) {
-            Image(systemName: getIconName(for: serviceInterval.part))
-                .font(.callout)
-                .foregroundColor(urgencyLevel.color)
-                .frame(width: 28, height: 28)
-                .background(urgencyLevel.color.opacity(0.1))
-                .clipShape(Circle())
-            
-            VStack(alignment: .leading, spacing: 2) {
-                Text(serviceInterval.part)
-                    .font(.subheadline)
-                    .fontWeight(.medium)
-                    .foregroundColor(.primary)
-                
-                Text(isOverdue ? 
-                     "\(String(format: "%.1f", abs(timeUntilService))) hrs overdue" : 
-                     "\(String(format: "%.1f", timeUntilService)) hrs remaining")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-            }
-            
-            Spacer()
-            
-            HStack(spacing: 6) {
-                Circle()
-                    .fill(urgencyLevel.color)
-                    .frame(width: 8, height: 8)
-                Text(urgencyLevel.statusText)
-                    .font(.caption)
-                    .fontWeight(.medium)
-                    .foregroundColor(urgencyLevel.color)
-            }
-        }
-        .padding(.vertical, 8)
-        .padding(.horizontal, 12)
-        .background(Color(.systemBackground))
-        .cornerRadius(8)
-        .shadow(color: Color.black.opacity(0.05), radius: 2, x: 0, y: 1)
+    private var currentUsage: Double {
+        let totalRideTime = serviceInterval.bike.rideTime(context: viewContext)
+        return totalRideTime - serviceInterval.startTime
     }
     
-    private func getUrgencyLevel(timeUntilService: Double) -> UrgencyLevel {
-        let percentageRemaining = timeUntilService / serviceInterval.intervalTime
-        
-        if percentageRemaining <= 0 {
-            return .now
-        } else if percentageRemaining <= 0.20 {
-            return .soon
+    private var fractionColor: Color {
+        let percentage = currentUsage / serviceInterval.intervalTime
+        if percentage >= 1.0 {
+            return .red
+        } else if percentage >= 0.9 {
+            return .orange
         } else {
-            return .good
+            return .green
+        }
+    }
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(alignment: .center) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(serviceInterval.bike.name)
+                        .font(.headline)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.primary)
+                    
+                    Text("Service \(serviceInterval.part.lowercased())")
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                        .italic()
+                        .foregroundColor(.secondary)
+                }
+                
+                Spacer()
+                
+                VStack(alignment: .center, spacing: 4) {
+                    Image(systemName: getIconName(for: serviceInterval.part))
+                        .font(.callout)
+                        .foregroundColor(fractionColor)
+                        .rotationEffect(
+                            serviceInterval.part.lowercased().contains("fork") ? .degrees(180) :
+                            serviceInterval.part.lowercased().contains("chain") ? .degrees(40) :
+                            .degrees(0)
+                        )
+                        .frame(width: 28, height: 28)
+                        .background(fractionColor.opacity(0.1))
+                        .clipShape(Circle())
+                    
+                    Text(statusText)
+                        .font(.caption2)
+                        .fontWeight(.medium)
+                        .foregroundColor(fractionColor)
+                }
+            }
+            
+            HStack(spacing: 16) {
+                Text(dueText)
+                    .font(.caption)
+                    .fontWeight(.medium)
+                    .foregroundColor(fractionColor)
+            }
+        }
+        .padding(8)
+        .background(
+            RoundedRectangle(cornerRadius: 10)
+                .fill(Color(.systemBackground))
+                .shadow(color: Color.black.opacity(0.05), radius: 6, x: 0, y: 1)
+        )
+        .padding(.horizontal, 4)
+        .padding(.vertical, 2)
+    }
+    
+    private var statusText: String {
+        let percentage = currentUsage / serviceInterval.intervalTime
+        if percentage >= 1.0 {
+            return "Now"
+        } else if percentage >= 0.9 {
+            return "Soon"
+        } else {
+            return "Good"
+        }
+    }
+    
+    private var dueText: String {
+        let percentage = currentUsage / serviceInterval.intervalTime
+        if percentage >= 1.0 {
+            return "Now"
+        } else {
+            let remainingTime = serviceInterval.intervalTime - currentUsage
+            return "In \(Int(remainingTime)) hours"
         }
     }
     
@@ -232,10 +273,10 @@ struct ServiceIntervalRowView: View {
             return "brake.signal"
         case let p where p.contains("tire"), let p where p.contains("wheel"):
             return "circle.dotted"
-        case let p where p.contains("oil"), let p where p.contains("fluid"):
-            return "drop.fill"
-        case let p where p.contains("filter"):
-            return "air.purifier"
+        case let p where p.contains("fork"):
+            return "tuningfork"
+        case let p where p.contains("shock"):
+            return "bolt"
         default:
             return "gear"
         }
