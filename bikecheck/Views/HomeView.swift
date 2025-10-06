@@ -67,7 +67,8 @@ struct HomeView: View {
         // Use Task to handle async calls
         Task {
             // First check service intervals (needs to be awaited)
-            await stravaService.checkServiceIntervals()
+            // Note: Service interval notifications are handled by background tasks only
+            // This prevents notification spam on app launch
             
             // Then get athlete data and activities
             await withCheckedContinuation { continuation in

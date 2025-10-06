@@ -113,33 +113,5 @@ struct bikecheckApp: App {
                 
             }
         }
-//        .backgroundTask(.appRefresh("checkServiceInterval")) { _ in
-//            // Check if the user is signed in before proceeding with the background task
-//            if await stravaService.isSignedIn ?? false {
-//                logger.info("Background task checkServiceInterval executed")
-//                await stravaService.checkServiceIntervals()
-//                logger.info("Service interval check completed")
-//            } else {
-//                logger.info("Skipping checkServiceInterval task - user not signed in")
-//            }
-//            
-//            // Reschedule the task for future execution
-//            BackgroundTaskManager.shared.scheduleBackgroundTask(identifier: .checkServiceInterval)
-//        }
-//        .backgroundTask(.appRefresh("fetchActivities")) { _ in
-//            logger.info("Background task fetchActivities executed")
-//            
-//            await stravaService.fetchActivities { result in
-//                switch result {
-//                case .success:
-//                    logger.info("Activity fetch completed successfully")
-//                case .failure(let error):
-//                    logger.error("Activity fetch failed: \(error.localizedDescription)")
-//                }
-//            }
-//            
-//            // Reschedule the task for future execution
-//            BackgroundTaskManager.shared.scheduleBackgroundTask(identifier: .fetchActivities)
-//        }
     }
 }

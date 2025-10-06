@@ -6,6 +6,74 @@ struct ServiceView: View {
     @EnvironmentObject var viewModel: ServiceViewModel
     @State private var showingServiceIntervalView = false
     @State private var navigationPath = NavigationPath()
+    @State private var selectedTab = 0
+    
+    private var displayServiceIntervals: [ServiceInterval] {
+        let intervalsByBike = Dictionary(grouping: viewModel.serviceIntervals, by: \.bike)
+        var result: [ServiceInterval] = []
+        
+        for bike in intervalsByBike.keys.sorted(by: { $0.name < $1.name }) {
+            guard let intervals = intervalsByBike[bike] else { continue }
+            
+            // Find overdue services (current usage >= interval time)
+            let overdueServices = intervals.filter { interval in
+                let currentUsage = getCurrentUsage(for: interval)
+                return currentUsage >= interval.intervalTime
+            }
+            
+            // Add all overdue services
+            result.append(contentsOf: overdueServices.sorted { interval1, interval2 in
+                let usage1 = getCurrentUsage(for: interval1)
+                let usage2 = getCurrentUsage(for: interval2)
+                return (usage1 - interval1.intervalTime) > (usage2 - interval2.intervalTime) // Most overdue first
+            })
+            
+            // If no overdue services, or we want to show next service regardless
+            let nonOverdueServices = intervals.filter { interval in
+                let currentUsage = getCurrentUsage(for: interval)
+                return currentUsage < interval.intervalTime
+            }
+            
+            if let nextService = nonOverdueServices.min(by: { interval1, interval2 in
+                let remaining1 = interval1.intervalTime - getCurrentUsage(for: interval1)
+                let remaining2 = interval2.intervalTime - getCurrentUsage(for: interval2)
+                return remaining1 < remaining2
+            }) {
+                result.append(nextService)
+            }
+        }
+        
+        return result
+    }
+    
+    private func getCurrentUsage(for serviceInterval: ServiceInterval) -> Double {
+        let totalRideTime = serviceInterval.bike.rideTime(context: viewContext)
+        return totalRideTime - serviceInterval.startTime
+    }
+    
+    private var serviceIntervalsList: some View {
+        List {
+            ForEach(displayServiceIntervals, id: \.self) { serviceInterval in
+                ZStack {
+                    ServiceIntervalCardView(serviceInterval: serviceInterval, viewModel: viewModel)
+                    NavigationLink(value: serviceInterval) {
+                        EmptyView()
+                    }
+                    .opacity(0)
+                }
+                .listRowSeparator(.hidden)
+                .listRowBackground(Color.clear)
+                .listRowInsets(EdgeInsets())
+            }
+            
+            AdContainerView()
+                .listRowSeparator(.hidden)
+                .listRowBackground(Color.clear)
+                .listRowInsets(EdgeInsets())
+        }
+        .listStyle(.plain)
+    }
+    
     
     var body: some View {
         NavigationStack(path: $navigationPath) {
@@ -29,22 +97,7 @@ struct ServiceView: View {
                         }
                     }
                 } else {
-                    List {
-                        ForEach(viewModel.serviceIntervals, id: \.self) { serviceInterval in
-                            NavigationLink(value: serviceInterval) {
-                                ServiceIntervalCardView(serviceInterval: serviceInterval, viewModel: viewModel)
-                            }
-                            .listRowSeparator(.hidden)
-                            .listRowBackground(Color.clear)
-                            .listRowInsets(EdgeInsets())
-                        }
-                        
-                        AdContainerView()
-                            .listRowSeparator(.hidden)
-                            .listRowBackground(Color.clear)
-                            .listRowInsets(EdgeInsets())
-                    }
-                    .listStyle(.plain)
+                    serviceIntervalsList
                 }
             }
             .navigationTitle("Service Intervals")
@@ -116,68 +169,69 @@ struct ServiceView: View {
 }
 
 struct ServiceIntervalCardView: View {
+    @Environment(\.managedObjectContext) private var viewContext
     let serviceInterval: ServiceInterval
     let viewModel: ServiceViewModel
     
+    private var currentUsage: Double {
+        let totalRideTime = serviceInterval.bike.rideTime(context: viewContext)
+        return totalRideTime - serviceInterval.startTime
+    }
+    
+    private var fractionColor: Color {
+        let percentage = currentUsage / serviceInterval.intervalTime
+        if percentage >= 1.0 {
+            return .red
+        } else if percentage >= 0.9 {
+            return .orange
+        } else {
+            return .green
+        }
+    }
+    
     var body: some View {
-        let timeUntilService = viewModel.calculateTimeUntilService(for: serviceInterval)
-        let isOverdue = timeUntilService <= 0
-        let urgencyLevel = getUrgencyLevel(timeUntilService: timeUntilService)
-        
         VStack(alignment: .leading, spacing: 8) {
-            HStack {
+            HStack(alignment: .center) {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(serviceInterval.bike.name)
-                        .font(.subheadline)
+                        .font(.headline)
                         .fontWeight(.semibold)
                         .foregroundColor(.primary)
                     
                     Text("Service \(serviceInterval.part.lowercased())")
-                        .font(.caption2)
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                        .italic()
                         .foregroundColor(.secondary)
                 }
                 
                 Spacer()
                 
-                Image(systemName: getIconName(for: serviceInterval.part))
-                    .font(.title3)
-                    .foregroundColor(urgencyLevel.color)
-                    .frame(width: 24, height: 24)
-                    .background(urgencyLevel.color.opacity(0.1))
-                    .clipShape(Circle())
+                VStack(alignment: .center, spacing: 4) {
+                    Image(systemName: getIconName(for: serviceInterval.part))
+                        .font(.callout)
+                        .foregroundColor(fractionColor)
+                        .rotationEffect(
+                            serviceInterval.part.lowercased().contains("fork") ? .degrees(180) :
+                            serviceInterval.part.lowercased().contains("chain") ? .degrees(40) :
+                            .degrees(0)
+                        )
+                        .frame(width: 28, height: 28)
+                        .background(fractionColor.opacity(0.1))
+                        .clipShape(Circle())
+                    
+                    Text(statusText)
+                        .font(.caption2)
+                        .fontWeight(.medium)
+                        .foregroundColor(fractionColor)
+                }
             }
             
             HStack(spacing: 16) {
-                VStack(alignment: .leading, spacing: 1) {
-                    Text(isOverdue ? "OVERDUE" : "DUE IN")
-                        .font(.caption2)
-                        .foregroundColor(.secondary)
-                        .textCase(.uppercase)
-                    Text(isOverdue ? 
-                         "\(String(format: "%.1f", abs(timeUntilService))) hrs ago" : 
-                         "\(String(format: "%.1f", timeUntilService)) hrs")
-                        .font(.caption)
-                        .fontWeight(.medium)
-                        .foregroundColor(urgencyLevel.color)
-                }
-                
-                Divider()
-                    .frame(height: 20)
-                
-                VStack(alignment: .leading, spacing: 1) {
-                    Text("Status")
-                        .font(.caption2)
-                        .foregroundColor(.secondary)
-                        .textCase(.uppercase)
-                    HStack(spacing: 3) {
-                        Circle()
-                            .fill(urgencyLevel.color)
-                            .frame(width: 5, height: 5)
-                        Text(urgencyLevel.statusText)
-                            .font(.caption)
-                            .fontWeight(.medium)
-                    }
-                }
+                Text(dueText)
+                    .font(.caption)
+                    .fontWeight(.medium)
+                    .foregroundColor(fractionColor)
             }
         }
         .padding(8)
@@ -190,15 +244,24 @@ struct ServiceIntervalCardView: View {
         .padding(.vertical, 2)
     }
     
-    private func getUrgencyLevel(timeUntilService: Double) -> UrgencyLevel {
-        if timeUntilService <= 0 {
-            return .overdue
-        } else if timeUntilService <= 5 {
-            return .urgent
-        } else if timeUntilService <= 10 {
-            return .warning
+    private var statusText: String {
+        let percentage = currentUsage / serviceInterval.intervalTime
+        if percentage >= 1.0 {
+            return "Now"
+        } else if percentage >= 0.9 {
+            return "Soon"
         } else {
-            return .good
+            return "Good"
+        }
+    }
+    
+    private var dueText: String {
+        let percentage = currentUsage / serviceInterval.intervalTime
+        if percentage >= 1.0 {
+            return "Now"
+        } else {
+            let remainingTime = serviceInterval.intervalTime - currentUsage
+            return "In \(Int(remainingTime)) hours"
         }
     }
     
@@ -210,10 +273,10 @@ struct ServiceIntervalCardView: View {
             return "brake.signal"
         case let p where p.contains("tire"), let p where p.contains("wheel"):
             return "circle.dotted"
-        case let p where p.contains("oil"), let p where p.contains("fluid"):
-            return "drop.fill"
-        case let p where p.contains("filter"):
-            return "air.purifier"
+        case let p where p.contains("fork"):
+            return "tuningfork"
+        case let p where p.contains("shock"):
+            return "bolt"
         default:
             return "gear"
         }
@@ -222,17 +285,15 @@ struct ServiceIntervalCardView: View {
 
 
 enum UrgencyLevel {
-    case good, warning, urgent, overdue
+    case good, soon, now
     
     var color: Color {
         switch self {
         case .good:
             return .green
-        case .warning:
+        case .soon:
             return .orange
-        case .urgent:
-            return .red
-        case .overdue:
+        case .now:
             return .red
         }
     }
@@ -241,12 +302,10 @@ enum UrgencyLevel {
         switch self {
         case .good:
             return "Good"
-        case .warning:
+        case .soon:
             return "Soon"
-        case .urgent:
+        case .now:
             return "Now"
-        case .overdue:
-            return "Overdue"
         }
     }
 }

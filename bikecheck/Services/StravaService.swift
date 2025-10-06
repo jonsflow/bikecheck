@@ -473,15 +473,39 @@ class StravaService: ObservableObject {
             createBike(id: "b4", name: "TimberJACKED", distance: 99999, in: viewContext)
         ]
         
-        // Create activities for the first bike
-        createActivity(id: 1111111, gearId: "b1", speed: 12.05, time: 645, name: "Test Activity 1", daysAgo: 5, in: viewContext)
-        createActivity(id: 2222222, gearId: "b1", speed: 15.06, time: 1585, name: "Test Activity 2", daysAgo: 3, in: viewContext)
-        createActivity(id: 3333333, gearId: "b1", speed: 9.03, time: 2765, name: "Test Activity 3", daysAgo: 6, in: viewContext)
+        // Create activities for bikes to simulate different usage scenarios
+        // Bike 1 (Kenevo) - 14 hours total ride time (overdue scenarios)
+        createActivity(id: 1111111, gearId: "b1", speed: 12.05, time: 18000, name: "Long Ride", daysAgo: 5, in: viewContext) // 5 hours
+        createActivity(id: 2222222, gearId: "b1", speed: 15.06, time: 14400, name: "Medium Ride", daysAgo: 3, in: viewContext) // 4 hours
+        createActivity(id: 3333333, gearId: "b1", speed: 9.03, time: 18000, name: "Another Long Ride", daysAgo: 1, in: viewContext) // 5 hours
         
-        // Create service intervals for the first bike
-        createServiceInterval(part: "chain", interval: 5, bike: bikes[0], in: viewContext)
-        createServiceInterval(part: "Fork Lowers", interval: 10, bike: bikes[0], in: viewContext)
-        createServiceInterval(part: "Shock", interval: 15, bike: bikes[0], in: viewContext)
+        // Bike 2 (StumpJumper) - 8 hours total (due soon scenarios)
+        createActivity(id: 4444444, gearId: "b2", speed: 14.0, time: 14400, name: "Trail Ride", daysAgo: 4, in: viewContext) // 4 hours
+        createActivity(id: 5555555, gearId: "b2", speed: 16.0, time: 14400, name: "Cross Country", daysAgo: 2, in: viewContext) // 4 hours
+        
+        // Bike 3 (Checkpoint) - 3 hours total (good scenarios)
+        createActivity(id: 6666666, gearId: "b3", speed: 25.0, time: 10800, name: "Road Ride", daysAgo: 1, in: viewContext) // 3 hours
+        
+        // Service intervals using default intervals (chain: 5h, Fork Lowers: 10h, Shock: 15h):
+        // Bike 1 (14 hours) - Mix of overdue and due soon
+        createServiceInterval(part: "chain", interval: 5, bike: bikes[0], in: viewContext) // 14/5 = overdue
+        createServiceInterval(part: "Fork Lowers", interval: 10, bike: bikes[0], in: viewContext) // 14/10 = overdue
+        createServiceInterval(part: "Shock", interval: 15, bike: bikes[0], in: viewContext) // 14/15 = due soon
+        
+        // Bike 2 (8 hours) - Due soon scenarios  
+        createServiceInterval(part: "chain", interval: 5, bike: bikes[1], in: viewContext) // 8/5 = overdue
+        createServiceInterval(part: "Fork Lowers", interval: 10, bike: bikes[1], in: viewContext) // 8/10 = good
+        createServiceInterval(part: "Shock", interval: 15, bike: bikes[1], in: viewContext) // 8/15 = good
+        
+        // Bike 3 (3 hours) - All good scenarios
+        createServiceInterval(part: "chain", interval: 5, bike: bikes[2], in: viewContext) // 3/5 = good
+        createServiceInterval(part: "Fork Lowers", interval: 10, bike: bikes[2], in: viewContext) // 3/10 = good
+        createServiceInterval(part: "Shock", interval: 15, bike: bikes[2], in: viewContext) // 3/15 = good
+        
+        // Bike 4 (no activities) - Fresh bike scenarios
+        createServiceInterval(part: "chain", interval: 5, bike: bikes[3], in: viewContext) // 0/5 = good
+        createServiceInterval(part: "Fork Lowers", interval: 10, bike: bikes[3], in: viewContext) // 0/10 = good
+        createServiceInterval(part: "Shock", interval: 15, bike: bikes[3], in: viewContext) // 0/15 = good
         
         // Set relationships
         newAthlete.bikes = NSSet(array: bikes) as! Set<Bike>
