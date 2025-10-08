@@ -1,5 +1,12 @@
 import SwiftUI
 
+enum ServiceStatus: String, CaseIterable {
+    case overdue = "Overdue"
+    case dueSoon = "Soon"
+    case good = "Good"
+    case all = "All"
+}
+
 struct ServiceView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject var stravaService: StravaService
@@ -7,43 +14,42 @@ struct ServiceView: View {
     @State private var showingServiceIntervalView = false
     @State private var navigationPath = NavigationPath()
     @State private var selectedTab = 0
+    @State private var selectedStatuses: Set<ServiceStatus> = [.overdue, .dueSoon]
     
     private var displayServiceIntervals: [ServiceInterval] {
-        let intervalsByBike = Dictionary(grouping: viewModel.serviceIntervals, by: \.bike)
-        var result: [ServiceInterval] = []
-        
-        for bike in intervalsByBike.keys.sorted(by: { $0.name < $1.name }) {
-            guard let intervals = intervalsByBike[bike] else { continue }
-            
-            // Find overdue services (current usage >= interval time)
-            let overdueServices = intervals.filter { interval in
+        return viewModel.serviceIntervals
+            .filter { interval in
+                // If "All" is selected, show everything
+                if selectedStatuses.contains(.all) {
+                    return true
+                }
+                
                 let currentUsage = getCurrentUsage(for: interval)
-                return currentUsage >= interval.intervalTime
+                let usagePercent = currentUsage / interval.intervalTime
+                
+                // Check if interval matches any selected status
+                return selectedStatuses.contains { status in
+                    switch status {
+                    case .overdue:
+                        return usagePercent >= 1.0
+                    case .dueSoon:
+                        return usagePercent >= 0.9 && usagePercent < 1.0
+                    case .good:
+                        return usagePercent < 0.9
+                    case .all:
+                        return true
+                    }
+                }
             }
-            
-            // Add all overdue services
-            result.append(contentsOf: overdueServices.sorted { interval1, interval2 in
+            .sorted { interval1, interval2 in
                 let usage1 = getCurrentUsage(for: interval1)
                 let usage2 = getCurrentUsage(for: interval2)
-                return (usage1 - interval1.intervalTime) > (usage2 - interval2.intervalTime) // Most overdue first
-            })
-            
-            // If no overdue services, or we want to show next service regardless
-            let nonOverdueServices = intervals.filter { interval in
-                let currentUsage = getCurrentUsage(for: interval)
-                return currentUsage < interval.intervalTime
+                let percent1 = usage1 / interval1.intervalTime
+                let percent2 = usage2 / interval2.intervalTime
+                
+                // Sort by urgency (most overdue first)
+                return percent1 > percent2
             }
-            
-            if let nextService = nonOverdueServices.min(by: { interval1, interval2 in
-                let remaining1 = interval1.intervalTime - getCurrentUsage(for: interval1)
-                let remaining2 = interval2.intervalTime - getCurrentUsage(for: interval2)
-                return remaining1 < remaining2
-            }) {
-                result.append(nextService)
-            }
-        }
-        
-        return result
     }
     
     private func getCurrentUsage(for serviceInterval: ServiceInterval) -> Double {
@@ -97,7 +103,45 @@ struct ServiceView: View {
                         }
                     }
                 } else {
-                    serviceIntervalsList
+                    VStack(spacing: 0) {
+                        HStack {
+                            ForEach(ServiceStatus.allCases, id: \.self) { status in
+                                Button(action: {
+                                    if status == .all {
+                                        // If "All" is tapped, clear others and select only "All"
+                                        selectedStatuses = [.all]
+                                    } else {
+                                        // For other statuses, toggle selection
+                                        if selectedStatuses.contains(.all) {
+                                            // If "All" was selected, clear it and select this status
+                                            selectedStatuses = [status]
+                                        } else if selectedStatuses.contains(status) {
+                                            selectedStatuses.remove(status)
+                                        } else {
+                                            selectedStatuses.insert(status)
+                                        }
+                                    }
+                                }) {
+                                    Text(status.rawValue)
+                                        .font(.caption)
+                                        .padding(.horizontal, 12)
+                                        .padding(.vertical, 6)
+                                        .background(
+                                            selectedStatuses.contains(status) ? 
+                                            Color.blue : Color(.systemGray6)
+                                        )
+                                        .foregroundColor(
+                                            selectedStatuses.contains(status) ? .white : .primary
+                                        )
+                                        .cornerRadius(16)
+                                }
+                            }
+                        }
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 8)
+                        
+                        serviceIntervalsList
+                    }
                 }
             }
             .navigationTitle("Service Intervals")
