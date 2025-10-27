@@ -17,12 +17,14 @@ struct AddServiceIntervalView: View {
                             Text(bike.name).tag(bike as Bike?)
                         }
                     }
+                    .accessibilityIdentifier("BikePicker")
                     
                     HStack {
                         Text("Part:")
                         Spacer()
                         TextField("Part", text: $viewModel.part)
                             .multilineTextAlignment(.trailing)
+                            .accessibilityIdentifier("PartTextField")
                     }
                     
                     HStack {
@@ -31,6 +33,7 @@ struct AddServiceIntervalView: View {
                         TextField("Interval Time (hrs)", text: $viewModel.intervalTime)
                             .keyboardType(.numberPad)
                             .multilineTextAlignment(.trailing)
+                            .accessibilityIdentifier("IntervalTimeTextField")
                     }
                     
                     if viewModel.serviceInterval != nil {
@@ -48,6 +51,7 @@ struct AddServiceIntervalView: View {
                     Toggle(isOn: $viewModel.notify) {
                         Text("Notify")
                     }
+                    .accessibilityIdentifier("NotifyToggle")
                 }
                 
                 if viewModel.serviceInterval != nil {
@@ -61,6 +65,7 @@ struct AddServiceIntervalView: View {
                             }
                             .foregroundColor(.blue)
                         }
+                        .accessibilityIdentifier("ResetIntervalButton")
                         .alert(isPresented: $viewModel.resetConfirmationDialog) {
                             Alert(
                                 title: Text("Confirm Reset Interval"),
@@ -81,6 +86,7 @@ struct AddServiceIntervalView: View {
                             }
                             .foregroundColor(.red)
                         }
+                        .accessibilityIdentifier("DeleteIntervalButton")
                         .alert(isPresented: $viewModel.deleteConfirmationDialog) {
                             Alert(
                                 title: Text("Confirm Removal"),

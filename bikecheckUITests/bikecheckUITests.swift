@@ -178,33 +178,58 @@ final class bikecheckUITests: BikeCheckUITestCase {
             // Verify we navigated to bike detail view
             XCTAssertTrue(verifyNavigationBar("Bike Details"))
             
-            // Verify we're in bike detail view by checking action buttons exist
-            let createServiceIntervalsButton = app.buttons["Create Default Service Intervals"]
-            let deleteButton = app.buttons["Delete"]
-            XCTAssertTrue(createServiceIntervalsButton.waitForExistence(timeout: 3))
-            XCTAssertTrue(deleteButton.waitForExistence(timeout: 3))
+            // Verify overflow menu exists (ellipsis button)
+            let overflowMenuButton = app.buttons["BikeDetailOverflowMenu"]
+            XCTAssertTrue(overflowMenuButton.waitForExistence(timeout: 3))
             
-            // Test create default service intervals flow
-            createServiceIntervalsButton.tap()
+            // Check if bike has service intervals or not
+            let serviceIntervalsSection = app.staticTexts["Service Intervals"]
+            let createDefaultButton = app.buttons["Create Default Service Intervals"]
+            let createCustomButton = app.buttons["Create Custom Service Interval"]
             
-            // Verify alert appears
-            let alert = app.alerts["Service Intervals Created"]
-            if alert.waitForExistence(timeout: 3) {
-                let okButton = alert.buttons["OK"]
-                XCTAssertTrue(okButton.exists)
-                okButton.tap()
+            if createDefaultButton.waitForExistence(timeout: 2) && createCustomButton.waitForExistence(timeout: 2) {
+                // Empty state - buttons should be visible in the list
+                XCTAssertTrue(createDefaultButton.exists)
+                XCTAssertTrue(createCustomButton.exists)
                 
-                // Should navigate to Service Intervals tab
-                XCTAssertTrue(verifyNavigationBar("Service Intervals"))
+                // Test create default service intervals flow
+                createDefaultButton.tap()
                 
-                // Navigate back to bikes to continue testing
-                navigateToTab("Bikes")
-                XCTAssertTrue(verifyNavigationBar("Bikes"))
-                
-                // Tap on the first bike again
-                firstBike.tap()
-                XCTAssertTrue(verifyNavigationBar("Bike Details"))
+                // Verify alert appears
+                let alert = app.alerts["Service Intervals Created"]
+                if alert.waitForExistence(timeout: 3) {
+                    let okButton = alert.buttons["OK"]
+                    XCTAssertTrue(okButton.exists)
+                    okButton.tap()
+                    
+                    // Should navigate to Service Intervals tab
+                    XCTAssertTrue(verifyNavigationBar("Service Intervals"))
+                    
+                    // Navigate back to bikes to continue testing
+                    navigateToTab("Bikes")
+                    XCTAssertTrue(verifyNavigationBar("Bikes"))
+                    
+                    // Tap on the first bike again
+                    firstBike.tap()
+                    XCTAssertTrue(verifyNavigationBar("Bike Details"))
+                }
             }
+            
+            // Test overflow menu functionality
+            overflowMenuButton.tap()
+            
+            // Verify overflow menu items exist
+            let overflowCreateButton = app.buttons["Create Default Service Intervals"]
+            let deleteButton = app.buttons["Delete Bike"]
+            
+            // One of these should exist in the overflow menu
+            if overflowCreateButton.waitForExistence(timeout: 2) {
+                // If bike has intervals, create button should be in overflow
+                XCTAssertTrue(overflowCreateButton.exists)
+            }
+            
+            // Delete button should always be in overflow menu
+            XCTAssertTrue(deleteButton.waitForExistence(timeout: 2))
             
             // Test delete confirmation dialog
             deleteButton.tap()

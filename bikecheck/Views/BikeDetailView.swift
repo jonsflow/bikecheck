@@ -95,6 +95,7 @@ struct BikeDetailView: View {
             } label: {
                 Image(systemName: "ellipsis.circle")
             }
+            .accessibilityIdentifier("BikeDetailOverflowMenu")
         )
         .alert(isPresented: $showingIntervalsCreatedAlert) {
             Alert(
