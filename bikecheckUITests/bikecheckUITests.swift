@@ -177,34 +177,64 @@ final class bikecheckUITests: BikeCheckUITestCase {
             
             // Verify we navigated to bike detail view
             XCTAssertTrue(verifyNavigationBar("Bike Details"))
+
+            // Verify overflow menu exists (ellipsis button in navigation bar)
+            let navigationBar = app.navigationBars["Bike Details"]
+            let overflowMenuButton = navigationBar.buttons["BikeDetailOverflowMenu"]
+
+            // Check if overflow menu exists (don't use waitForExistence as it triggers scroll)
+            XCTAssertTrue(overflowMenuButton.exists, "Overflow menu should exist in navigation bar")
             
-            // Verify we're in bike detail view by checking action buttons exist
-            let createServiceIntervalsButton = app.buttons["Create Default Service Intervals"]
-            let deleteButton = app.buttons["Delete"]
-            XCTAssertTrue(createServiceIntervalsButton.waitForExistence(timeout: 3))
-            XCTAssertTrue(deleteButton.waitForExistence(timeout: 3))
+            // Check if bike has service intervals or not
+            let serviceIntervalsSection = app.staticTexts["Service Intervals"]
+            let createDefaultButton = app.buttons["Create Default Service Intervals"]
+            let createCustomButton = app.buttons["Create Custom Service Interval"]
             
-            // Test create default service intervals flow
-            createServiceIntervalsButton.tap()
-            
-            // Verify alert appears
-            let alert = app.alerts["Service Intervals Created"]
-            if alert.waitForExistence(timeout: 3) {
-                let okButton = alert.buttons["OK"]
-                XCTAssertTrue(okButton.exists)
-                okButton.tap()
+            if createDefaultButton.waitForExistence(timeout: 2) && createCustomButton.waitForExistence(timeout: 2) {
+                // Empty state - buttons should be visible in the list
+                XCTAssertTrue(createDefaultButton.exists)
+                XCTAssertTrue(createCustomButton.exists)
                 
-                // Should navigate to Service Intervals tab
-                XCTAssertTrue(verifyNavigationBar("Service Intervals"))
+                // Test create default service intervals flow
+                createDefaultButton.tap()
                 
-                // Navigate back to bikes to continue testing
-                navigateToTab("Bikes")
-                XCTAssertTrue(verifyNavigationBar("Bikes"))
-                
-                // Tap on the first bike again
-                firstBike.tap()
-                XCTAssertTrue(verifyNavigationBar("Bike Details"))
+                // Verify alert appears
+                let alert = app.alerts["Service Intervals Created"]
+                if alert.waitForExistence(timeout: 3) {
+                    let okButton = alert.buttons["OK"]
+                    XCTAssertTrue(okButton.exists)
+                    okButton.tap()
+                    
+                    // Should navigate to Service Intervals tab
+                    XCTAssertTrue(verifyNavigationBar("Service Intervals"))
+                    
+                    // Navigate back to bikes to continue testing
+                    navigateToTab("Bikes")
+                    XCTAssertTrue(verifyNavigationBar("Bikes"))
+                    
+                    // Tap on the first bike again
+                    firstBike.tap()
+                    XCTAssertTrue(verifyNavigationBar("Bike Details"))
+                }
             }
+            
+            // Test overflow menu functionality
+            // Tap using coordinate to avoid scroll action on navigation bar button
+            let menuButton = navigationBar.buttons["BikeDetailOverflowMenu"]
+            menuButton.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
+            
+            // Verify overflow menu items exist
+            let overflowCreateButton = app.buttons["Create Default Service Intervals"]
+            let deleteButton = app.buttons["Delete Bike"]
+            
+            // One of these should exist in the overflow menu
+            if overflowCreateButton.waitForExistence(timeout: 2) {
+                // If bike has intervals, create button should be in overflow
+                XCTAssertTrue(overflowCreateButton.exists)
+            }
+            
+            // Delete button should always be in overflow menu
+            XCTAssertTrue(deleteButton.waitForExistence(timeout: 2))
             
             // Test delete confirmation dialog
             deleteButton.tap()

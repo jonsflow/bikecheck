@@ -36,6 +36,7 @@ struct LoginView: View {
                                 .foregroundColor(.white)
                                 .cornerRadius(10)
                         }
+                        .accessibilityIdentifier("SignInWithStrava")
                         
                         #if DEBUG
                         Button(action: {
@@ -47,6 +48,7 @@ struct LoginView: View {
                                 .foregroundColor(.white)
                                 .cornerRadius(10)
                         }
+                        .accessibilityIdentifier("DemoMode")
                         #endif
                     }
                 }

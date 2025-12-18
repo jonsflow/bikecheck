@@ -16,7 +16,7 @@ public class Bike: NSManagedObject, Codable, Identifiable {
     @NSManaged public var distance: Double
    // @NSManaged public var activities: Set<Activity>
     @NSManaged public var athlete: Athlete
-    //@NSManaged public var serviceIntervals: Set<ServiceInterval>?
+    @NSManaged public var serviceIntervals: Set<ServiceInterval>?
     
     public func activities (context: NSManagedObjectContext) -> [Activity] {
         let fetchRequest: NSFetchRequest<Activity> = Activity.fetchRequest() as! NSFetchRequest<Activity>
