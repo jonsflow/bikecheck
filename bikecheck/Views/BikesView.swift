@@ -61,103 +61,104 @@ struct BikeCardView: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            VStack(alignment: .leading, spacing: 8) {
-                HStack {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(bike.name)
-                            .font(.subheadline)
-                            .fontWeight(.semibold)
-                            .foregroundColor(.primary)
-                        
-                        Text("Mountain Bike")
-                            .font(.caption2)
-                            .foregroundColor(.secondary)
-                    }
-                    .onTapGesture {
-                        showingBikeDetail = true
-                    }
-                    
-                    Spacer()
-                    
-                    HStack(spacing: 8) {
-                        Button(action: {
-                            showingBikeDetail = true
-                        }) {
-                            Image(systemName: "bicycle")
-                                .font(.callout)
-                                .foregroundColor(.blue)
-                                .frame(width: 28, height: 28)
-                                .background(Color.blue.opacity(0.1))
-                                .clipShape(Circle())
-                        }
-                        .buttonStyle(PlainButtonStyle())
-                        
-                        Button(action: {
-                            withAnimation(.easeInOut(duration: 0.3)) {
-                                isExpanded.toggle()
-                            }
-                        }) {
-                            Image(systemName: "chevron.right")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                                .rotationEffect(.degrees(isExpanded ? 90 : 0))
-                                .animation(.easeInOut(duration: 0.2), value: isExpanded)
-                                .frame(width: 20, height: 20)
-                        }
-                        .buttonStyle(PlainButtonStyle())
-                    }
-                }
-                
-                HStack(spacing: 16) {
-                    VStack(alignment: .leading, spacing: 1) {
-                        Text("Ride Time")
-                            .font(.caption2)
-                            .foregroundColor(.secondary)
-                            .textCase(.uppercase)
-                        Text(viewModel.getTotalRideTime(for: bike))
-                            .font(.caption)
-                            .fontWeight(.medium)
-                    }
-                    
-                    Divider()
-                        .frame(height: 20)
-                    
-                    VStack(alignment: .leading, spacing: 1) {
-                        Text("Status")
-                            .font(.caption2)
-                            .foregroundColor(.secondary)
-                            .textCase(.uppercase)
-                        HStack(spacing: 3) {
-                            Circle()
-                                .fill(Color.green)
-                                .frame(width: 5, height: 5)
-                            Text("Good")
-                                .font(.caption)
-                                .fontWeight(.medium)
-                        }
-                    }
-                }
-            }
-            
-            if isExpanded {
-                ServiceIntervalsSection(serviceIntervals: bikeServiceIntervals, serviceViewModel: serviceViewModel)
-            }
-        }
-        .padding(8)
-        .background(
-            RoundedRectangle(cornerRadius: 10)
-                .fill(Color(.systemBackground))
-                .shadow(color: Color.black.opacity(0.05), radius: 6, x: 0, y: 1)
-        )
-        .padding(.horizontal, 4)
-        .padding(.vertical, 2)
-        .background(
+        ZStack {
             NavigationLink(destination: BikeDetailView(bike: bike, selectedTab: $selectedTab), isActive: $showingBikeDetail) {
                 EmptyView()
             }
             .opacity(0)
-        )
+
+            VStack(alignment: .leading, spacing: 8) {
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(bike.name)
+                                .font(.subheadline)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.primary)
+
+                            Text("Mountain Bike")
+                                .font(.caption2)
+                                .foregroundColor(.secondary)
+                        }
+                        .onTapGesture {
+                            showingBikeDetail = true
+                        }
+
+                        Spacer()
+
+                        HStack(spacing: 8) {
+                            Button(action: {
+                                showingBikeDetail = true
+                            }) {
+                                Image(systemName: "bicycle")
+                                    .font(.callout)
+                                    .foregroundColor(.blue)
+                                    .frame(width: 28, height: 28)
+                                    .background(Color.blue.opacity(0.1))
+                                    .clipShape(Circle())
+                            }
+                            .buttonStyle(PlainButtonStyle())
+
+                            Button(action: {
+                                withAnimation(.easeInOut(duration: 0.3)) {
+                                    isExpanded.toggle()
+                                }
+                            }) {
+                                Image(systemName: "chevron.right")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                    .rotationEffect(.degrees(isExpanded ? 90 : 0))
+                                    .animation(.easeInOut(duration: 0.2), value: isExpanded)
+                                    .frame(width: 20, height: 20)
+                            }
+                            .buttonStyle(PlainButtonStyle())
+                        }
+                    }
+
+                    HStack(spacing: 16) {
+                        VStack(alignment: .leading, spacing: 1) {
+                            Text("Ride Time")
+                                .font(.caption2)
+                                .foregroundColor(.secondary)
+                                .textCase(.uppercase)
+                            Text(viewModel.getTotalRideTime(for: bike))
+                                .font(.caption)
+                                .fontWeight(.medium)
+                        }
+
+                        Divider()
+                            .frame(height: 20)
+
+                        VStack(alignment: .leading, spacing: 1) {
+                            Text("Status")
+                                .font(.caption2)
+                                .foregroundColor(.secondary)
+                                .textCase(.uppercase)
+                            HStack(spacing: 3) {
+                                Circle()
+                                    .fill(Color.green)
+                                    .frame(width: 5, height: 5)
+                                Text("Good")
+                                    .font(.caption)
+                                    .fontWeight(.medium)
+                            }
+                        }
+                    }
+                }
+
+                if isExpanded {
+                    ServiceIntervalsSection(serviceIntervals: bikeServiceIntervals, serviceViewModel: serviceViewModel)
+                }
+            }
+            .padding(8)
+            .background(
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(Color(.systemBackground))
+                    .shadow(color: Color.black.opacity(0.05), radius: 6, x: 0, y: 1)
+            )
+            .padding(.horizontal, 4)
+            .padding(.vertical, 2)
+        }
     }
 }
 

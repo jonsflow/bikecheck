@@ -177,10 +177,13 @@ final class bikecheckUITests: BikeCheckUITestCase {
             
             // Verify we navigated to bike detail view
             XCTAssertTrue(verifyNavigationBar("Bike Details"))
-            
-            // Verify overflow menu exists (ellipsis button)
-            let overflowMenuButton = app.buttons["BikeDetailOverflowMenu"]
-            XCTAssertTrue(overflowMenuButton.waitForExistence(timeout: 3))
+
+            // Verify overflow menu exists (ellipsis button in navigation bar)
+            let navigationBar = app.navigationBars["Bike Details"]
+            let overflowMenuButton = navigationBar.buttons["BikeDetailOverflowMenu"]
+
+            // Check if overflow menu exists (don't use waitForExistence as it triggers scroll)
+            XCTAssertTrue(overflowMenuButton.exists, "Overflow menu should exist in navigation bar")
             
             // Check if bike has service intervals or not
             let serviceIntervalsSection = app.staticTexts["Service Intervals"]
@@ -216,7 +219,9 @@ final class bikecheckUITests: BikeCheckUITestCase {
             }
             
             // Test overflow menu functionality
-            overflowMenuButton.tap()
+            // Tap using coordinate to avoid scroll action on navigation bar button
+            let menuButton = navigationBar.buttons["BikeDetailOverflowMenu"]
+            menuButton.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
             
             // Verify overflow menu items exist
             let overflowCreateButton = app.buttons["Create Default Service Intervals"]

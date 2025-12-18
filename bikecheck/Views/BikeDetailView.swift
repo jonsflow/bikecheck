@@ -78,25 +78,28 @@ struct BikeDetailView: View {
             }
         }
         .navigationTitle("Bike Details")
-        .navigationBarItems(
-            trailing: Menu {
-                Button(action: {
-                    viewModel.createDefaultServiceIntervals()
-                    showingIntervalsCreatedAlert = true
-                }) {
-                    Label("Create Default Service Intervals", systemImage: "plus.circle.fill")
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Menu {
+                    Button(action: {
+                        viewModel.createDefaultServiceIntervals()
+                        showingIntervalsCreatedAlert = true
+                    }) {
+                        Label("Create Default Service Intervals", systemImage: "plus.circle.fill")
+                    }
+
+                    Button(action: {
+                        viewModel.showingConfirmationDialog = true
+                    }) {
+                        Label("Delete Bike", systemImage: "trash")
+                    }
+                } label: {
+                    Image(systemName: "ellipsis.circle")
+                        .accessibilityLabel("More")
+                        .accessibilityIdentifier("BikeDetailOverflowMenu")
                 }
-                
-                Button(action: {
-                    viewModel.showingConfirmationDialog = true
-                }) {
-                    Label("Delete Bike", systemImage: "trash")
-                }
-            } label: {
-                Image(systemName: "ellipsis.circle")
             }
-            .accessibilityIdentifier("BikeDetailOverflowMenu")
-        )
+        }
         .alert(isPresented: $showingIntervalsCreatedAlert) {
             Alert(
                 title: Text("Service Intervals Created"),
