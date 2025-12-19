@@ -60,30 +60,34 @@ class DataService {
     func createDefaultServiceIntervals(for bike: Bike) {
         // Get the current ride time for the bike
         let currentRideTime = bike.rideTime(context: context)
-        
+        let today = Date()
+
         let newServInt1 = ServiceInterval(context: context)
         let newServInt2 = ServiceInterval(context: context)
         let newServInt3 = ServiceInterval(context: context)
-        
+
         // Set the current ride time as the start time for all intervals
         newServInt2.intervalTime = 5
         newServInt2.startTime = currentRideTime
+        newServInt2.lastServiceDate = today
         newServInt2.bike = bike
         newServInt2.part = "chain"
         newServInt2.notify = true
-        
+
         newServInt3.intervalTime = 10
         newServInt3.startTime = currentRideTime
+        newServInt3.lastServiceDate = today
         newServInt3.bike = bike
         newServInt3.part = "Fork Lowers"
         newServInt3.notify = true
-        
+
         newServInt1.intervalTime = 15
         newServInt1.startTime = currentRideTime
+        newServInt1.lastServiceDate = today
         newServInt1.bike = bike
         newServInt1.part = "Shock"
         newServInt1.notify = true
-        
+
         saveContext()
     }
     

@@ -18,7 +18,7 @@ struct AddServiceIntervalView: View {
                         }
                     }
                     .accessibilityIdentifier("BikePicker")
-                    
+
                     HStack {
                         Text("Part:")
                         Spacer()
@@ -26,7 +26,7 @@ struct AddServiceIntervalView: View {
                             .multilineTextAlignment(.trailing)
                             .accessibilityIdentifier("PartTextField")
                     }
-                    
+
                     HStack {
                         Text("Interval Time (hrs)")
                         Spacer()
@@ -35,6 +35,12 @@ struct AddServiceIntervalView: View {
                             .multilineTextAlignment(.trailing)
                             .accessibilityIdentifier("IntervalTimeTextField")
                     }
+
+                    DatePicker("Last Service Date", selection: $viewModel.lastServiceDate, displayedComponents: .date)
+                        .accessibilityIdentifier("LastServiceDatePicker")
+                        .onChange(of: viewModel.lastServiceDate) { _ in
+                            viewModel.updateStartTimeFromDate()
+                        }
                     
                     if viewModel.serviceInterval != nil {
                         HStack {

@@ -619,6 +619,7 @@ class StravaService: ObservableObject {
         serviceInterval.part = part
         serviceInterval.intervalTime = Double(interval)
         serviceInterval.startTime = 0
+        serviceInterval.lastServiceDate = Date()
         serviceInterval.bike = bike
         serviceInterval.notify = true
     }
