@@ -49,7 +49,6 @@
         <attribute name="notify" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="part" optional="YES" attributeType="String"/>
         <attribute name="lastServiceDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="startTime" optional="YES" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="bike" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Bike" inverseName="serviceIntervals" inverseEntity="Bike"/>
     </entity>
     <entity name="TokenInfo" representedClassName="TokenInfo" syncable="YES">

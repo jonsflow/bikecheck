@@ -4,7 +4,6 @@ import Combine
 
 class AddServiceIntervalViewModel: ObservableObject {
     @Published var part = ""
-    @Published var startTime: Double = 0
     @Published var intervalTime = ""
     @Published var notify = false
     @Published var selectedBike: Bike?
@@ -44,7 +43,6 @@ class AddServiceIntervalViewModel: ObservableObject {
     
     private func loadServiceIntervalData(_ serviceInterval: ServiceInterval) {
         part = serviceInterval.part
-        startTime = serviceInterval.startTime
         intervalTime = String(format: "%.1f", serviceInterval.intervalTime)
         notify = serviceInterval.notify
         selectedBike = serviceInterval.bike
@@ -83,17 +81,6 @@ class AddServiceIntervalViewModel: ObservableObject {
 
         timeUntilServiceText = String(format: "%.1f", timeUntilService)
     }
-
-    func updateStartTimeFromDate() {
-        guard let selectedBike = selectedBike else { return }
-
-        startTime = selectedBike.rideTimeSince(date: lastServiceDate, context: context)
-
-        // Update UI if editing existing interval
-        if serviceInterval != nil {
-            updateTimeUntilService()
-        }
-    }
     
     func saveServiceInterval() {
         if let existingInterval = serviceInterval {
@@ -107,8 +94,7 @@ class AddServiceIntervalViewModel: ObservableObject {
         interval.part = part
         interval.intervalTime = Double(intervalTime) ?? 0
         interval.notify = notify
-        interval.startTime = startTime // Use the recalculated startTime from date picker
-        interval.lastServiceDate = lastServiceDate // Save the date
+        interval.lastServiceDate = lastServiceDate
 
         if let selectedBike = selectedBike {
             interval.bike = selectedBike
@@ -124,20 +110,18 @@ class AddServiceIntervalViewModel: ObservableObject {
         newInterval.part = part
         newInterval.intervalTime = Double(intervalTime) ?? 0
         newInterval.notify = notify
-        newInterval.startTime = selectedBike.rideTimeSince(date: lastServiceDate, context: context)
-        newInterval.lastServiceDate = lastServiceDate // Save the date
+        newInterval.lastServiceDate = lastServiceDate
         newInterval.bike = selectedBike
 
         dataService.saveContext()
     }
     
     func resetInterval() {
-        guard let serviceInterval = serviceInterval, let selectedBike = selectedBike else { return }
+        guard let serviceInterval = serviceInterval else { return }
 
         // Reset to today's date
         lastServiceDate = Date()
-        serviceInterval.lastServiceDate = lastServiceDate // Save the date
-        serviceInterval.startTime = selectedBike.rideTimeSince(date: lastServiceDate, context: context)
+        serviceInterval.lastServiceDate = lastServiceDate
         timeUntilServiceText = String(format: "%.1f", serviceInterval.intervalTime)
 
         dataService.saveContext()

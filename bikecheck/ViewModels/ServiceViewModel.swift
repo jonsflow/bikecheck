@@ -41,7 +41,7 @@ class ServiceViewModel: ObservableObject {
     }
     
     func resetInterval(serviceInterval: ServiceInterval) {
-        serviceInterval.startTime = serviceInterval.bike.rideTime(context: context)
+        serviceInterval.lastServiceDate = Date()
         dataService.saveContext()
     }
 }

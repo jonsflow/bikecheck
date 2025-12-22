@@ -7,6 +7,9 @@ struct BikeDetailView: View {
     @EnvironmentObject var serviceViewModel: ServiceViewModel
     @Binding var selectedTab: Int
     @State private var showingIntervalsCreatedAlert = false
+    @State private var showingDatePicker = false
+    @State private var showingBatchUpdateDatePicker = false
+    @State private var selectedDate = Date()
     
     init(bike: Bike, selectedTab: Binding<Int>) {
         self.bike = bike
@@ -30,8 +33,8 @@ struct BikeDetailView: View {
                     if intervals.isEmpty {
                         // Empty state - offer both options
                         Button(action: {
-                            viewModel.createDefaultServiceIntervals()
-                            showingIntervalsCreatedAlert = true
+                            selectedDate = Date()
+                            showingDatePicker = true
                         }) {
                             HStack {
                                 Image(systemName: "plus.circle.fill")
@@ -58,7 +61,21 @@ struct BikeDetailView: View {
                                 CompactServiceIntervalRow(serviceInterval: serviceInterval, serviceViewModel: serviceViewModel)
                             }
                         }
-                        
+
+                        // Batch update all intervals' last service date
+                        Button(action: {
+                            selectedDate = Date()
+                            showingBatchUpdateDatePicker = true
+                        }) {
+                            HStack {
+                                Image(systemName: "calendar")
+                                    .foregroundColor(.orange)
+                                Text("Set Last Service Date for All")
+                                    .foregroundColor(.orange)
+                                Spacer()
+                            }
+                        }
+
                         // Add new service interval option
                         NavigationLink(destination: AddServiceIntervalView()) {
                             HStack {
@@ -82,10 +99,20 @@ struct BikeDetailView: View {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Menu {
                     Button(action: {
-                        viewModel.createDefaultServiceIntervals()
-                        showingIntervalsCreatedAlert = true
+                        selectedDate = Date()
+                        showingDatePicker = true
                     }) {
                         Label("Create Default Service Intervals", systemImage: "plus.circle.fill")
+                    }
+
+                    let intervals = Array(bike.serviceIntervals ?? [])
+                    if !intervals.isEmpty {
+                        Button(action: {
+                            selectedDate = Date()
+                            showingBatchUpdateDatePicker = true
+                        }) {
+                            Label("Set Last Service Date for All", systemImage: "calendar")
+                        }
                     }
 
                     Button(action: {
@@ -123,6 +150,66 @@ struct BikeDetailView: View {
                 secondaryButton: .cancel()
             )
         }
+        .sheet(isPresented: $showingDatePicker) {
+            NavigationView {
+                VStack(spacing: 20) {
+                    Text("When did you last service this bike?")
+                        .font(.headline)
+                        .padding(.top)
+
+                    DatePicker("Last Service Date", selection: $selectedDate, displayedComponents: .date)
+                        .datePickerStyle(.graphical)
+                        .padding()
+
+                    Spacer()
+                }
+                .navigationTitle("Set Service Date")
+                .navigationBarItems(
+                    leading: Button("Cancel") {
+                        showingDatePicker = false
+                    },
+                    trailing: Button("Create") {
+                        viewModel.createDefaultServiceIntervals(lastServiceDate: selectedDate)
+                        showingDatePicker = false
+                        showingIntervalsCreatedAlert = true
+                        serviceViewModel.loadServiceIntervals()
+                    }
+                )
+            }
+        }
+        .sheet(isPresented: $showingBatchUpdateDatePicker) {
+            NavigationView {
+                VStack(spacing: 20) {
+                    Text("Set last service date for all intervals on this bike")
+                        .font(.headline)
+                        .multilineTextAlignment(.center)
+                        .padding(.top)
+
+                    DatePicker("Last Service Date", selection: $selectedDate, displayedComponents: .date)
+                        .datePickerStyle(.graphical)
+                        .padding()
+
+                    Text("This will update all service intervals to calculate from this date")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal)
+
+                    Spacer()
+                }
+                .navigationTitle("Update All Intervals")
+                .navigationBarItems(
+                    leading: Button("Cancel") {
+                        showingBatchUpdateDatePicker = false
+                    },
+                    trailing: Button("Update") {
+                        viewModel.updateAllServiceDates(to: selectedDate)
+                        showingBatchUpdateDatePicker = false
+                        serviceViewModel.loadServiceIntervals()
+                    }
+                )
+            }
+        }
     }
 }
 
@@ -132,8 +219,8 @@ struct CompactServiceIntervalRow: View {
     @Environment(\.managedObjectContext) private var viewContext
     
     private var currentUsage: Double {
-        let totalRideTime = serviceInterval.bike.rideTime(context: viewContext)
-        return totalRideTime - serviceInterval.startTime
+        let lastServiceDate = serviceInterval.lastServiceDate ?? Date()
+        return serviceInterval.bike.rideTimeSince(date: lastServiceDate, context: viewContext)
     }
     
     private var statusColor: Color {

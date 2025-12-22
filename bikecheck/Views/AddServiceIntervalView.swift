@@ -36,12 +36,6 @@ struct AddServiceIntervalView: View {
                             .accessibilityIdentifier("IntervalTimeTextField")
                     }
 
-                    DatePicker("Last Service Date", selection: $viewModel.lastServiceDate, displayedComponents: .date)
-                        .accessibilityIdentifier("LastServiceDatePicker")
-                        .onChange(of: viewModel.lastServiceDate) { _ in
-                            viewModel.updateStartTimeFromDate()
-                        }
-                    
                     if viewModel.serviceInterval != nil {
                         HStack {
                             Text("Time until service (hrs)")
@@ -53,11 +47,17 @@ struct AddServiceIntervalView: View {
                                 )
                         }
                     }
-                    
+
                     Toggle(isOn: $viewModel.notify) {
                         Text("Notify")
                     }
                     .accessibilityIdentifier("NotifyToggle")
+
+                    DatePicker("Last Service Date", selection: $viewModel.lastServiceDate, displayedComponents: .date)
+                        .accessibilityIdentifier("LastServiceDatePicker")
+                        .onChange(of: viewModel.lastServiceDate) { _ in
+                            viewModel.updateTimeUntilService()
+                        }
                 }
                 
                 if viewModel.serviceInterval != nil {

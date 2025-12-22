@@ -27,7 +27,7 @@ class BikesViewModel: ObservableObject {
         loadBikes()
     }
     
-    func createDefaultServiceIntervals(for bike: Bike) {
-        dataService.createDefaultServiceIntervals(for: bike)
+    func createDefaultServiceIntervals(for bike: Bike, lastServiceDate: Date = Date()) {
+        dataService.createDefaultServiceIntervals(for: bike, lastServiceDate: lastServiceDate)
     }
 }
