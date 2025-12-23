@@ -34,7 +34,19 @@ jobs:
           fi
           echo "device_id=$DEVICE_ID" >> $GITHUB_OUTPUT
           echo "Using simulator device ID: $DEVICE_ID"
-      
+
+      - name: Clean build folder
+        run: |
+          xcodebuild clean \
+            -project bikecheck.xcodeproj \
+            -scheme bikecheck
+
+      - name: Erase simulator to ensure fresh state
+        run: |
+          xcrun simctl shutdown ${{ steps.find-simulator.outputs.device_id }} || true
+          xcrun simctl erase ${{ steps.find-simulator.outputs.device_id }}
+          xcrun simctl boot ${{ steps.find-simulator.outputs.device_id }}
+
       - name: Run Unit tests
         run: |
           xcodebuild test \
