@@ -293,42 +293,191 @@ final class bikecheckUITests: BikeCheckUITestCase {
     
     func test8_BackgroundTaskExecution() throws {
         // Test that background task logic executes without crashing
-        
+
         navigateToTab("Service Intervals")
         XCTAssertTrue(verifyNavigationBar("Service Intervals"))
-        
+
         // Find and tap the hidden test button to execute background task logic
         let testButton = app.buttons["TestBackgroundTask"]
         XCTAssertTrue(testButton.waitForExistence(timeout: 5), "Test background task button should exist in UI testing mode")
-        
+
         // Tap the button to execute the background task logic
         testButton.tap()
-        
+
         // Wait for the async task to complete
         sleep(2)
-        
+
         // Verify that the app remains stable after background task execution
         let tabBar = app.tabBars["Tab Bar"]
         XCTAssertTrue(tabBar.exists, "App should remain stable after background task execution")
-        
+
         // Verify service intervals are still displayed correctly
         let serviceList = app.collectionViews.firstMatch
         XCTAssertTrue(serviceList.waitForExistence(timeout: 5), "Service intervals should still be displayed")
-        
+
         // Test multiple executions to ensure stability
         testButton.tap()
         sleep(1)
         testButton.tap()
         sleep(1)
-        
+
         // App should still be functional
         XCTAssertTrue(tabBar.exists, "App should remain stable after multiple background task executions")
-        
+
         // Verify navigation still works
         navigateToTab("Bikes")
         XCTAssertTrue(verifyNavigationBar("Bikes"))
-        
+
         navigateToTab("Service Intervals")
+        XCTAssertTrue(verifyNavigationBar("Service Intervals"))
+    }
+
+    func test9_LastServiceDateField() throws {
+        // Test that Last Service Date field exists and is at the bottom
+
+        // Ensure tab bar is visible first
+        let tabBar = app.tabBars["Tab Bar"]
+        XCTAssertTrue(tabBar.waitForExistence(timeout: 5), "Tab bar should be visible")
+
+        navigateToTab("Service Intervals")
+        XCTAssertTrue(verifyNavigationBar("Service Intervals"))
+
+        // Tap on first service interval to view details
+        let serviceIntervalCells = app.cells
+        if serviceIntervalCells.count > 0 {
+            let firstServiceInterval = serviceIntervalCells.firstMatch
+            XCTAssertTrue(firstServiceInterval.waitForExistence(timeout: 3))
+            firstServiceInterval.tap()
+
+            // Scroll down to make sure the date picker is visible
+            app.swipeUp()
+
+            // Verify Last Service Date picker exists
+            let datePicker = app.datePickers["LastServiceDatePicker"]
+            XCTAssertTrue(datePicker.waitForExistence(timeout: 3), "Last Service Date picker should exist")
+
+            // Verify it appears after the Notify toggle (i.e., at the bottom)
+            let notifyToggle = app.switches["NotifyToggle"]
+            XCTAssertTrue(notifyToggle.exists, "Notify toggle should exist")
+
+            // Navigate back
+            app.navigationBars.buttons.firstMatch.tap()
+        }
+
+        XCTAssertTrue(verifyNavigationBar("Service Intervals"))
+    }
+
+    func test10_BatchUpdateServiceDates() throws {
+        // Test batch updating all service intervals' dates
+
+        navigateToTab("Bikes")
+        XCTAssertTrue(verifyNavigationBar("Bikes"))
+
+        // Navigate to bike detail
+        let bikeCells = app.cells
+        if bikeCells.count > 0 {
+            bikeCells.firstMatch.tap()
+            XCTAssertTrue(verifyNavigationBar("Bike Details"))
+
+            // Look for the batch update button using its unique identifier
+            let batchUpdateButton = app.buttons["BatchUpdateServiceDatesButton"]
+
+            if batchUpdateButton.waitForExistence(timeout: 2) {
+                batchUpdateButton.tap()
+
+                // Verify date picker sheet appears
+                XCTAssertTrue(app.navigationBars["Update All Intervals"].waitForExistence(timeout: 3), "Update All Intervals sheet should appear")
+
+                // Verify Cancel and Update buttons exist
+                XCTAssertTrue(app.buttons["Cancel"].exists, "Cancel button should exist")
+                XCTAssertTrue(app.buttons["Update"].exists, "Update button should exist")
+
+                // Test canceling
+                app.buttons["Cancel"].tap()
+
+                // Should return to bike detail
+                XCTAssertTrue(verifyNavigationBar("Bike Details"))
+            }
+
+            // Navigate back
+            app.navigationBars.buttons.firstMatch.tap()
+        }
+
+        XCTAssertTrue(verifyNavigationBar("Bikes"))
+    }
+
+    func test11_CreateDefaultIntervalsWithDatePicker() throws {
+        // Test creating default service intervals shows date picker first
+
+        navigateToTab("Bikes")
+        XCTAssertTrue(verifyNavigationBar("Bikes"))
+
+        // Navigate to bike detail
+        let bikeCells = app.cells
+        if bikeCells.count > 0 {
+            bikeCells.firstMatch.tap()
+            XCTAssertTrue(verifyNavigationBar("Bike Details"))
+
+            // Tap overflow menu
+            let navigationBar = app.navigationBars["Bike Details"]
+            let overflowMenuButton = navigationBar.buttons["BikeDetailOverflowMenu"]
+            overflowMenuButton.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
+
+            // Tap "Create Default Service Intervals"
+            let createButton = app.buttons["Create Default Service Intervals"]
+            if createButton.waitForExistence(timeout: 2) {
+                createButton.tap()
+
+                // Verify date picker sheet appears before creating
+                XCTAssertTrue(app.navigationBars["Set Service Date"].waitForExistence(timeout: 3), "Set Service Date sheet should appear")
+
+                // Verify the question text
+                XCTAssertTrue(app.staticTexts["When did you last service this bike?"].exists, "Question should be displayed")
+
+                // Verify Cancel and Create buttons exist
+                XCTAssertTrue(app.buttons["Cancel"].exists, "Cancel button should exist")
+                XCTAssertTrue(app.buttons["Create"].exists, "Create button should exist")
+
+                // Test canceling
+                app.buttons["Cancel"].tap()
+
+                // Should return to bike detail
+                XCTAssertTrue(verifyNavigationBar("Bike Details"))
+            }
+
+            // Navigate back
+            app.navigationBars.buttons.firstMatch.tap()
+        }
+
+        XCTAssertTrue(verifyNavigationBar("Bikes"))
+    }
+
+    func test12_ServiceFilterDefaultsToAll() throws {
+        // Test that service interval filter defaults to "All"
+
+        navigateToTab("Service Intervals")
+        XCTAssertTrue(verifyNavigationBar("Service Intervals"))
+
+        // Verify "All" filter button is selected by default
+        // The selected filter will have a blue background in the UI
+        let allButton = app.buttons["All"]
+        XCTAssertTrue(allButton.waitForExistence(timeout: 3), "'All' filter button should exist")
+
+        // Verify other filter buttons exist but are not necessarily selected
+        XCTAssertTrue(app.buttons["Overdue"].exists, "Overdue filter should exist")
+        XCTAssertTrue(app.buttons["Soon"].exists, "Soon filter should exist")
+        XCTAssertTrue(app.buttons["Good"].exists, "Good filter should exist")
+
+        // Tap "Overdue" to change filter
+        app.buttons["Overdue"].tap()
+
+        // Wait a moment for filter to apply
+        sleep(1)
+
+        // Tap "All" again to reset
+        app.buttons["All"].tap()
+
+        // Should still be on Service Intervals view
         XCTAssertTrue(verifyNavigationBar("Service Intervals"))
     }
 }

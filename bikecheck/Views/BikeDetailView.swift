@@ -75,6 +75,7 @@ struct BikeDetailView: View {
                                 Spacer()
                             }
                         }
+                        .accessibilityIdentifier("BatchUpdateServiceDatesButton")
 
                         // Add new service interval option
                         NavigationLink(destination: AddServiceIntervalView()) {
