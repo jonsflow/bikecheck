@@ -438,12 +438,9 @@ class StravaService: ObservableObject {
     }
     
     func calculateTimeUntilService(for serviceInterval: ServiceInterval) -> Double {
-        let totalRideTime = serviceInterval.bike.rideTime(context: self.managedObjectContext)
-        let startTime = serviceInterval.startTime
-        let intervalTime = serviceInterval.intervalTime
-        
-        let currentIntervalTime = totalRideTime - startTime
-        return intervalTime - currentIntervalTime
+        let lastServiceDate = serviceInterval.lastServiceDate ?? Date()
+        let rideTimeSinceService = serviceInterval.bike.rideTimeSince(date: lastServiceDate, context: self.managedObjectContext)
+        return serviceInterval.intervalTime - rideTimeSinceService
     }
     
     // MARK: - Test Data
@@ -618,7 +615,7 @@ class StravaService: ObservableObject {
         let serviceInterval = ServiceInterval(context: context)
         serviceInterval.part = part
         serviceInterval.intervalTime = Double(interval)
-        serviceInterval.startTime = 0
+        serviceInterval.lastServiceDate = Date()
         serviceInterval.bike = bike
         serviceInterval.notify = true
     }

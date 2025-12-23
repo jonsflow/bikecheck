@@ -142,7 +142,7 @@ class MockPersistenceController {
         // Create test service intervals
         let serviceInterval = NSEntityDescription.insertNewObject(forEntityName: "ServiceInterval", into: context) as! ServiceInterval
         serviceInterval.part = "Chain"
-        serviceInterval.startTime = 0
+        serviceInterval.lastServiceDate = Date()
         serviceInterval.intervalTime = 10
         serviceInterval.notify = true
         serviceInterval.bike = bike1

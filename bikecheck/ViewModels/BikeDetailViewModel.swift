@@ -31,8 +31,18 @@ class BikeDetailViewModel: ObservableObject {
         dataService.deleteBike(bike)
     }
     
-    func createDefaultServiceIntervals() {
-        dataService.createDefaultServiceIntervals(for: bike)
+    func createDefaultServiceIntervals(lastServiceDate: Date = Date()) {
+        dataService.createDefaultServiceIntervals(for: bike, lastServiceDate: lastServiceDate)
         showingServiceIntervalsCreatedAlert = true
+    }
+
+    func updateAllServiceDates(to date: Date) {
+        guard let intervals = bike.serviceIntervals else { return }
+
+        for interval in intervals {
+            interval.lastServiceDate = date
+        }
+
+        dataService.saveContext()
     }
 }

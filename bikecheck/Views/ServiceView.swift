@@ -14,7 +14,7 @@ struct ServiceView: View {
     @State private var showingServiceIntervalView = false
     @State private var navigationPath = NavigationPath()
     @State private var selectedTab = 0
-    @State private var selectedStatuses: Set<ServiceStatus> = [.overdue, .dueSoon]
+    @State private var selectedStatuses: Set<ServiceStatus> = [.all]
     
     private var displayServiceIntervals: [ServiceInterval] {
         return viewModel.serviceIntervals
@@ -53,8 +53,8 @@ struct ServiceView: View {
     }
     
     private func getCurrentUsage(for serviceInterval: ServiceInterval) -> Double {
-        let totalRideTime = serviceInterval.bike.rideTime(context: viewContext)
-        return totalRideTime - serviceInterval.startTime
+        let lastServiceDate = serviceInterval.lastServiceDate ?? Date()
+        return serviceInterval.bike.rideTimeSince(date: lastServiceDate, context: viewContext)
     }
     
     private var serviceIntervalsList: some View {
@@ -218,8 +218,8 @@ struct ServiceIntervalCardView: View {
     let viewModel: ServiceViewModel
     
     private var currentUsage: Double {
-        let totalRideTime = serviceInterval.bike.rideTime(context: viewContext)
-        return totalRideTime - serviceInterval.startTime
+        let lastServiceDate = serviceInterval.lastServiceDate ?? Date()
+        return serviceInterval.bike.rideTimeSince(date: lastServiceDate, context: viewContext)
     }
     
     private var fractionColor: Color {

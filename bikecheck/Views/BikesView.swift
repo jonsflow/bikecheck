@@ -193,8 +193,8 @@ struct ServiceIntervalMiniRow: View {
     @Environment(\.managedObjectContext) private var viewContext
     
     private func getCurrentUsage(for serviceInterval: ServiceInterval) -> Double {
-        let currentUsage = serviceInterval.bike.rideTime(context: viewContext)
-        return currentUsage - serviceInterval.startTime
+        let lastServiceDate = serviceInterval.lastServiceDate ?? Date()
+        return serviceInterval.bike.rideTimeSince(date: lastServiceDate, context: viewContext)
     }
     
     private func getStatusText() -> String {

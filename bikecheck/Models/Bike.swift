@@ -37,6 +37,13 @@ public class Bike: NSManagedObject, Codable, Identifiable {
         return totalRideTime / 3600
     }
 
+    public func rideTimeSince(date: Date, context: NSManagedObjectContext) -> Double {
+        let activities = self.activities(context: context)
+            .filter { ($0.startDate ?? Date.distantPast) >= date }
+        let totalRideTime = activities.reduce(0) { $0 + Double($1.movingTime) }
+        return totalRideTime / 3600
+    }
+
     enum CodingKeys: String, CodingKey {
         case id
         case name
