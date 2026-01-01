@@ -365,7 +365,7 @@ class StravaService: ObservableObject {
             
             let parameters: [String: Any] = [
                 "page": 1,
-                "per_page": 30,
+                "per_page": 200,
                 "type": "Ride"
             ]
             
