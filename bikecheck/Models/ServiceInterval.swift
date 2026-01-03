@@ -12,6 +12,7 @@ public class ServiceInterval: NSManagedObject, Identifiable {
     @NSManaged public var id: UUID?
     @NSManaged public var part: String
     @NSManaged public var lastServiceDate: Date?
+    @NSManaged public var lastNotificationDate: Date?
     @NSManaged public var intervalTime: Double
     @NSManaged public var notify: Bool
     @NSManaged public var bike: Bike

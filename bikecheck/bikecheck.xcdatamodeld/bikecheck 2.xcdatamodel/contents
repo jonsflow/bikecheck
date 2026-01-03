@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23507" systemVersion="24C5079e" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Activity" representedClassName=".Activity" syncable="YES">
+        <attribute name="averageSpeed" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="distance" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="gearId" optional="YES" attributeType="String"/>
+        <attribute name="id" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="movingTime" attributeType="Integer 64" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="name" attributeType="String"/>
+        <attribute name="processed" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="startDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="type" attributeType="String"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="id"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="Athlete" representedClassName=".Athlete" syncable="YES">
+        <attribute name="firstname" attributeType="String"/>
+        <attribute name="id" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" spotlightIndexingEnabled="YES"/>
+        <attribute name="profile" optional="YES" attributeType="String"/>
+        <relationship name="bikes" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Bike" inverseName="athlete" inverseEntity="Bike"/>
+        <relationship name="tokenInfo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TokenInfo" inverseName="athlete" inverseEntity="TokenInfo"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="id"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="Bike" representedClassName=".Bike" syncable="YES">
+        <attribute name="distance" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="id" attributeType="String" spotlightIndexingEnabled="YES"/>
+        <attribute name="name" attributeType="String"/>
+        <relationship name="athlete" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Athlete" inverseName="bikes" inverseEntity="Athlete"/>
+        <relationship name="serviceIntervals" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ServiceInterval" inverseName="bike" inverseEntity="ServiceInterval"/>
+        <fetchedProperty name="fetchedProperty" optional="YES">
+            <fetchRequest name="fetchedPropertyFetchRequest" entity="Bike"/>
+        </fetchedProperty>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="id"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="ServiceInterval" representedClassName=".ServiceInterval" syncable="YES">
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="intervalTime" optional="YES" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="lastNotificationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="lastServiceDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="notify" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="part" optional="YES" attributeType="String"/>
+        <relationship name="bike" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Bike" inverseName="serviceIntervals" inverseEntity="Bike"/>
+    </entity>
+    <entity name="TokenInfo" representedClassName="TokenInfo" syncable="YES">
+        <attribute name="accessToken" attributeType="String"/>
+        <attribute name="expiresAt" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="refreshToken" attributeType="String"/>
+        <relationship name="athlete" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Athlete" inverseName="tokenInfo" inverseEntity="Athlete"/>
+    </entity>
+</model>

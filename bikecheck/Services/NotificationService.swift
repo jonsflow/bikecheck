@@ -22,22 +22,33 @@ class NotificationService: NSObject, UNUserNotificationCenterDelegate {
     
     func sendNotification(for interval: ServiceInterval) {
         if interval.notify {
-            print("Sending notification")
+            // Throttle: max once per week (604800 seconds = 7 days)
+            if let lastNotificationDate = interval.lastNotificationDate,
+               Date().timeIntervalSince(lastNotificationDate) < 604800 {
+                logger.info("Skipping notification for \(interval.part) - sent within last 7 days")
+                return
+            }
+
+            logger.info("Sending notification for \(interval.part)")
             let content = UNMutableNotificationContent()
             content.title = "\(interval.bike.name) Service Reminder"
             content.body = "It's time to service your \(interval.part)."
             content.sound = UNNotificationSound.default
-            
+
             // Use consistent identifier based on service interval ID to prevent duplicate notifications
             // This ensures that subsequent notifications for the same interval replace previous ones
             let identifier = "service-interval-\(interval.id?.uuidString ?? UUID().uuidString)"
             let request = UNNotificationRequest(identifier: identifier, content: content, trigger: nil)
-            
-            center.add(request) { (error) in
+
+            center.add(request) { [weak self] (error) in
                 if let error = error {
-                    print("Error adding notification request: \(error.localizedDescription)")
+                    self?.logger.error("Error adding notification request: \(error.localizedDescription)")
                 } else {
-                    print("Notification request added successfully for interval: \(identifier)")
+                    self?.logger.info("Notification request added successfully for interval: \(identifier)")
+
+                    // Update lastNotificationDate after successful notification
+                    interval.lastNotificationDate = Date()
+                    try? interval.managedObjectContext?.save()
                 }
             }
         }
