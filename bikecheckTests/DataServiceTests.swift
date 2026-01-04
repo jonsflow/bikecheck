@@ -212,14 +212,13 @@ class DataServiceTests: XCTestCase {
 
     func testRideTimeSinceDate() {
         // Given
-        mockPersistenceController.createTestData()
         let context = mockPersistenceController.container.viewContext
 
-        let fetchRequest: NSFetchRequest<Bike> = NSFetchRequest<Bike>(entityName: "Bike")
-        guard let bike = try? context.fetch(fetchRequest).first else {
-            XCTFail("No test bike found")
-            return
-        }
+        // Create a test bike without calling createTestData() to avoid test activity pollution
+        let bike = NSEntityDescription.insertNewObject(forEntityName: "Bike", into: context) as! Bike
+        bike.id = "test-bike-ride-time"
+        bike.name = "Test Bike"
+        bike.distance = 100.0
 
         // Create activities with known dates
         let activity1 = NSEntityDescription.insertNewObject(forEntityName: "Activity", into: context) as! Activity
