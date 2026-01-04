@@ -6,7 +6,13 @@ class PersistenceController {
     let container: NSPersistentContainer
     
     init(inMemory: Bool = false) {
-        container = NSPersistentContainer(name: "bikecheck")
+        // Explicitly load the current Core Data model to avoid loading multiple versions
+        guard let modelURL = Bundle.main.url(forResource: "bikecheck", withExtension: "momd"),
+              let model = NSManagedObjectModel(contentsOf: modelURL) else {
+            fatalError("Failed to load Core Data model from bundle")
+        }
+
+        container = NSPersistentContainer(name: "bikecheck", managedObjectModel: model)
 
         if inMemory {
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")

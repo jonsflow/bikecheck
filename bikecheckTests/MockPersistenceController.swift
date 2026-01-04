@@ -11,24 +11,30 @@ class MockPersistenceController {
     var shouldThrowOnSave = false
     
     init() {
-        // Create an in-memory data store for testing
-        let container = NSPersistentContainer(name: "bikecheck")
-        
+        // Explicitly load the current Core Data model to avoid loading multiple versions
+        guard let modelURL = Bundle.main.url(forResource: "bikecheck", withExtension: "momd"),
+              let model = NSManagedObjectModel(contentsOf: modelURL) else {
+            fatalError("Failed to load Core Data model from bundle")
+        }
+
+        // Create an in-memory data store for testing with explicit model
+        let container = NSPersistentContainer(name: "bikecheck", managedObjectModel: model)
+
         // Configure the persistent store to be in-memory
         let description = NSPersistentStoreDescription()
         description.url = URL(fileURLWithPath: "/dev/null")
         description.type = NSInMemoryStoreType
         container.persistentStoreDescriptions = [description]
-        
+
         container.loadPersistentStores { _, error in
             if let error = error as NSError? {
                 fatalError("Failed to load in-memory persistent stores: \(error), \(error.userInfo)")
             }
         }
-        
+
         container.viewContext.automaticallyMergesChangesFromParent = true
         container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-        
+
         self.container = container
     }
     
