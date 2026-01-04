@@ -6,18 +6,34 @@ class PersistenceController {
     let container: NSPersistentContainer
     
     init(inMemory: Bool = false) {
-        container = NSPersistentContainer(name: "bikecheck")
-        
+        // Explicitly load the current Core Data model to avoid loading multiple versions
+        guard let modelURL = Bundle.main.url(forResource: "bikecheck", withExtension: "momd"),
+              let model = NSManagedObjectModel(contentsOf: modelURL) else {
+            fatalError("Failed to load Core Data model from bundle")
+        }
+
+        container = NSPersistentContainer(name: "bikecheck", managedObjectModel: model)
+
         if inMemory {
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
         }
-        
+
+        // Enable automatic lightweight migration
+        container.persistentStoreDescriptions.first?.setOption(
+            true as NSNumber,
+            forKey: NSMigratePersistentStoresAutomaticallyOption
+        )
+        container.persistentStoreDescriptions.first?.setOption(
+            true as NSNumber,
+            forKey: NSInferMappingModelAutomaticallyOption
+        )
+
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error as NSError? {
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
         })
-        
+
         container.viewContext.automaticallyMergesChangesFromParent = true
         container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
     }

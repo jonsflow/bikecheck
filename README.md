@@ -52,6 +52,8 @@ When viewing a service interval, you can:
 
 BikeCheck will send you notifications when components are due for service, ensuring you never miss critical maintenance. All notifications are managed locally on your device.
 
+**Smart Notification Throttling**: To prevent notification spam, BikeCheck limits service reminders to once per week for each component. If a component is overdue, you'll receive one notification, then won't be reminded again for 7 days even if it remains overdue. This gives you time to schedule maintenance without being overwhelmed by repeated alerts.
+
 Enjoy keeping your bikes in peak condition with BikeCheck!
 
 # BikeCheck Application Architecture
