@@ -42,12 +42,17 @@ struct ServiceView: View {
                 }
             }
             .sorted { interval1, interval2 in
+                // First sort by bike name
+                if interval1.bike.name != interval2.bike.name {
+                    return interval1.bike.name < interval2.bike.name
+                }
+
+                // Within same bike, sort by urgency (most overdue first)
                 let usage1 = getCurrentUsage(for: interval1)
                 let usage2 = getCurrentUsage(for: interval2)
                 let percent1 = usage1 / interval1.intervalTime
                 let percent2 = usage2 / interval2.intervalTime
-                
-                // Sort by urgency (most overdue first)
+
                 return percent1 > percent2
             }
     }
@@ -237,20 +242,18 @@ struct ServiceIntervalCardView: View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(alignment: .center) {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(serviceInterval.bike.name)
-                        .font(.headline)
+                    Text(serviceInterval.part)
+                        .font(.subheadline)
                         .fontWeight(.semibold)
                         .foregroundColor(.primary)
-                    
-                    Text("Service \(serviceInterval.part.lowercased())")
-                        .font(.subheadline)
-                        .fontWeight(.medium)
-                        .italic()
+
+                    Text(serviceInterval.bike.name)
+                        .font(.caption)
                         .foregroundColor(.secondary)
                 }
-                
+
                 Spacer()
-                
+
                 VStack(alignment: .center, spacing: 4) {
                     Image(systemName: getIconName(for: serviceInterval.part))
                         .font(.callout)
@@ -263,19 +266,24 @@ struct ServiceIntervalCardView: View {
                         .frame(width: 28, height: 28)
                         .background(fractionColor.opacity(0.1))
                         .clipShape(Circle())
-                    
+
                     Text(statusText)
                         .font(.caption2)
                         .fontWeight(.medium)
                         .foregroundColor(fractionColor)
                 }
             }
-            
+
             HStack(spacing: 16) {
                 Text(dueText)
                     .font(.caption)
                     .fontWeight(.medium)
                     .foregroundColor(fractionColor)
+
+                Spacer()
+
+                WearIndicator(usagePercent: currentUsage / serviceInterval.intervalTime, color: fractionColor)
+                    .frame(width: 80)
             }
         }
         .padding(8)
@@ -328,9 +336,32 @@ struct ServiceIntervalCardView: View {
 }
 
 
+struct WearIndicator: View {
+    let usagePercent: Double
+    let color: Color
+    let segmentCount: Int = 5
+
+    var body: some View {
+        GeometryReader { geometry in
+            HStack(spacing: 2) {
+                ForEach(0..<segmentCount, id: \.self) { index in
+                    let remainingPercent = 1.0 - usagePercent
+                    let segmentThreshold = Double(segmentCount - index) / Double(segmentCount)
+                    let isFilled = remainingPercent >= segmentThreshold
+
+                    RoundedRectangle(cornerRadius: 2)
+                        .fill(isFilled ? color : Color(.systemGray5))
+                        .frame(height: 4)
+                }
+            }
+        }
+        .frame(height: 4)
+    }
+}
+
 enum UrgencyLevel {
     case good, soon, now
-    
+
     var color: Color {
         switch self {
         case .good:
@@ -341,7 +372,7 @@ enum UrgencyLevel {
             return .red
         }
     }
-    
+
     var statusText: String {
         switch self {
         case .good:

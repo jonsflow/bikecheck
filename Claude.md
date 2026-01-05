@@ -5,6 +5,7 @@
 ## Current Development State (as of January 3, 2026)
 
 ### Recent Major Features Completed
+- **Bike Status Indicator** (January 2026): Dynamic bike status based on service interval health (Good/Needs Service)
 - **Notification Throttling** (January 2026): 7-day throttle window prevents notification spam for overdue service intervals
 - **Core Data Migration** (January 2026): Implemented lightweight migration as proof of concept for future schema changes
 - **Strava Activity Limit Increase** (December 2025): Increased from 30 to 200 activities to ensure adequate ride history
@@ -17,12 +18,13 @@
 ### Active Features
 1. **Strava Integration** - OAuth flow and data sync for bikes and activities
 2. **Service Interval Tracking** - CRUD operations with smart notifications
-3. **Bike Management** - Import from Strava and manual management
-4. **Activity Tracking** - Automatic sync with ride time calculations
-5. **Onboarding Experience** - Single-step flow with test data tour
-6. **Background Sync** - BackgroundTasks framework for iOS
-7. **Notification System** - Local notifications with 7-day throttling
-8. **UI Testing Suite** - Comprehensive test coverage with mock data injection
+3. **Bike Management** - Import from Strava and manual management with status indicators
+4. **Bike Status System** - Real-time status calculation based on service interval health
+5. **Activity Tracking** - Automatic sync with ride time calculations
+6. **Onboarding Experience** - Single-step flow with test data tour
+7. **Background Sync** - BackgroundTasks framework for iOS
+8. **Notification System** - Local notifications with 7-day throttling
+9. **UI Testing Suite** - Comprehensive test coverage with mock data injection
 
 ## Architecture
 
