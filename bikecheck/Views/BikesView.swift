@@ -55,11 +55,25 @@ struct BikeCardView: View {
     @Binding var selectedTab: Int
     @State private var isExpanded: Bool = false
     @State private var showingBikeDetail: Bool = false
-    
+    @Environment(\.managedObjectContext) private var viewContext
+
     private var bikeServiceIntervals: [ServiceInterval] {
         serviceViewModel.serviceIntervals.filter { $0.bike == bike }
     }
-    
+
+    private var bikeStatus: BikeStatus {
+        bike.status(context: viewContext)
+    }
+
+    private var statusColor: Color {
+        switch bikeStatus {
+        case .good:
+            return .green
+        case .needsService:
+            return .red
+        }
+    }
+
     var body: some View {
         ZStack {
             NavigationLink(destination: BikeDetailView(bike: bike, selectedTab: $selectedTab), isActive: $showingBikeDetail) {
@@ -136,9 +150,9 @@ struct BikeCardView: View {
                                 .textCase(.uppercase)
                             HStack(spacing: 3) {
                                 Circle()
-                                    .fill(Color.green)
+                                    .fill(statusColor)
                                     .frame(width: 5, height: 5)
-                                Text("Good")
+                                Text(bikeStatus.rawValue)
                                     .font(.caption)
                                     .fontWeight(.medium)
                             }

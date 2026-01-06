@@ -9,6 +9,11 @@ import Foundation
 import Combine
 import CoreData
 
+public enum BikeStatus: String {
+    case good = "Good"
+    case needsService = "Needs Service"
+}
+
 @objc(Bike)
 public class Bike: NSManagedObject, Codable, Identifiable {
     @NSManaged public var id: String
@@ -42,6 +47,24 @@ public class Bike: NSManagedObject, Codable, Identifiable {
             .filter { ($0.startDate ?? Date.distantPast) >= date }
         let totalRideTime = activities.reduce(0) { $0 + Double($1.movingTime) }
         return totalRideTime / 3600
+    }
+
+    public func status(context: NSManagedObjectContext) -> BikeStatus {
+        guard let intervals = serviceIntervals, !intervals.isEmpty else {
+            return .good
+        }
+
+        for interval in intervals {
+            let lastServiceDate = interval.lastServiceDate ?? Date()
+            let rideTimeSinceService = self.rideTimeSince(date: lastServiceDate, context: context)
+            let timeUntilService = interval.intervalTime - rideTimeSinceService
+
+            if timeUntilService <= 0 {
+                return .needsService
+            }
+        }
+
+        return .good
     }
 
     enum CodingKeys: String, CodingKey {
