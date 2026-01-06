@@ -19,6 +19,8 @@
 		A35AEADB2F0C6B38009349A3 /* BikeDatabase.json in Resources */ = {isa = PBXBuildFile; fileRef = A35AEAD82F0C6B38009349A3 /* BikeDatabase.json */; };
 		A35AEADC2F0C6B38009349A3 /* PartTemplates.yaml in Resources */ = {isa = PBXBuildFile; fileRef = A35AEAD92F0C6B38009349A3 /* PartTemplates.yaml */; };
 		A35AEADF2F0C9B19009349A3 /* Yams in Frameworks */ = {isa = PBXBuildFile; productRef = A35AEADE2F0C9B19009349A3 /* Yams */; };
+		A35AEAE12F0CB551009349A3 /* Yams in Frameworks */ = {isa = PBXBuildFile; productRef = A35AEAE02F0CB551009349A3 /* Yams */; };
+		A35AEAE32F0CB558009349A3 /* Yams in Frameworks */ = {isa = PBXBuildFile; productRef = A35AEAE22F0CB558009349A3 /* Yams */; };
 		A365B0012B44D34900FF712E /* bikecheckApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A365B0002B44D34900FF712E /* bikecheckApp.swift */; };
 		A365B0082B44D34A00FF712E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A365B0072B44D34A00FF712E /* Preview Assets.xcassets */; };
 		A365B00D2B44D34A00FF712E /* bikecheck.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A365B00B2B44D34A00FF712E /* bikecheck.xcdatamodeld */; };
@@ -148,6 +150,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A35AEAE32F0CB558009349A3 /* Yams in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -155,6 +158,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A35AEAE12F0CB551009349A3 /* Yams in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1014,6 +1018,16 @@
 
 /* Begin XCSwiftPackageProductDependency section */
 		A35AEADE2F0C9B19009349A3 /* Yams */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A35AEAD12F0C6A38009349A3 /* XCRemoteSwiftPackageReference "Yams" */;
+			productName = Yams;
+		};
+		A35AEAE02F0CB551009349A3 /* Yams */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A35AEAD12F0C6A38009349A3 /* XCRemoteSwiftPackageReference "Yams" */;
+			productName = Yams;
+		};
+		A35AEAE22F0CB558009349A3 /* Yams */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = A35AEAD12F0C6A38009349A3 /* XCRemoteSwiftPackageReference "Yams" */;
 			productName = Yams;

@@ -324,9 +324,9 @@ class StravaService: ObservableObject {
                 createActivity(id: 3333333, gearId: "b1", speed: 9.03, time: 2765, name: "Test Activity 3", daysAgo: 6, in: managedObjectContext)
                 
                 // Create service intervals for the first bike
-                createServiceInterval(part: "chain", interval: 5, bike: demoBikes[0], in: managedObjectContext)
-                createServiceInterval(part: "Fork Lowers", interval: 10, bike: demoBikes[0], in: managedObjectContext)
-                createServiceInterval(part: "Shock", interval: 15, bike: demoBikes[0], in: managedObjectContext)
+                createServiceIntervalFromTemplate(templateId: "chain", bike: demoBikes[0], in: managedObjectContext)
+                createServiceIntervalFromTemplate(templateId: "fork_lowers", bike: demoBikes[0], in: managedObjectContext)
+                createServiceIntervalFromTemplate(templateId: "rear_shock", bike: demoBikes[0], in: managedObjectContext)
                 
                 // Save changes
                 do {
