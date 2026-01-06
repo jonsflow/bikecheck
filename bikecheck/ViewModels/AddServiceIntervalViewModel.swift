@@ -13,6 +13,7 @@ class AddServiceIntervalViewModel: ObservableObject {
     @Published var resetConfirmationDialog = false
     @Published var showUnsavedChangesAlert = false
     @Published var lastServiceDate: Date = Date()
+    @Published var selectedTemplate: PartTemplate?
     
     // Original values for tracking changes
     private var originalPart = ""
@@ -141,6 +142,19 @@ class AddServiceIntervalViewModel: ObservableObject {
         } else {
             completion(true) // Allow dismissal
         }
+    }
+
+    func applyTemplate() {
+        guard let template = selectedTemplate else {
+            part = ""
+            intervalTime = ""
+            notify = false
+            return
+        }
+
+        part = template.name
+        intervalTime = String(format: "%.0f", template.defaultIntervalHours)
+        notify = template.notifyDefault
     }
 }
 
