@@ -145,13 +145,15 @@ class MockPersistenceController {
         activity2.distance = 40000.0
         activity2.averageSpeed = 5.5
         
-        // Create test service intervals
-        let serviceInterval = NSEntityDescription.insertNewObject(forEntityName: "ServiceInterval", into: context) as! ServiceInterval
-        serviceInterval.part = "Chain"
-        serviceInterval.lastServiceDate = Date()
-        serviceInterval.intervalTime = 10
-        serviceInterval.notify = true
-        serviceInterval.bike = bike1
+        // Create test service intervals using templates
+        if let chainTemplate = PartTemplateService.shared.getTemplate(id: "chain") {
+            let serviceInterval = NSEntityDescription.insertNewObject(forEntityName: "ServiceInterval", into: context) as! ServiceInterval
+            serviceInterval.part = chainTemplate.name
+            serviceInterval.lastServiceDate = Date()
+            serviceInterval.intervalTime = chainTemplate.defaultIntervalHours
+            serviceInterval.notify = chainTemplate.notifyDefault
+            serviceInterval.bike = bike1
+        }
         
         // Save the context
         saveContext()
