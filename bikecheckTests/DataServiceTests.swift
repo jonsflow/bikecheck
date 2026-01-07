@@ -111,9 +111,9 @@ class DataServiceTests: XCTestCase {
             
             // Check each interval has required properties
             let parts = intervals.map { $0.part }
-            XCTAssertTrue(parts.contains("chain"), "Should create a chain service interval")
+            XCTAssertTrue(parts.contains("Chain"), "Should create a chain service interval")
             XCTAssertTrue(parts.contains("Fork Lowers"), "Should create a fork lowers service interval")
-            XCTAssertTrue(parts.contains("Shock"), "Should create a shock service interval")
+            XCTAssertTrue(parts.contains("Rear Shock"), "Should create a rear shock service interval")
         } catch {
             XCTFail("Failed to fetch service intervals: \(error)")
         }
