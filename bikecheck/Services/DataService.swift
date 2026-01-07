@@ -58,27 +58,23 @@ class DataService {
     }
     
     func createDefaultServiceIntervals(for bike: Bike, lastServiceDate: Date = Date()) {
-        let newServInt1 = ServiceInterval(context: context)
-        let newServInt2 = ServiceInterval(context: context)
-        let newServInt3 = ServiceInterval(context: context)
+        let templateService = PartTemplateService.shared
 
-        newServInt2.intervalTime = 5
-        newServInt2.lastServiceDate = lastServiceDate
-        newServInt2.bike = bike
-        newServInt2.part = "chain"
-        newServInt2.notify = true
+        // Use templates for common MTB components
+        let defaultTemplateIds = ["chain", "fork_lowers", "rear_shock"]
 
-        newServInt3.intervalTime = 10
-        newServInt3.lastServiceDate = lastServiceDate
-        newServInt3.bike = bike
-        newServInt3.part = "Fork Lowers"
-        newServInt3.notify = true
+        for templateId in defaultTemplateIds {
+            guard let template = templateService.getTemplate(id: templateId) else {
+                continue
+            }
 
-        newServInt1.intervalTime = 15
-        newServInt1.lastServiceDate = lastServiceDate
-        newServInt1.bike = bike
-        newServInt1.part = "Shock"
-        newServInt1.notify = true
+            let newInterval = ServiceInterval(context: context)
+            newInterval.part = template.name
+            newInterval.intervalTime = template.defaultIntervalHours
+            newInterval.lastServiceDate = lastServiceDate
+            newInterval.bike = bike
+            newInterval.notify = template.notifyDefault
+        }
 
         saveContext()
     }

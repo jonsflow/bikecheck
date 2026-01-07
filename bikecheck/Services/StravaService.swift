@@ -324,9 +324,9 @@ class StravaService: ObservableObject {
                 createActivity(id: 3333333, gearId: "b1", speed: 9.03, time: 2765, name: "Test Activity 3", daysAgo: 6, in: managedObjectContext)
                 
                 // Create service intervals for the first bike
-                createServiceInterval(part: "chain", interval: 5, bike: demoBikes[0], in: managedObjectContext)
-                createServiceInterval(part: "Fork Lowers", interval: 10, bike: demoBikes[0], in: managedObjectContext)
-                createServiceInterval(part: "Shock", interval: 15, bike: demoBikes[0], in: managedObjectContext)
+                createServiceIntervalFromTemplate(templateId: "chain", bike: demoBikes[0], in: managedObjectContext)
+                createServiceIntervalFromTemplate(templateId: "fork_lowers", bike: demoBikes[0], in: managedObjectContext)
+                createServiceIntervalFromTemplate(templateId: "rear_shock", bike: demoBikes[0], in: managedObjectContext)
                 
                 // Save changes
                 do {
@@ -483,26 +483,26 @@ class StravaService: ObservableObject {
         // Bike 3 (Checkpoint) - 3 hours total (good scenarios)
         createActivity(id: 6666666, gearId: "b3", speed: 25.0, time: 10800, name: "Road Ride", daysAgo: 1, in: viewContext) // 3 hours
         
-        // Service intervals using default intervals (chain: 5h, Fork Lowers: 10h, Shock: 15h):
-        // Bike 1 (14 hours) - Mix of overdue and due soon
-        createServiceInterval(part: "chain", interval: 5, bike: bikes[0], in: viewContext) // 14/5 = overdue
-        createServiceInterval(part: "Fork Lowers", interval: 10, bike: bikes[0], in: viewContext) // 14/10 = overdue
-        createServiceInterval(part: "Shock", interval: 15, bike: bikes[0], in: viewContext) // 14/15 = due soon
-        
-        // Bike 2 (8 hours) - Due soon scenarios  
-        createServiceInterval(part: "chain", interval: 5, bike: bikes[1], in: viewContext) // 8/5 = overdue
-        createServiceInterval(part: "Fork Lowers", interval: 10, bike: bikes[1], in: viewContext) // 8/10 = good
-        createServiceInterval(part: "Shock", interval: 15, bike: bikes[1], in: viewContext) // 8/15 = good
-        
+        // Service intervals using templates (chain: 50h, Fork Lowers: 50h, Rear Shock: 50h):
+        // Bike 1 (14 hours) - All good with new intervals
+        createServiceIntervalFromTemplate(templateId: "chain", bike: bikes[0], in: viewContext)
+        createServiceIntervalFromTemplate(templateId: "fork_lowers", bike: bikes[0], in: viewContext)
+        createServiceIntervalFromTemplate(templateId: "rear_shock", bike: bikes[0], in: viewContext)
+
+        // Bike 2 (8 hours) - All good with new intervals
+        createServiceIntervalFromTemplate(templateId: "chain", bike: bikes[1], in: viewContext)
+        createServiceIntervalFromTemplate(templateId: "fork_lowers", bike: bikes[1], in: viewContext)
+        createServiceIntervalFromTemplate(templateId: "rear_shock", bike: bikes[1], in: viewContext)
+
         // Bike 3 (3 hours) - All good scenarios
-        createServiceInterval(part: "chain", interval: 5, bike: bikes[2], in: viewContext) // 3/5 = good
-        createServiceInterval(part: "Fork Lowers", interval: 10, bike: bikes[2], in: viewContext) // 3/10 = good
-        createServiceInterval(part: "Shock", interval: 15, bike: bikes[2], in: viewContext) // 3/15 = good
-        
+        createServiceIntervalFromTemplate(templateId: "chain", bike: bikes[2], in: viewContext)
+        createServiceIntervalFromTemplate(templateId: "fork_lowers", bike: bikes[2], in: viewContext)
+        createServiceIntervalFromTemplate(templateId: "rear_shock", bike: bikes[2], in: viewContext)
+
         // Bike 4 (no activities) - Fresh bike scenarios
-        createServiceInterval(part: "chain", interval: 5, bike: bikes[3], in: viewContext) // 0/5 = good
-        createServiceInterval(part: "Fork Lowers", interval: 10, bike: bikes[3], in: viewContext) // 0/10 = good
-        createServiceInterval(part: "Shock", interval: 15, bike: bikes[3], in: viewContext) // 0/15 = good
+        createServiceIntervalFromTemplate(templateId: "chain", bike: bikes[3], in: viewContext)
+        createServiceIntervalFromTemplate(templateId: "fork_lowers", bike: bikes[3], in: viewContext)
+        createServiceIntervalFromTemplate(templateId: "rear_shock", bike: bikes[3], in: viewContext)
         
         // Set relationships
         newAthlete.bikes = NSSet(array: bikes) as! Set<Bike>
@@ -611,13 +611,18 @@ class StravaService: ObservableObject {
         activity.type = "Ride"
     }
     
-    private func createServiceInterval(part: String, interval: Int, bike: Bike, in context: NSManagedObjectContext) {
+    private func createServiceIntervalFromTemplate(templateId: String, bike: Bike, in context: NSManagedObjectContext) {
+        guard let template = PartTemplateService.shared.getTemplate(id: templateId) else {
+            print("Warning: Template '\(templateId)' not found")
+            return
+        }
+
         let serviceInterval = ServiceInterval(context: context)
-        serviceInterval.part = part
-        serviceInterval.intervalTime = Double(interval)
+        serviceInterval.part = template.name
+        serviceInterval.intervalTime = template.defaultIntervalHours
         serviceInterval.lastServiceDate = Date()
         serviceInterval.bike = bike
-        serviceInterval.notify = true
+        serviceInterval.notify = template.notifyDefault
     }
     
     class AuthenticationSession: NSObject, ASWebAuthenticationPresentationContextProviding {

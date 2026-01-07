@@ -1,0 +1,161 @@
+# Part Templates Configuration
+# Version 1.0
+version: "1.0"
+
+# Categories for organizing parts
+categories:
+  - id: drivetrain
+    name: Drivetrain
+    icon: gearshape.2
+
+  - id: suspension
+    name: Suspension
+    icon: bolt.horizontal
+
+  - id: wheels
+    name: Wheels & Hubs
+    icon: circle.dotted
+
+  - id: brakes
+    name: Brakes
+    icon: brake.signal
+
+  - id: cockpit
+    name: Cockpit
+    icon: arrow.up.and.down
+
+# Part Templates
+# default_interval_hours: Hours of ride time between services
+part_templates:
+  # Drivetrain Components
+  - id: chain
+    name: Chain
+    category: drivetrain
+    default_interval_hours: 50
+    icon: link
+    description: "Chain wear and lubrication"
+    notify_default: true
+
+  - id: cassette
+    name: Cassette
+    category: drivetrain
+    default_interval_hours: 150
+    icon: gearshape
+    description: "Cassette replacement"
+    notify_default: true
+
+  - id: chainrings
+    name: Chainrings
+    category: drivetrain
+    default_interval_hours: 200
+    icon: gearshape.2
+    description: "Chainring replacement"
+    notify_default: true
+
+  - id: bottom_bracket
+    name: Bottom Bracket
+    category: drivetrain
+    default_interval_hours: 100
+    icon: circle.hexagongrid
+    description: "Bottom bracket service or replacement"
+    notify_default: true
+
+  # Suspension Components
+  - id: fork_lowers
+    name: Fork Lowers
+    category: suspension
+    default_interval_hours: 50
+    icon: tuningfork
+    description: "Lower leg service (dust seals, oil)"
+    notify_default: true
+
+  - id: fork_air_spring
+    name: Fork Air Spring
+    category: suspension
+    default_interval_hours: 100
+    icon: tuningfork
+    description: "Full air spring service"
+    notify_default: true
+
+  - id: fork_damper
+    name: Fork Damper
+    category: suspension
+    default_interval_hours: 200
+    icon: tuningfork
+    description: "Fork damper service"
+    notify_default: false
+
+  - id: rear_shock
+    name: Rear Shock
+    category: suspension
+    default_interval_hours: 50
+    icon: bolt
+    description: "Shock service (air can, damper)"
+    notify_default: true
+
+  - id: dropper_post
+    name: Dropper Post
+    category: cockpit
+    default_interval_hours: 100
+    icon: arrow.up.and.down
+    description: "Dropper post service"
+    notify_default: true
+
+  # Wheels & Hubs
+  - id: hub_front
+    name: Front Hub
+    category: wheels
+    default_interval_hours: 150
+    icon: circle.dotted
+    description: "Front hub service"
+    notify_default: true
+
+  - id: hub_rear
+    name: Rear Hub
+    category: wheels
+    default_interval_hours: 150
+    icon: circle.dotted
+    description: "Rear hub service"
+    notify_default: true
+
+  - id: wheels
+    name: Wheel Truing
+    category: wheels
+    default_interval_hours: 100
+    icon: circle
+    description: "Wheel truing and spoke tension"
+    notify_default: false
+
+  # Brakes
+  - id: brake_pads
+    name: Brake Pads
+    category: brakes
+    default_interval_hours: 75
+    icon: brake.signal
+    description: "Brake pad replacement"
+    notify_default: true
+
+  - id: brake_fluid
+    name: Brake Fluid
+    category: brakes
+    default_interval_hours: 200
+    icon: drop
+    description: "Hydraulic brake bleed"
+    notify_default: true
+
+  # Cockpit
+  - id: headset
+    name: Headset
+    category: cockpit
+    default_interval_hours: 150
+    icon: circle.hexagongrid
+    description: "Headset service"
+    notify_default: false
+
+  - id: grips_tape
+    name: Grips/Tape
+    category: cockpit
+    default_interval_hours: 100
+    icon: hand.raised
+    description: "Grip or handlebar tape replacement"
+    notify_default: false

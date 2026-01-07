@@ -14,6 +14,13 @@
 		A31DDB4E2DFCEB2600E16E4B /* TourStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = A31DDB4D2DFCEB2600E16E4B /* TourStep.swift */; };
 		A31DDB502DFCEB3800E16E4B /* OnboardingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A31DDB4F2DFCEB3800E16E4B /* OnboardingViewModel.swift */; };
 		A31DDB522DFCEB4700E16E4B /* OnboardingTourOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = A31DDB512DFCEB4700E16E4B /* OnboardingTourOverlay.swift */; };
+		A35AEAD52F0C6B0C009349A3 /* PartTemplateModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35AEAD42F0C6B0C009349A3 /* PartTemplateModels.swift */; };
+		A35AEAD72F0C6B1A009349A3 /* PartTemplateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35AEAD62F0C6B1A009349A3 /* PartTemplateService.swift */; };
+		A35AEADB2F0C6B38009349A3 /* BikeDatabase.json in Resources */ = {isa = PBXBuildFile; fileRef = A35AEAD82F0C6B38009349A3 /* BikeDatabase.json */; };
+		A35AEADC2F0C6B38009349A3 /* PartTemplates.yaml in Resources */ = {isa = PBXBuildFile; fileRef = A35AEAD92F0C6B38009349A3 /* PartTemplates.yaml */; };
+		A35AEADF2F0C9B19009349A3 /* Yams in Frameworks */ = {isa = PBXBuildFile; productRef = A35AEADE2F0C9B19009349A3 /* Yams */; };
+		A35AEAE12F0CB551009349A3 /* Yams in Frameworks */ = {isa = PBXBuildFile; productRef = A35AEAE02F0CB551009349A3 /* Yams */; };
+		A35AEAE32F0CB558009349A3 /* Yams in Frameworks */ = {isa = PBXBuildFile; productRef = A35AEAE22F0CB558009349A3 /* Yams */; };
 		A365B0012B44D34900FF712E /* bikecheckApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A365B0002B44D34900FF712E /* bikecheckApp.swift */; };
 		A365B0082B44D34A00FF712E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A365B0072B44D34A00FF712E /* Preview Assets.xcassets */; };
 		A365B00D2B44D34A00FF712E /* bikecheck.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A365B00B2B44D34A00FF712E /* bikecheck.xcdatamodeld */; };
@@ -78,6 +85,10 @@
 		A31DDB4D2DFCEB2600E16E4B /* TourStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TourStep.swift; sourceTree = "<group>"; };
 		A31DDB4F2DFCEB3800E16E4B /* OnboardingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewModel.swift; sourceTree = "<group>"; };
 		A31DDB512DFCEB4700E16E4B /* OnboardingTourOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingTourOverlay.swift; sourceTree = "<group>"; };
+		A35AEAD42F0C6B0C009349A3 /* PartTemplateModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartTemplateModels.swift; sourceTree = "<group>"; };
+		A35AEAD62F0C6B1A009349A3 /* PartTemplateService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartTemplateService.swift; sourceTree = "<group>"; };
+		A35AEAD82F0C6B38009349A3 /* BikeDatabase.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = BikeDatabase.json; sourceTree = "<group>"; };
+		A35AEAD92F0C6B38009349A3 /* PartTemplates.yaml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = PartTemplates.yaml; sourceTree = "<group>"; };
 		A365AFFD2B44D34900FF712E /* bikecheck.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = bikecheck.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A365B0002B44D34900FF712E /* bikecheckApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = bikecheckApp.swift; sourceTree = "<group>"; };
 		A365B0042B44D34A00FF712E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -130,6 +141,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A3B565C22E6BF9D800C438BD /* GoogleMobileAds in Frameworks */,
+				A35AEADF2F0C9B19009349A3 /* Yams in Frameworks */,
 				A365B03A2B44D41000FF712E /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -138,6 +150,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A35AEAE32F0CB558009349A3 /* Yams in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -145,12 +158,29 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A35AEAE12F0CB551009349A3 /* Yams in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A35AEADA2F0C6B38009349A3 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A35AEAD82F0C6B38009349A3 /* BikeDatabase.json */,
+				A35AEAD92F0C6B38009349A3 /* PartTemplates.yaml */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		A35AEADD2F0C9B19009349A3 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		A365AFF42B44D34900FF712E = {
 			isa = PBXGroup;
 			children = (
@@ -159,6 +189,7 @@
 				A365AFFF2B44D34900FF712E /* bikecheck */,
 				A365B0152B44D34A00FF712E /* bikecheckTests */,
 				A365B01F2B44D34A00FF712E /* bikecheckUITests */,
+				A35AEADD2F0C9B19009349A3 /* Frameworks */,
 				A365AFFE2B44D34900FF712E /* Products */,
 			);
 			sourceTree = "<group>";
@@ -176,6 +207,7 @@
 		A365AFFF2B44D34900FF712E /* bikecheck */ = {
 			isa = PBXGroup;
 			children = (
+				A35AEADA2F0C6B38009349A3 /* Resources */,
 				A365B03B2B44D93700FF712E /* Info.plist */,
 				A365B0002B44D34900FF712E /* bikecheckApp.swift */,
 				A3AB08302DA1EE1300935BB8 /* Services */,
@@ -221,6 +253,7 @@
 		A365B02F2B44D36100FF712E /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				A35AEAD42F0C6B0C009349A3 /* PartTemplateModels.swift */,
 				A31DDB4D2DFCEB2600E16E4B /* TourStep.swift */,
 				A31DDB492DFCDA5000E16E4B /* OnboardingStep.swift */,
 				A3E742932B46FDEE00C5191F /* Activity.swift */,
@@ -235,6 +268,7 @@
 		A3AB08302DA1EE1300935BB8 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				A35AEAD62F0C6B1A009349A3 /* PartTemplateService.swift */,
 				A30220882DBDD56900C3C195 /* BackgroundTaskManager.swift */,
 				A3AB082C2DA1EE1300935BB8 /* DataService.swift */,
 				A3AB082D2DA1EE1300935BB8 /* NotificationService.swift */,
@@ -307,6 +341,7 @@
 			packageProductDependencies = (
 				A365B0392B44D41000FF712E /* Alamofire */,
 				A3B565C12E6BF9D800C438BD /* GoogleMobileAds */,
+				A35AEADE2F0C9B19009349A3 /* Yams */,
 			);
 			productName = bikecheck;
 			productReference = A365AFFD2B44D34900FF712E /* bikecheck.app */;
@@ -383,6 +418,7 @@
 			packageReferences = (
 				A365B0382B44D41000FF712E /* XCRemoteSwiftPackageReference "Alamofire" */,
 				A3B565C02E6BF9D800C438BD /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
+				A35AEAD12F0C6A38009349A3 /* XCRemoteSwiftPackageReference "Yams" */,
 			);
 			productRefGroup = A365AFFE2B44D34900FF712E /* Products */;
 			projectDirPath = "";
@@ -400,6 +436,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A35AEADB2F0C6B38009349A3 /* BikeDatabase.json in Resources */,
+				A35AEADC2F0C6B38009349A3 /* PartTemplates.yaml in Resources */,
 				A3C2EC792C237B7500BA2BC8 /* Assets.xcassets in Resources */,
 				A365B0082B44D34A00FF712E /* Preview Assets.xcassets in Resources */,
 			);
@@ -440,6 +478,7 @@
 				A3AB08472DA1EE1300935BB8 /* LoginViewModel.swift in Sources */,
 				A3AB08482DA1EE1300935BB8 /* DataService.swift in Sources */,
 				A3AB08492DA1EE1300935BB8 /* BikeDetailView.swift in Sources */,
+				A35AEAD52F0C6B0C009349A3 /* PartTemplateModels.swift in Sources */,
 				A3AB084A2DA1EE1300935BB8 /* ActivitiesViewModel.swift in Sources */,
 				A3AB084B2DA1EE1300935BB8 /* BikeDetailViewModel.swift in Sources */,
 				A3AB084C2DA1EE1300935BB8 /* HomeView.swift in Sources */,
@@ -457,6 +496,7 @@
 				A3E742962B46FDEE00C5191F /* Activity.swift in Sources */,
 				A3C3E63D2E594D6D00083A7B /* AdContainerView.swift in Sources */,
 				A365B00D2B44D34A00FF712E /* bikecheck.xcdatamodeld in Sources */,
+				A35AEAD72F0C6B1A009349A3 /* PartTemplateService.swift in Sources */,
 				A3E742952B46FDEE00C5191F /* Athlete.swift in Sources */,
 				A31DDB4E2DFCEB2600E16E4B /* TourStep.swift in Sources */,
 			);
@@ -950,6 +990,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		A35AEAD12F0C6A38009349A3 /* XCRemoteSwiftPackageReference "Yams" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/jpsim/Yams.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.2.0;
+			};
+		};
 		A365B0382B44D41000FF712E /* XCRemoteSwiftPackageReference "Alamofire" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
@@ -969,6 +1017,21 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		A35AEADE2F0C9B19009349A3 /* Yams */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A35AEAD12F0C6A38009349A3 /* XCRemoteSwiftPackageReference "Yams" */;
+			productName = Yams;
+		};
+		A35AEAE02F0CB551009349A3 /* Yams */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A35AEAD12F0C6A38009349A3 /* XCRemoteSwiftPackageReference "Yams" */;
+			productName = Yams;
+		};
+		A35AEAE22F0CB558009349A3 /* Yams */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A35AEAD12F0C6A38009349A3 /* XCRemoteSwiftPackageReference "Yams" */;
+			productName = Yams;
+		};
 		A365B0392B44D41000FF712E /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = A365B0382B44D41000FF712E /* XCRemoteSwiftPackageReference "Alamofire" */;

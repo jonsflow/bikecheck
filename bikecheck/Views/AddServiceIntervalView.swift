@@ -19,12 +19,34 @@ struct AddServiceIntervalView: View {
                     }
                     .accessibilityIdentifier("BikePicker")
 
-                    HStack {
-                        Text("Part:")
-                        Spacer()
-                        TextField("Part", text: $viewModel.part)
-                            .multilineTextAlignment(.trailing)
-                            .accessibilityIdentifier("PartTextField")
+                    Picker("Part", selection: $viewModel.selectedTemplate) {
+                        Text("Custom...").tag(nil as PartTemplate?)
+
+                        ForEach(PartTemplateService.shared.getAllCategories()) { category in
+                            Section(header: Text(category.name)) {
+                                ForEach(PartTemplateService.shared.getTemplatesByCategory(category.id)) { template in
+                                    HStack {
+                                        Image(systemName: template.icon)
+                                        Text(template.name)
+                                    }
+                                    .tag(template as PartTemplate?)
+                                }
+                            }
+                        }
+                    }
+                    .accessibilityIdentifier("PartTemplatePicker")
+                    .onChange(of: viewModel.selectedTemplate) { _ in
+                        viewModel.applyTemplate()
+                    }
+
+                    if viewModel.selectedTemplate == nil {
+                        HStack {
+                            Text("Custom Part Name:")
+                            Spacer()
+                            TextField("Part", text: $viewModel.part)
+                                .multilineTextAlignment(.trailing)
+                                .accessibilityIdentifier("PartTextField")
+                        }
                     }
 
                     HStack {
