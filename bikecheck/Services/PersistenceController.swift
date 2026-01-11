@@ -2,25 +2,27 @@ import CoreData
 
 class PersistenceController {
     static let shared = PersistenceController()
-    
-    let container: NSPersistentContainer
-    
+
+    let container: NSPersistentCloudKitContainer
+
     init(inMemory: Bool = false) {
-        container = NSPersistentContainer(name: "bikecheck")
+        container = NSPersistentCloudKitContainer(name: "bikecheck")
 
         if inMemory {
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
+            // Disable CloudKit for in-memory stores (testing)
+            container.persistentStoreDescriptions.first!.cloudKitContainerOptions = nil
+        } else {
+            // Enable automatic lightweight migration
+            container.persistentStoreDescriptions.first?.setOption(
+                true as NSNumber,
+                forKey: NSMigratePersistentStoresAutomaticallyOption
+            )
+            container.persistentStoreDescriptions.first?.setOption(
+                true as NSNumber,
+                forKey: NSInferMappingModelAutomaticallyOption
+            )
         }
-
-        // Enable automatic lightweight migration
-        container.persistentStoreDescriptions.first?.setOption(
-            true as NSNumber,
-            forKey: NSMigratePersistentStoresAutomaticallyOption
-        )
-        container.persistentStoreDescriptions.first?.setOption(
-            true as NSNumber,
-            forKey: NSInferMappingModelAutomaticallyOption
-        )
 
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error as NSError? {

@@ -2,9 +2,10 @@
 
 > Developer and AI Assistant Reference
 
-## Current Development State (as of January 3, 2026)
+## Current Development State (as of January 10, 2026)
 
 ### Recent Major Features Completed
+- **iCloud CloudKit Sync** (January 2026): Automatic data sync across devices and persistence after app reinstall
 - **Bike Status Indicator** (January 2026): Dynamic bike status based on service interval health (Good/Needs Service)
 - **Notification Throttling** (January 2026): 7-day throttle window prevents notification spam for overdue service intervals
 - **Core Data Migration** (January 2026): Implemented lightweight migration as proof of concept for future schema changes
@@ -16,21 +17,22 @@
 - **Background Tasks**: Service checking and Strava data syncing via BackgroundTaskManager
 
 ### Active Features
-1. **Strava Integration** - OAuth flow and data sync for bikes and activities
-2. **Service Interval Tracking** - CRUD operations with smart notifications
-3. **Bike Management** - Import from Strava and manual management with status indicators
-4. **Bike Status System** - Real-time status calculation based on service interval health
-5. **Activity Tracking** - Automatic sync with ride time calculations
-6. **Onboarding Experience** - Single-step flow with test data tour
-7. **Background Sync** - BackgroundTasks framework for iOS
-8. **Notification System** - Local notifications with 7-day throttling
-9. **UI Testing Suite** - Comprehensive test coverage with mock data injection
+1. **iCloud CloudKit Sync** - Automatic multi-device sync and data persistence after reinstall
+2. **Strava Integration** - OAuth flow and data sync for bikes and activities
+3. **Service Interval Tracking** - CRUD operations with smart notifications
+4. **Bike Management** - Import from Strava and manual management with status indicators
+5. **Bike Status System** - Real-time status calculation based on service interval health
+6. **Activity Tracking** - Automatic sync with ride time calculations
+7. **Onboarding Experience** - Single-step flow with test data tour
+8. **Background Sync** - BackgroundTasks framework for iOS
+9. **Notification System** - Local notifications with 7-day throttling
+10. **UI Testing Suite** - Comprehensive test coverage with mock data injection
 
 ## Architecture
 
 ### Pattern: MVVM + Singleton Services
 - **MVVM** - SwiftUI views with dedicated ViewModels for business logic
-- **Core Data** - Persistence layer with automatic lightweight migration enabled
+- **Core Data with CloudKit** - NSPersistentCloudKitContainer for automatic iCloud sync and persistence
 - **Singleton Services** - StravaService, DataService, NotificationService, PersistenceController
 - **Background Tasks** - BackgroundTaskManager handles service checking and data synchronization
 - **Environment Objects** - Services and ViewModels injected via SwiftUI environment
@@ -136,11 +138,42 @@ This approach ensures seamless app updates when schema changes are required.
 - Saves context with error handling
 
 ### PersistenceController (Singleton)
-- Manages Core Data stack (NSPersistentContainer)
+- Manages Core Data stack with **NSPersistentCloudKitContainer**
+- **CloudKit Integration**: Automatic sync to iCloud for multi-device support and data persistence
 - Automatic lightweight migration enabled
-- In-memory store option for testing
+- In-memory store option for testing (CloudKit disabled for tests)
 - Automatic merge of changes from parent context
 - Merge policy: NSMergeByPropertyObjectTrumpMergePolicy
+
+## iCloud CloudKit Sync
+
+BikeCheck uses `NSPersistentCloudKitContainer` for automatic data synchronization and persistence.
+
+### Features
+- **Automatic Sync**: All Core Data changes automatically sync to iCloud
+- **Multi-Device**: Same data appears on all user's devices (iPhone, iPad, Mac)
+- **Reinstall Persistence**: User data automatically restored when app is reinstalled
+- **Offline Support**: Local Core Data cache works offline, syncs when online
+- **Conflict Resolution**: CloudKit handles merge conflicts automatically
+
+### Implementation Details
+- **Container**: `NSPersistentCloudKitContainer` (PersistenceController.swift:6-9)
+- **Entitlements**: `bikecheck.entitlements` with iCloud and CloudKit capabilities
+- **Container ID**: `iCloud.$(CFBundleIdentifier)` (automatic based on bundle ID)
+- **Testing**: CloudKit disabled for in-memory stores to prevent test data sync
+
+### Setup Requirements
+See `CLOUDKIT_SETUP.md` for complete Xcode configuration instructions:
+1. Add entitlements file to build settings
+2. Enable iCloud capability in target
+3. Configure CloudKit container
+4. Test with multiple devices/simulators
+
+### Privacy & Storage
+- Data stored in user's personal iCloud account
+- 10GB database storage per user (generous free tier)
+- Data not accessible by developers or other users
+- Automatic encrypted transport and storage
 
 ## ViewModels
 
