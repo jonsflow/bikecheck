@@ -1,0 +1,23 @@
+// settings.gradle
+
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        // Add any other repositories like JitPack if you use them
+        // maven { url 'https://www.jitpack.io' }
+    }
+}
+
+rootProject.name = "BikeCheckAndroid" // Or your actual project name
+include ':app' // Or your actual module names
+// include ':yourOtherModule'

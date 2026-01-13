@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/textViewPartName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Part Name"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/primary_text" />
+
+        <TextView
+            android:id="@+id/textViewBikeName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="Bike Name"
+            android:textSize="12sp"
+            android:textColor="@color/secondary_text" />
+
+        <!-- Removed service subtext; part is shown above in bold -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textViewDueLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="DUE IN"
+                android:textAllCaps="true"
+                android:textSize="12sp"
+                android:textColor="@color/secondary_text" />
+
+            <TextView
+                android:id="@+id/textViewDueValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0.0 hrs"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="@color/primary_text" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

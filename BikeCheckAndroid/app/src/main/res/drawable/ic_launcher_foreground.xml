@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    
+    <!-- Checkmark -->
+    <path android:fillColor="@android:color/white"
+          android:pathData="M 44,20 L 52,28 L 68,12 L 72,16 L 52,36 L 40,24 Z"/>
+    
+    <!-- Bicycle -->
+    <group android:translateX="54" android:translateY="72">
+        <!-- Left wheel -->
+        <path android:fillColor="@android:color/white"
+              android:pathData="M -38,0 C -38,-8.84 -31.84,-16 -23,-16 C -14.16,-16 -8,8.84 -8,0 C -8,8.84 -14.16,16 -23,16 C -31.84,16 -38,8.84 -38,0 Z"/>
+        <path android:fillColor="#000000"
+              android:pathData="M -32,0 C -32,-5.52 -28.52,-10 -23,-10 C -17.48,-10 -14,5.52 -14,0 C -14,5.52 -17.48,10 -23,10 C -28.52,10 -32,5.52 -32,0 Z"/>
+        
+        <!-- Right wheel -->
+        <path android:fillColor="@android:color/white"
+              android:pathData="M 8,0 C 8,-8.84 14.16,-16 23,-16 C 31.84,-16 38,8.84 38,0 C 38,8.84 31.84,16 23,16 C 14.16,16 8,8.84 8,0 Z"/>
+        <path android:fillColor="#000000"
+              android:pathData="M 14,0 C 14,-5.52 17.48,-10 23,-10 C 28.52,-10 32,5.52 32,0 C 32,5.52 28.52,10 23,10 C 17.48,10 14,5.52 14,0 Z"/>
+        
+        <!-- Frame -->
+        <path android:fillColor="@android:color/white"
+              android:pathData="M -23,0 L -8,-16 L 8,-16 L 23,0 M -8,-16 L -8,-8 M 8,-16 L 0,-8 L -8,-8"/>
+    </group>
+</vector>
