@@ -33,6 +33,31 @@ class PersistenceController {
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
             self.logger.info("Persistent store loaded: \(storeDescription)")
+
+            // Check if this is first launch by checking for existing data
+            let context = self.container.viewContext
+            let bikeRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "Bike")
+            bikeRequest.fetchLimit = 1
+
+            do {
+                let count = try context.count(for: bikeRequest)
+                if count > 0 {
+                    // Already have local data - no need to wait for CloudKit
+                    self.logger.info("Local data exists - skipping CloudKit wait")
+                    self.hasCompletedInitialImport = true
+                    DispatchQueue.main.async {
+                        StravaService.shared.checkAuthenticationAfterStoreLoad()
+                    }
+                } else {
+                    // No local data - wait for potential CloudKit import (first launch scenario)
+                    self.logger.info("No local data - waiting for CloudKit import")
+                    self.scheduleCloudKitTimeout()
+                }
+            } catch {
+                self.logger.error("Error checking for local data: \(error.localizedDescription)")
+                // On error, proceed with timeout
+                self.scheduleCloudKitTimeout()
+            }
         })
 
         container.viewContext.automaticallyMergesChangesFromParent = true
@@ -60,7 +85,9 @@ class PersistenceController {
                 }
             }
         }
+    }
 
+    private func scheduleCloudKitTimeout() {
         // Timeout fallback: if no CloudKit import completes within 5 seconds, proceed anyway
         // This handles cases where CloudKit is not available (simulator, user not signed in, etc.)
         DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) { [weak self] in
