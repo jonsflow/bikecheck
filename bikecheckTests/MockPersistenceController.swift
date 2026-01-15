@@ -5,10 +5,14 @@ import CoreData
 /// A mock implementation of PersistenceController for testing purposes
 class MockPersistenceController {
     static let shared = MockPersistenceController()
-    
+
     let container: NSPersistentContainer
     var saveWasCalled = false
     var shouldThrowOnSave = false
+
+    var viewContext: NSManagedObjectContext {
+        return container.viewContext
+    }
     
     init() {
         // Explicitly load the current Core Data model to avoid loading multiple versions
@@ -161,13 +165,23 @@ class MockPersistenceController {
 }
 
 // Extension to make the mock compatible with the real PersistenceController API
-extension MockPersistenceController: PersistenceControllerProtocol {}
+extension MockPersistenceController: PersistenceControllerProtocol {
+    func resetAllData() {
+        // For mock, just call reset() which clears all entities
+        reset()
+    }
+}
 
 // Protocol to allow dependency injection with either real or mock controller
-protocol PersistenceControllerProtocol {
-    var container: NSPersistentContainer { get }
+protocol PersistenceControllerProtocol: AnyObject {
     func saveContext()
+    func resetAllData()
+    var viewContext: NSManagedObjectContext { get }
 }
 
 // Make the real PersistenceController conform to the protocol
-extension PersistenceController: PersistenceControllerProtocol {}
+extension PersistenceController: PersistenceControllerProtocol {
+    var viewContext: NSManagedObjectContext {
+        return container.viewContext
+    }
+}

@@ -9,21 +9,22 @@ class BikeCheckUITestCase: XCTestCase {
         app = XCUIApplication()
         app.launchArguments = ["UI_TESTING"]
         app.launch()
-        
-        // Handle onboarding if it appears
+
+        // Wait for loading to complete and login screen to appear
+        XCTAssertTrue(app.buttons["Demo Mode"].waitForExistence(timeout: 10), "Demo Mode button should appear on login screen")
+
+        // Use Demo Mode button to load test data and sign in
+        app.buttons["Demo Mode"].tap()
+
+        // Handle post-login onboarding if it appears
         let onboardingOverlay = app.otherElements.containing(.staticText, identifier: "Welcome to BikeCheck!")
-        if onboardingOverlay.element.waitForExistence(timeout: 3) {
-            // Skip onboarding to get to login screen
+        if onboardingOverlay.element.waitForExistence(timeout: 5) {
+            // Skip onboarding to get to main app
             app.buttons["Skip Tour"].tap()
         }
-        
-        // Use Demo Mode button to load test data and sign in
-        if app.buttons["Demo Mode"].waitForExistence(timeout: 3) {
-            app.buttons["Demo Mode"].tap()
-            
-            // Wait for main app to be visible
-            _ = app.tabBars["Tab Bar"].waitForExistence(timeout: 10)
-        }
+
+        // Wait for main app to be visible
+        XCTAssertTrue(app.tabBars["Tab Bar"].waitForExistence(timeout: 10), "Main app should be visible after demo mode login")
     }
     
     override func tearDown() {

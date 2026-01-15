@@ -41,8 +41,11 @@ struct HomeView: View {
                 .tag(2)
             }
             .onAppear {
-                // Only request notification permission if not in tour mode
-                if !onboardingViewModel.showTour {
+                // Show onboarding for first-time users (after login or demo mode)
+                if !UserDefaults.standard.bool(forKey: "hasCompletedOnboarding") {
+                    onboardingViewModel.startOnboarding()
+                } else {
+                    // Only request notification permission if onboarding is already complete
                     requestNotificationPermission()
                 }
                 fetchStravaData()
@@ -50,6 +53,17 @@ struct HomeView: View {
             .onChange(of: onboardingViewModel.showTour) { showTour in
                 // Request notification permission when tour completes
                 if !showTour {
+                    UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
+                    requestNotificationPermission()
+                }
+            }
+            .onChange(of: onboardingViewModel.showOnboarding) { showOnboarding in
+                if showOnboarding {
+                    // When onboarding starts, switch to Service Intervals tab
+                    selectedTab = 0
+                } else if !onboardingViewModel.showTour {
+                    // Mark onboarding complete if user skips and request notification permission
+                    UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
                     requestNotificationPermission()
                 }
             }
@@ -57,6 +71,11 @@ struct HomeView: View {
                 handleDeepLink(url)
             }
             
+            // Show onboarding overlay on HomeView (post-login)
+            if onboardingViewModel.showOnboarding {
+                OnboardingOverlay(onboardingViewModel: onboardingViewModel)
+            }
+
             if onboardingViewModel.showTour {
                 OnboardingTourOverlay(onboardingViewModel: onboardingViewModel, selectedTab: $selectedTab)
             }

@@ -68,9 +68,6 @@ struct LoginView: View {
                 }
             }
             
-            if onboardingViewModel.showOnboarding {
-                OnboardingOverlay(onboardingViewModel: onboardingViewModel)
-            }
         }
         .onAppear {
             // Clear any test data when showing login screen
@@ -78,19 +75,6 @@ struct LoginView: View {
 
             // Skip onboarding if CloudKit has restored data (user has used app before)
             if hasExistingData() {
-                hasCompletedOnboarding = true
-            } else if !hasCompletedOnboarding {
-                onboardingViewModel.startOnboarding()
-            }
-        }
-        .onChange(of: onboardingViewModel.showOnboarding) { newValue in
-            if !newValue {
-                hasCompletedOnboarding = true
-            }
-        }
-        .onChange(of: onboardingViewModel.showTour) { showTour in
-            if !showTour && hasCompletedOnboarding {
-                // Tour has ended, ensure onboarding is marked complete
                 hasCompletedOnboarding = true
             }
         }

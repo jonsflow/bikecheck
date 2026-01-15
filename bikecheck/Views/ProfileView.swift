@@ -2,6 +2,8 @@ import SwiftUI
 
 struct ProfileView: View {
     @EnvironmentObject var stravaService: StravaService
+    @EnvironmentObject var onboardingViewModel: OnboardingViewModel
+    @Environment(\.dismiss) private var dismiss
     @State private var showLogoutAlert = false
     
     var body: some View {
@@ -31,16 +33,35 @@ struct ProfileView: View {
             VStack(spacing: 12) {
                 Text("Strava Connection")
                     .font(.headline)
-                
+
                 Text("Status: \(connectionStatusText)")
                     .foregroundColor(connectionStatusColor)
-                
+
                 if isDemoMode {
                     Text("Demo Mode Active")
                         .foregroundColor(.orange)
                 }
             }
-            
+
+            // Small, unobtrusive restart tour button
+            Button(action: {
+                restartTour()
+            }) {
+                HStack(spacing: 4) {
+                    Image(systemName: "info.circle")
+                        .font(.caption)
+                    Text("Restart Tour")
+                        .font(.caption)
+                }
+                .foregroundColor(.blue)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 6)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 6)
+                        .stroke(Color.blue.opacity(0.3), lineWidth: 1)
+                )
+            }
+
             Button(action: {
                 showLogoutAlert = true
             }) {
@@ -100,9 +121,20 @@ struct ProfileView: View {
     private func logout() {
         stravaService.logout()
     }
+
+    private func restartTour() {
+        // Reset onboarding state and start the tour
+        UserDefaults.standard.set(false, forKey: "hasCompletedOnboarding")
+        onboardingViewModel.startOnboarding()
+
+        // Dismiss ProfileView to return to HomeView
+        // HomeView will show onboarding overlay on the Service Intervals tab
+        dismiss()
+    }
 }
 
 #Preview {
     ProfileView()
         .environmentObject(StravaService.shared)
+        .environmentObject(OnboardingViewModel())
 }
