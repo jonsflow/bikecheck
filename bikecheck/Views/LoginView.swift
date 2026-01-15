@@ -40,7 +40,6 @@ struct LoginView: View {
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 150, height: 150)
                             .cornerRadius(30)
-                            .shadow(color: .gray, radius: 1, x: 5, y: 5)
                         
                         Button(action: {
                             loginViewModel.authenticate { _ in }
