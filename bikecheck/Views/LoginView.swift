@@ -1,10 +1,25 @@
 import SwiftUI
+import CoreData
 
 struct LoginView: View {
     @EnvironmentObject var stravaService: StravaService
     @EnvironmentObject var loginViewModel: LoginViewModel
     @EnvironmentObject var onboardingViewModel: OnboardingViewModel
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding: Bool = false
+    @Environment(\.managedObjectContext) private var viewContext
+
+    private func hasExistingData() -> Bool {
+        // Check if CloudKit has restored any data (bikes or service intervals exist)
+        let bikeRequest: NSFetchRequest<Bike> = Bike.fetchRequest() as! NSFetchRequest<Bike>
+        bikeRequest.fetchLimit = 1
+
+        do {
+            let count = try viewContext.count(for: bikeRequest)
+            return count > 0
+        } catch {
+            return false
+        }
+    }
     
     var body: some View {
         ZStack {
@@ -61,8 +76,11 @@ struct LoginView: View {
         .onAppear {
             // Clear any test data when showing login screen
             onboardingViewModel.clearTestDataIfNeeded()
-            
-            if !hasCompletedOnboarding {
+
+            // Skip onboarding if CloudKit has restored data (user has used app before)
+            if hasExistingData() {
+                hasCompletedOnboarding = true
+            } else if !hasCompletedOnboarding {
                 onboardingViewModel.startOnboarding()
             }
         }

@@ -1,9 +1,13 @@
 import CoreData
+import os.log
 
 class PersistenceController {
     static let shared = PersistenceController()
 
     let container: NSPersistentCloudKitContainer
+    private let logger = Logger(subsystem: "com.bikecheck", category: "CloudKit")
+
+    private var hasCompletedInitialImport = false
 
     init(inMemory: Bool = false) {
         container = NSPersistentCloudKitContainer(name: "bikecheck")
@@ -28,10 +32,45 @@ class PersistenceController {
             if let error = error as NSError? {
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
+            self.logger.info("Persistent store loaded: \(storeDescription)")
         })
 
         container.viewContext.automaticallyMergesChangesFromParent = true
         container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+
+        // Listen for CloudKit sync notifications
+        NotificationCenter.default.addObserver(
+            forName: NSPersistentCloudKitContainer.eventChangedNotification,
+            object: container,
+            queue: .main
+        ) { [weak self] notification in
+            if let event = notification.userInfo?[NSPersistentCloudKitContainer.eventNotificationUserInfoKey] as? NSPersistentCloudKitContainer.Event {
+                self?.logger.info("CloudKit event: \(event.type.rawValue) - succeeded: \(event.succeeded) - endDate: \(String(describing: event.endDate))")
+                if let error = event.error {
+                    self?.logger.error("CloudKit error: \(error.localizedDescription)")
+                }
+
+                // Wait for first COMPLETED import event (endDate != nil means finished)
+                if event.type == .import && event.endDate != nil && self?.hasCompletedInitialImport == false {
+                    self?.hasCompletedInitialImport = true
+                    self?.logger.info("CloudKit import completed - checking auth")
+                    DispatchQueue.main.async {
+                        StravaService.shared.checkAuthenticationAfterStoreLoad()
+                    }
+                }
+            }
+        }
+
+        // Timeout fallback: if no CloudKit import completes within 5 seconds, proceed anyway
+        // This handles cases where CloudKit is not available (simulator, user not signed in, etc.)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) { [weak self] in
+            guard let self = self else { return }
+            if !self.hasCompletedInitialImport {
+                self.hasCompletedInitialImport = true
+                self.logger.info("CloudKit import timeout - proceeding to check auth")
+                StravaService.shared.checkAuthenticationAfterStoreLoad()
+            }
+        }
     }
     
     func saveContext() {

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A30145872F15E168006C0E03 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A30145862F15E168006C0E03 /* LoadingView.swift */; };
 		A30220892DBDD56900C3C195 /* BackgroundTaskManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A30220882DBDD56900C3C195 /* BackgroundTaskManager.swift */; };
 		A31DDB482DFCDA4300E16E4B /* OnboardingOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = A31DDB472DFCDA4300E16E4B /* OnboardingOverlay.swift */; };
 		A31DDB4A2DFCDA5000E16E4B /* OnboardingStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = A31DDB492DFCDA5000E16E4B /* OnboardingStep.swift */; };
@@ -78,6 +79,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A30145862F15E168006C0E03 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		A30220882DBDD56900C3C195 /* BackgroundTaskManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundTaskManager.swift; sourceTree = "<group>"; };
 		A31DDB472DFCDA4300E16E4B /* OnboardingOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingOverlay.swift; sourceTree = "<group>"; };
 		A31DDB492DFCDA5000E16E4B /* OnboardingStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingStep.swift; sourceTree = "<group>"; };
@@ -98,6 +100,7 @@
 		A365B01C2B44D34A00FF712E /* bikecheckUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = bikecheckUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A365B0302B44D37300FF712E /* TokenInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenInfo.swift; sourceTree = "<group>"; };
 		A365B03B2B44D93700FF712E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		A37DCD322F15B66F00806526 /* bikecheck.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = bikecheck.entitlements; sourceTree = "<group>"; };
 		A38B30792DAC5B0000F82FA3 /* bikecheckUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = bikecheckUITests.swift; sourceTree = "<group>"; };
 		A38B307B2DAC5B2000F82FA3 /* DataServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataServiceTests.swift; sourceTree = "<group>"; };
 		A38B307C2DAC5B2000F82FA3 /* MockPersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPersistenceController.swift; sourceTree = "<group>"; };
@@ -207,6 +210,7 @@
 		A365AFFF2B44D34900FF712E /* bikecheck */ = {
 			isa = PBXGroup;
 			children = (
+				A37DCD322F15B66F00806526 /* bikecheck.entitlements */,
 				A35AEADA2F0C6B38009349A3 /* Resources */,
 				A365B03B2B44D93700FF712E /* Info.plist */,
 				A365B0002B44D34900FF712E /* bikecheckApp.swift */,
@@ -295,6 +299,7 @@
 		A3AB083F2DA1EE1300935BB8 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				A30145862F15E168006C0E03 /* LoadingView.swift */,
 				A3B565C32E6BFBA900C438BD /* AdBannerView.swift */,
 				A3C3E63C2E594D6D00083A7B /* AdContainerView.swift */,
 				A31DDB512DFCEB4700E16E4B /* OnboardingTourOverlay.swift */,
@@ -481,6 +486,7 @@
 				A35AEAD52F0C6B0C009349A3 /* PartTemplateModels.swift in Sources */,
 				A3AB084A2DA1EE1300935BB8 /* ActivitiesViewModel.swift in Sources */,
 				A3AB084B2DA1EE1300935BB8 /* BikeDetailViewModel.swift in Sources */,
+				A30145872F15E168006C0E03 /* LoadingView.swift in Sources */,
 				A3AB084C2DA1EE1300935BB8 /* HomeView.swift in Sources */,
 				A31DDB502DFCEB3800E16E4B /* OnboardingViewModel.swift in Sources */,
 				A31DDB4A2DFCDA5000E16E4B /* OnboardingStep.swift in Sources */,
@@ -665,6 +671,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = bikecheck/bikecheck.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"bikecheck/Preview Content\"";
@@ -702,6 +709,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = bikecheck/bikecheck.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"bikecheck/Preview Content\"";
@@ -876,6 +884,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = bikecheck/bikecheck.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"bikecheck/Preview Content\"";
