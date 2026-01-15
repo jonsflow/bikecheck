@@ -89,7 +89,10 @@ struct bikecheckApp: App {
     var body: some Scene {
         WindowGroup {
             Group {
-                if stravaService.isSignedIn ?? false || onboardingViewModel.showTour {
+                if stravaService.isSignedIn == nil {
+                    // Still checking CloudKit/authentication
+                    LoadingView()
+                } else if stravaService.isSignedIn == true || onboardingViewModel.showTour {
                     HomeView()
                         .environment(\.managedObjectContext, persistenceController.container.viewContext)
                         .environmentObject(stravaService)

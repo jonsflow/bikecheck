@@ -48,6 +48,31 @@ class StravaService: ObservableObject {
     
     init(context: NSManagedObjectContext = PersistenceController.shared.container.viewContext) {
         self.managedObjectContext = context
+
+        // Listen for CloudKit imports (for ongoing syncs)
+        NotificationCenter.default.addObserver(
+            forName: NSPersistentCloudKitContainer.eventChangedNotification,
+            object: PersistenceController.shared.container,
+            queue: .main
+        ) { [weak self] notification in
+            if let event = notification.userInfo?[NSPersistentCloudKitContainer.eventNotificationUserInfoKey] as? NSPersistentCloudKitContainer.Event {
+                if event.type == .import && event.succeeded {
+                    self?.checkAuthenticationAfterCloudKitImport()
+                }
+            }
+        }
+
+        // Don't check auth here - persistent store might not be loaded yet
+        // PersistenceController will call checkAuthenticationAfterStoreLoad() when ready
+    }
+
+    private func checkAuthenticationAfterCloudKitImport() {
+        // Re-check authentication after CloudKit imports data
+        checkAuthentication()
+    }
+
+    func checkAuthenticationAfterStoreLoad() {
+        // Called after persistent store finishes loading
         checkAuthentication()
     }
     
