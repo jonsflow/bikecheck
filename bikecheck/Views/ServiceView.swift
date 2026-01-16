@@ -76,7 +76,8 @@ struct ServiceView: View {
                 .listRowBackground(Color.clear)
                 .listRowInsets(EdgeInsets())
             }
-            
+
+            // Ad at bottom of list
             AdContainerView()
                 .listRowSeparator(.hidden)
                 .listRowBackground(Color.clear)
