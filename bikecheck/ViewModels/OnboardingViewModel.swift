@@ -35,7 +35,7 @@ class OnboardingViewModel: ObservableObject {
         showOnboarding = false
         showTour = true
         currentTourStep = 0
-        
+
         // Load test data and sign in when starting tour
         loadTestDataIfNeeded()
         DispatchQueue.main.async {
@@ -46,7 +46,8 @@ class OnboardingViewModel: ObservableObject {
     func skipTour() {
         showOnboarding = false
         showTour = false
-        clearTestData()
+        // Don't clear test data - user is already logged in
+        // Just dismiss the onboarding overlay
     }
     
     func nextTourStep() {
@@ -61,9 +62,8 @@ class OnboardingViewModel: ObservableObject {
     func completeTour() {
         showTour = false
         currentTourStep = 0
-        
-        // Clear test data and return to login when tour completes
-        clearTestData()
+        // Don't clear test data - user is already logged in
+        // Just dismiss the tour overlay
     }
     
     private func clearTestData() {

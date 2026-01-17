@@ -41,6 +41,18 @@ struct HomeView: View {
                 .tag(2)
             }
             .onAppear {
+                // Handle UI testing flags for onboarding state
+                if ProcessInfo.processInfo.arguments.contains("UI_TESTING") {
+                    if ProcessInfo.processInfo.arguments.contains("COMPLETED_ONBOARDING") {
+                        // For non-onboarding tests, mark onboarding as complete
+                        UserDefaults.standard.set(true, forKey: "hasCompletedOnboarding")
+                    } else if ProcessInfo.processInfo.arguments.contains("CLEAR_ONBOARDING") {
+                        // For onboarding tests, explicitly clear the flag
+                        UserDefaults.standard.removeObject(forKey: "hasCompletedOnboarding")
+                    }
+                    // If neither flag is present, preserve existing UserDefaults state
+                }
+
                 // Show onboarding for first-time users (after login or demo mode)
                 if !UserDefaults.standard.bool(forKey: "hasCompletedOnboarding") {
                     onboardingViewModel.startOnboarding()

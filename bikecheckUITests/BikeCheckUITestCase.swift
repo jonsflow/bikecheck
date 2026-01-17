@@ -7,7 +7,11 @@ class BikeCheckUITestCase: XCTestCase {
         super.setUp()
         continueAfterFailure = false
         app = XCUIApplication()
-        app.launchArguments = ["UI_TESTING"]
+
+        // Pre-set onboarding as completed for non-onboarding tests
+        // OnboardingUITests will NOT include this flag to test the onboarding flow
+        app.launchArguments = ["UI_TESTING", "COMPLETED_ONBOARDING"]
+
         app.launch()
 
         // Wait for loading to complete and login screen to appear
@@ -15,13 +19,6 @@ class BikeCheckUITestCase: XCTestCase {
 
         // Use Demo Mode button to load test data and sign in
         app.buttons["Demo Mode"].tap()
-
-        // Handle post-login onboarding if it appears
-        let onboardingOverlay = app.otherElements.containing(.staticText, identifier: "Welcome to BikeCheck!")
-        if onboardingOverlay.element.waitForExistence(timeout: 5) {
-            // Skip onboarding to get to main app
-            app.buttons["Skip Tour"].tap()
-        }
 
         // Wait for main app to be visible
         XCTAssertTrue(app.tabBars["Tab Bar"].waitForExistence(timeout: 10), "Main app should be visible after demo mode login")
