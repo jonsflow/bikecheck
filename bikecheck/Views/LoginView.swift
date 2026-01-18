@@ -25,7 +25,6 @@ struct LoginView: View {
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 150, height: 150)
                             .cornerRadius(30)
-                            .shadow(color: .gray, radius: 1, x: 5, y: 5)
                         
                         Button(action: {
                             loginViewModel.authenticate { _ in }
@@ -37,8 +36,7 @@ struct LoginView: View {
                                 .cornerRadius(10)
                         }
                         .accessibilityIdentifier("SignInWithStrava")
-                        
-                        #if DEBUG
+
                         Button(action: {
                             loginViewModel.enterDemoMode()
                         }) {
@@ -49,7 +47,6 @@ struct LoginView: View {
                                 .cornerRadius(10)
                         }
                         .accessibilityIdentifier("DemoMode")
-                        #endif
                     }
                 }
             }
