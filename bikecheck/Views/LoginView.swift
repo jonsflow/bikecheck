@@ -69,8 +69,8 @@ struct LoginView: View {
             }
         }
         .onChange(of: onboardingViewModel.showTour) { showTour in
-            if !showTour && hasCompletedOnboarding {
-                // Tour has ended, ensure onboarding is marked complete
+            if !showTour {
+                // Tour has ended, mark onboarding as complete
                 hasCompletedOnboarding = true
             }
         }
