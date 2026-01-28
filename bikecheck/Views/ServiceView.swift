@@ -122,6 +122,10 @@ struct ServiceView: View {
                                             selectedStatuses = [status]
                                         } else if selectedStatuses.contains(status) {
                                             selectedStatuses.remove(status)
+                                            // If no statuses selected, default to "All"
+                                            if selectedStatuses.isEmpty {
+                                                selectedStatuses = [.all]
+                                            }
                                         } else {
                                             selectedStatuses.insert(status)
                                         }

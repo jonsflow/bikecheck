@@ -31,7 +31,7 @@ part_templates:
   - id: chain
     name: Chain
     category: drivetrain
-    default_interval_hours: 50
+    default_interval_hours: 5
     icon: link
     description: "Chain wear and lubrication"
     notify_default: true
@@ -64,7 +64,7 @@ part_templates:
   - id: fork_lowers
     name: Fork Lowers
     category: suspension
-    default_interval_hours: 50
+    default_interval_hours: 10
     icon: tuningfork
     description: "Lower leg service (dust seals, oil)"
     notify_default: true
@@ -88,7 +88,7 @@ part_templates:
   - id: rear_shock
     name: Rear Shock
     category: suspension
-    default_interval_hours: 50
+    default_interval_hours: 15
     icon: bolt
     description: "Shock service (air can, damper)"
     notify_default: true
