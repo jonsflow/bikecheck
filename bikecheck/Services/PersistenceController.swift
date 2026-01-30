@@ -44,7 +44,7 @@ class PersistenceController {
             if isUsingiCloud {
                 // Enable CloudKit sync for user data only
                 userStore.cloudKitContainerOptions = NSPersistentCloudKitContainerOptions(
-                    containerIdentifier: "iCloud.com.bikecheck.app"
+                    containerIdentifier: "iCloud.com.ride.bikecheck"
                 )
                 print("iCloud sync enabled for UserData store")
             } else {
