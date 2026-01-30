@@ -51,6 +51,7 @@ struct ProfileView: View {
                     .cornerRadius(10)
             }
         }
+        .navigationBarHidden(true)
         .alert("Sign Out", isPresented: $showLogoutAlert) {
             Button("Cancel", role: .cancel) { }
             Button("Sign Out", role: .destructive) {
