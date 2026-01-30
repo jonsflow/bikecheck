@@ -21,7 +21,6 @@ public class Bike: NSManagedObject, Codable, Identifiable {
     @NSManaged public var distance: Double
    // @NSManaged public var activities: Set<Activity>
     @NSManaged public var athlete: Athlete
-    @NSManaged public var serviceIntervals: Set<ServiceInterval>?
     
     public func activities (context: NSManagedObjectContext) -> [Activity] {
         let fetchRequest: NSFetchRequest<Activity> = Activity.fetchRequest() as! NSFetchRequest<Activity>
@@ -49,8 +48,23 @@ public class Bike: NSManagedObject, Codable, Identifiable {
         return totalRideTime / 3600
     }
 
+    /// Get all service intervals for this bike from the UserData store
+    public func serviceIntervals(from context: NSManagedObjectContext) -> [ServiceInterval] {
+        let fetchRequest: NSFetchRequest<ServiceInterval> = ServiceInterval.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "bikeId == %@", id)
+
+        do {
+            return try context.fetch(fetchRequest)
+        } catch {
+            print("Error fetching service intervals for bike \(id): \(error)")
+            return []
+        }
+    }
+
     public func status(context: NSManagedObjectContext) -> BikeStatus {
-        guard let intervals = serviceIntervals, !intervals.isEmpty else {
+        let intervals = serviceIntervals(from: context)
+
+        guard !intervals.isEmpty else {
             return .good
         }
 
