@@ -52,8 +52,8 @@
         </uniquenessConstraints>
     </entity>
     <entity name="ServiceInterval" representedClassName=".ServiceInterval" syncable="YES">
-        <attribute name="bikeId" attributeType="String"/>
-        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="bikeId" optional="YES" attributeType="String"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="intervalTime" optional="YES" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="lastNotificationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="lastServiceDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>

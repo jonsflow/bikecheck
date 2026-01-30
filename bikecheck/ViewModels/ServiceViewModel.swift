@@ -6,11 +6,12 @@ class ServiceViewModel: ObservableObject {
     @Published var serviceIntervals: [ServiceInterval] = []
     @Published var isLoading = false
     @Published var error: Error?
-    
+
     private let dataService = DataService.shared
     private let stravaService = StravaService.shared
     private let context = PersistenceController.shared.container.viewContext
-    
+    private var cancellables = Set<AnyCancellable>()
+
     var serviceIntervalsByBike: [Bike: [ServiceInterval]] {
         var grouped: [Bike: [ServiceInterval]] = [:]
         for interval in serviceIntervals {
@@ -20,9 +21,22 @@ class ServiceViewModel: ObservableObject {
         }
         return grouped
     }
-    
+
     init() {
         loadServiceIntervals()
+        setupCloudKitObservers()
+    }
+
+    private func setupCloudKitObservers() {
+        // Listen for CloudKit import notifications
+        NotificationCenter.default.publisher(for: .NSPersistentStoreRemoteChange)
+            .sink { [weak self] _ in
+                print("CloudKit remote change detected, reloading service intervals")
+                DispatchQueue.main.async {
+                    self?.loadServiceIntervals()
+                }
+            }
+            .store(in: &cancellables)
     }
     
     func loadServiceIntervals() {

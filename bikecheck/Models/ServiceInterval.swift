@@ -15,7 +15,7 @@ public class ServiceInterval: NSManagedObject, Identifiable {
     @NSManaged public var lastNotificationDate: Date?
     @NSManaged public var intervalTime: Double
     @NSManaged public var notify: Bool
-    @NSManaged public var bikeId: String
+    @NSManaged public var bikeId: String?
 
     public override func awakeFromInsert() {
         super.awakeFromInsert()
@@ -24,6 +24,8 @@ public class ServiceInterval: NSManagedObject, Identifiable {
 
     /// Get the associated Bike from the Strava store
     public func getBike(from context: NSManagedObjectContext) -> Bike? {
+        guard let bikeId = bikeId else { return nil }
+
         let fetchRequest = NSFetchRequest<Bike>(entityName: "Bike")
         fetchRequest.predicate = NSPredicate(format: "id == %@", bikeId)
         fetchRequest.fetchLimit = 1
