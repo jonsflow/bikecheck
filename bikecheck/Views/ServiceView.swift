@@ -99,10 +99,27 @@ struct ServiceView: View {
                     ProgressView("Loading service intervals...")
                 } else if let error = viewModel.error {
                     Text("Error: \(error.localizedDescription)")
+                } else if viewModel.isWaitingForCloudKit {
+                    VStack(spacing: 20) {
+                        Image("BikeCheckLogo")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 100, height: 100)
+                            .cornerRadius(20)
+
+                        ProgressView()
+                            .scaleEffect(1.5)
+
+                        Text("Syncing your service intervals from iCloud...")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                            .padding(.top, 8)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else if viewModel.serviceIntervals.isEmpty {
                     VStack {
                         Text("No service intervals found")
-                        
+
                         Button(action: {
                             showingServiceIntervalView = true
                         }) {
