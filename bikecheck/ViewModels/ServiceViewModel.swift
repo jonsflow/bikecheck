@@ -12,7 +12,13 @@ class ServiceViewModel: ObservableObject {
     private let context = PersistenceController.shared.container.viewContext
     
     var serviceIntervalsByBike: [Bike: [ServiceInterval]] {
-        Dictionary(grouping: serviceIntervals, by: \.bike)
+        var grouped: [Bike: [ServiceInterval]] = [:]
+        for interval in serviceIntervals {
+            if let bike = interval.getBike(from: context) {
+                grouped[bike, default: []].append(interval)
+            }
+        }
+        return grouped
     }
     
     init() {

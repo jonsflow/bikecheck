@@ -24,7 +24,7 @@ public class ServiceInterval: NSManagedObject, Identifiable {
 
     /// Get the associated Bike from the Strava store
     public func getBike(from context: NSManagedObjectContext) -> Bike? {
-        let fetchRequest: NSFetchRequest<Bike> = Bike.fetchRequest()
+        let fetchRequest = NSFetchRequest<Bike>(entityName: "Bike")
         fetchRequest.predicate = NSPredicate(format: "id == %@", bikeId)
         fetchRequest.fetchLimit = 1
 

@@ -50,7 +50,7 @@ public class Bike: NSManagedObject, Codable, Identifiable {
 
     /// Get all service intervals for this bike from the UserData store
     public func serviceIntervals(from context: NSManagedObjectContext) -> [ServiceInterval] {
-        let fetchRequest: NSFetchRequest<ServiceInterval> = ServiceInterval.fetchRequest()
+        let fetchRequest = NSFetchRequest<ServiceInterval>(entityName: "ServiceInterval")
         fetchRequest.predicate = NSPredicate(format: "bikeId == %@", id)
 
         do {

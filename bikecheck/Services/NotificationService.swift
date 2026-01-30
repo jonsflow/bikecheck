@@ -31,7 +31,12 @@ class NotificationService: NSObject, UNUserNotificationCenterDelegate {
 
             logger.info("Sending notification for \(interval.part)")
             let content = UNMutableNotificationContent()
-            content.title = "\(interval.bike.name) Service Reminder"
+
+            // Get bike name for notification title
+            let context = interval.managedObjectContext ?? PersistenceController.shared.container.viewContext
+            let bikeName = interval.getBike(from: context)?.name ?? "Your Bike"
+
+            content.title = "\(bikeName) Service Reminder"
             content.body = "It's time to service your \(interval.part)."
             content.sound = UNNotificationSound.default
 

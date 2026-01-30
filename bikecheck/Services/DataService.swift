@@ -72,7 +72,7 @@ class DataService {
             newInterval.part = template.name
             newInterval.intervalTime = template.defaultIntervalHours
             newInterval.lastServiceDate = lastServiceDate
-            newInterval.bike = bike
+            newInterval.bikeId = bike.id
             newInterval.notify = template.notifyDefault
         }
 

@@ -438,8 +438,11 @@ class StravaService: ObservableObject {
     }
     
     func calculateTimeUntilService(for serviceInterval: ServiceInterval) -> Double {
+        guard let bike = serviceInterval.getBike(from: managedObjectContext) else {
+            return serviceInterval.intervalTime
+        }
         let lastServiceDate = serviceInterval.lastServiceDate ?? Date()
-        let rideTimeSinceService = serviceInterval.bike.rideTimeSince(date: lastServiceDate, context: self.managedObjectContext)
+        let rideTimeSinceService = bike.rideTimeSince(date: lastServiceDate, context: managedObjectContext)
         return serviceInterval.intervalTime - rideTimeSinceService
     }
     
@@ -621,7 +624,7 @@ class StravaService: ObservableObject {
         serviceInterval.part = template.name
         serviceInterval.intervalTime = template.defaultIntervalHours
         serviceInterval.lastServiceDate = Date()
-        serviceInterval.bike = bike
+        serviceInterval.bikeId = bike.id
         serviceInterval.notify = template.notifyDefault
     }
     
