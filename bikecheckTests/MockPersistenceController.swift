@@ -152,7 +152,7 @@ class MockPersistenceController {
             serviceInterval.lastServiceDate = Date()
             serviceInterval.intervalTime = chainTemplate.defaultIntervalHours
             serviceInterval.notify = chainTemplate.notifyDefault
-            serviceInterval.bike = bike1
+            serviceInterval.bikeId = bike1.id
         }
         
         // Save the context

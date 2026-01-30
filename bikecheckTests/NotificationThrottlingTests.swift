@@ -35,7 +35,7 @@ class NotificationThrottlingTests: XCTestCase {
         let serviceInterval = NSEntityDescription.insertNewObject(forEntityName: "ServiceInterval", into: context) as! ServiceInterval
         serviceInterval.part = "Chain"
         serviceInterval.intervalTime = 10.0
-        serviceInterval.bike = bike
+        serviceInterval.bikeId = bike.id
         serviceInterval.notify = true
 
         // When - Set lastNotificationDate
@@ -59,7 +59,7 @@ class NotificationThrottlingTests: XCTestCase {
         let serviceInterval = NSEntityDescription.insertNewObject(forEntityName: "ServiceInterval", into: context) as! ServiceInterval
         serviceInterval.part = "Chain"
         serviceInterval.intervalTime = 10.0
-        serviceInterval.bike = bike
+        serviceInterval.bikeId = bike.id
         serviceInterval.notify = true
 
         try? context.save()
@@ -78,7 +78,7 @@ class NotificationThrottlingTests: XCTestCase {
         let serviceInterval = NSEntityDescription.insertNewObject(forEntityName: "ServiceInterval", into: context) as! ServiceInterval
         serviceInterval.part = "Chain"
         serviceInterval.intervalTime = 10.0
-        serviceInterval.bike = bike
+        serviceInterval.bikeId = bike.id
         serviceInterval.notify = true
 
         let testDate = Calendar.current.date(byAdding: .day, value: -3, to: Date())!
@@ -108,7 +108,7 @@ class NotificationThrottlingTests: XCTestCase {
         let serviceInterval = NSEntityDescription.insertNewObject(forEntityName: "ServiceInterval", into: context) as! ServiceInterval
         serviceInterval.part = "Chain"
         serviceInterval.intervalTime = 10.0
-        serviceInterval.bike = bike
+        serviceInterval.bikeId = bike.id
         serviceInterval.notify = true
         serviceInterval.lastNotificationDate = nil
 
@@ -134,7 +134,7 @@ class NotificationThrottlingTests: XCTestCase {
         let serviceInterval = NSEntityDescription.insertNewObject(forEntityName: "ServiceInterval", into: context) as! ServiceInterval
         serviceInterval.part = "Chain"
         serviceInterval.intervalTime = 10.0
-        serviceInterval.bike = bike
+        serviceInterval.bikeId = bike.id
         serviceInterval.notify = true
 
         // Set lastNotificationDate to 3 days ago (within 7-day throttle window)
@@ -161,7 +161,7 @@ class NotificationThrottlingTests: XCTestCase {
         let serviceInterval = NSEntityDescription.insertNewObject(forEntityName: "ServiceInterval", into: context) as! ServiceInterval
         serviceInterval.part = "Chain"
         serviceInterval.intervalTime = 10.0
-        serviceInterval.bike = bike
+        serviceInterval.bikeId = bike.id
         serviceInterval.notify = true
 
         // Set lastNotificationDate to 8 days ago (outside throttle window)
@@ -188,7 +188,7 @@ class NotificationThrottlingTests: XCTestCase {
         let serviceInterval = NSEntityDescription.insertNewObject(forEntityName: "ServiceInterval", into: context) as! ServiceInterval
         serviceInterval.part = "Chain"
         serviceInterval.intervalTime = 10.0
-        serviceInterval.bike = bike
+        serviceInterval.bikeId = bike.id
         serviceInterval.notify = false
         serviceInterval.lastNotificationDate = nil
 
@@ -211,7 +211,7 @@ class NotificationThrottlingTests: XCTestCase {
         let serviceInterval = NSEntityDescription.insertNewObject(forEntityName: "ServiceInterval", into: context) as! ServiceInterval
         serviceInterval.part = "Chain"
         serviceInterval.intervalTime = 10.0
-        serviceInterval.bike = bike
+        serviceInterval.bikeId = bike.id
         serviceInterval.notify = true
 
         // Set to exactly 7 days ago (604800 seconds)

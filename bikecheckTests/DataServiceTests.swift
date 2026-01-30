@@ -103,7 +103,7 @@ class DataServiceTests: XCTestCase {
         
         // Then
         let fetchRequest: NSFetchRequest<ServiceInterval> = NSFetchRequest<ServiceInterval>(entityName: "ServiceInterval")
-        fetchRequest.predicate = NSPredicate(format: "bike.id == %@", "test-bike")
+        fetchRequest.predicate = NSPredicate(format: "bikeId == %@", "test-bike")
         
         do {
             let intervals = try context.fetch(fetchRequest)
@@ -157,7 +157,7 @@ class DataServiceTests: XCTestCase {
 
         // Then
         let fetchRequest: NSFetchRequest<ServiceInterval> = NSFetchRequest<ServiceInterval>(entityName: "ServiceInterval")
-        fetchRequest.predicate = NSPredicate(format: "bike.id == %@", "test-bike-date")
+        fetchRequest.predicate = NSPredicate(format: "bikeId == %@", "test-bike-date")
 
         do {
             let intervals = try context.fetch(fetchRequest)
@@ -190,7 +190,7 @@ class DataServiceTests: XCTestCase {
 
         // Then
         let fetchRequest: NSFetchRequest<ServiceInterval> = NSFetchRequest<ServiceInterval>(entityName: "ServiceInterval")
-        fetchRequest.predicate = NSPredicate(format: "bike.id == %@", "test-bike-default-date")
+        fetchRequest.predicate = NSPredicate(format: "bikeId == %@", "test-bike-default-date")
 
         do {
             let intervals = try context.fetch(fetchRequest)
@@ -287,7 +287,7 @@ class DataServiceTests: XCTestCase {
         let serviceInterval = NSEntityDescription.insertNewObject(forEntityName: "ServiceInterval", into: context) as! ServiceInterval
         serviceInterval.part = "Chain"
         serviceInterval.intervalTime = 10.0
-        serviceInterval.bike = bike
+        serviceInterval.bikeId = bike.id
         serviceInterval.notify = true
 
         // SCENARIO 1: Last serviced 15 days ago (before all activities)
