@@ -15,10 +15,27 @@ public class ServiceInterval: NSManagedObject, Identifiable {
     @NSManaged public var lastNotificationDate: Date?
     @NSManaged public var intervalTime: Double
     @NSManaged public var notify: Bool
-    @NSManaged public var bike: Bike
+    @NSManaged public var bikeId: String?
 
     public override func awakeFromInsert() {
         super.awakeFromInsert()
         id = UUID()
+    }
+
+    /// Get the associated Bike from the Strava store
+    public func getBike(from context: NSManagedObjectContext) -> Bike? {
+        guard let bikeId = bikeId else { return nil }
+
+        let fetchRequest = NSFetchRequest<Bike>(entityName: "Bike")
+        fetchRequest.predicate = NSPredicate(format: "id == %@", bikeId)
+        fetchRequest.fetchLimit = 1
+
+        do {
+            let bikes = try context.fetch(fetchRequest)
+            return bikes.first
+        } catch {
+            print("Error fetching bike with id \(bikeId): \(error)")
+            return nil
+        }
     }
 }

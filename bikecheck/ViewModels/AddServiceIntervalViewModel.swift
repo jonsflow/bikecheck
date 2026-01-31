@@ -46,7 +46,7 @@ class AddServiceIntervalViewModel: ObservableObject {
         part = serviceInterval.part
         intervalTime = String(format: "%.1f", serviceInterval.intervalTime)
         notify = serviceInterval.notify
-        selectedBike = serviceInterval.bike
+        selectedBike = serviceInterval.getBike(from: context)
 
         // Load the saved last service date, or default to today if not set
         lastServiceDate = serviceInterval.lastServiceDate ?? Date()
@@ -98,7 +98,7 @@ class AddServiceIntervalViewModel: ObservableObject {
         interval.lastServiceDate = lastServiceDate
 
         if let selectedBike = selectedBike {
-            interval.bike = selectedBike
+            interval.bikeId = selectedBike.id
         }
 
         dataService.saveContext()
@@ -112,7 +112,7 @@ class AddServiceIntervalViewModel: ObservableObject {
         newInterval.intervalTime = Double(intervalTime) ?? 0
         newInterval.notify = notify
         newInterval.lastServiceDate = lastServiceDate
-        newInterval.bike = selectedBike
+        newInterval.bikeId = selectedBike.id
 
         dataService.saveContext()
     }

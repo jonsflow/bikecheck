@@ -43,8 +43,11 @@ struct ServiceView: View {
             }
             .sorted { interval1, interval2 in
                 // First sort by bike name
-                if interval1.bike.name != interval2.bike.name {
-                    return interval1.bike.name < interval2.bike.name
+                let bike1Name = interval1.getBike(from: viewContext)?.name ?? ""
+                let bike2Name = interval2.getBike(from: viewContext)?.name ?? ""
+
+                if bike1Name != bike2Name {
+                    return bike1Name < bike2Name
                 }
 
                 // Within same bike, sort by urgency (most overdue first)
@@ -58,8 +61,11 @@ struct ServiceView: View {
     }
     
     private func getCurrentUsage(for serviceInterval: ServiceInterval) -> Double {
+        guard let bike = serviceInterval.getBike(from: viewContext) else {
+            return 0
+        }
         let lastServiceDate = serviceInterval.lastServiceDate ?? Date()
-        return serviceInterval.bike.rideTimeSince(date: lastServiceDate, context: viewContext)
+        return bike.rideTimeSince(date: lastServiceDate, context: viewContext)
     }
     
     private var serviceIntervalsList: some View {
@@ -93,10 +99,27 @@ struct ServiceView: View {
                     ProgressView("Loading service intervals...")
                 } else if let error = viewModel.error {
                     Text("Error: \(error.localizedDescription)")
+                } else if viewModel.isWaitingForCloudKit {
+                    VStack(spacing: 20) {
+                        Image("BikeCheckLogo")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 100, height: 100)
+                            .cornerRadius(20)
+
+                        ProgressView()
+                            .scaleEffect(1.5)
+
+                        Text("Syncing your service intervals from iCloud...")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                            .padding(.top, 8)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else if viewModel.serviceIntervals.isEmpty {
                     VStack {
                         Text("No service intervals found")
-                        
+
                         Button(action: {
                             showingServiceIntervalView = true
                         }) {
@@ -227,8 +250,11 @@ struct ServiceIntervalCardView: View {
     let viewModel: ServiceViewModel
     
     private var currentUsage: Double {
+        guard let bike = serviceInterval.getBike(from: viewContext) else {
+            return 0
+        }
         let lastServiceDate = serviceInterval.lastServiceDate ?? Date()
-        return serviceInterval.bike.rideTimeSince(date: lastServiceDate, context: viewContext)
+        return bike.rideTimeSince(date: lastServiceDate, context: viewContext)
     }
     
     private var fractionColor: Color {
@@ -251,9 +277,11 @@ struct ServiceIntervalCardView: View {
                         .fontWeight(.semibold)
                         .foregroundColor(.primary)
 
-                    Text(serviceInterval.bike.name)
-                        .font(.caption)
-                        .foregroundColor(.secondary)
+                    if let bike = serviceInterval.getBike(from: viewContext) {
+                        Text(bike.name)
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
                 }
 
                 Spacer()

@@ -37,7 +37,9 @@ class BikeDetailViewModel: ObservableObject {
     }
 
     func updateAllServiceDates(to date: Date) {
-        guard let intervals = bike.serviceIntervals else { return }
+        let intervals = bike.serviceIntervals(from: context)
+
+        guard !intervals.isEmpty else { return }
 
         for interval in intervals {
             interval.lastServiceDate = date

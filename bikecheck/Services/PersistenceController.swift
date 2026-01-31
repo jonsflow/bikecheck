@@ -2,34 +2,88 @@ import CoreData
 
 class PersistenceController {
     static let shared = PersistenceController()
-    
+
     let container: NSPersistentContainer
-    
+    private(set) var isUsingiCloud: Bool = false
+
     init(inMemory: Bool = false) {
-        container = NSPersistentContainer(name: "bikecheck")
+        // Always use NSPersistentCloudKitContainer even if iCloud is disabled
+        container = NSPersistentCloudKitContainer(name: "bikecheck")
 
         if inMemory {
-            container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
-        }
+            // In-memory store for testing
+            let description = NSPersistentStoreDescription()
+            description.type = NSInMemoryStoreType
+            container.persistentStoreDescriptions = [description]
+        } else {
+            // Two-store architecture
+            let storeDirectory = container.persistentStoreDescriptions.first!.url!.deletingLastPathComponent()
 
-        // Enable automatic lightweight migration
-        container.persistentStoreDescriptions.first?.setOption(
-            true as NSNumber,
-            forKey: NSMigratePersistentStoresAutomaticallyOption
-        )
-        container.persistentStoreDescriptions.first?.setOption(
-            true as NSNumber,
-            forKey: NSInferMappingModelAutomaticallyOption
-        )
+            // Store 1: Strava Data (ALWAYS local-only, with constraints)
+            let stravaStoreURL = storeDirectory.appendingPathComponent("strava.sqlite")
+            let stravaStore = NSPersistentStoreDescription(url: stravaStoreURL)
+            stravaStore.configuration = "Strava"
+            stravaStore.cloudKitContainerOptions = nil // Never sync to iCloud
+
+            // Enable automatic lightweight migration for Strava store
+            stravaStore.setOption(true as NSNumber, forKey: NSMigratePersistentStoresAutomaticallyOption)
+            stravaStore.setOption(true as NSNumber, forKey: NSInferMappingModelAutomaticallyOption)
+
+            // Store 2: User Data (local + optional CloudKit sync, no constraints)
+            let userStoreURL = storeDirectory.appendingPathComponent("userdata.sqlite")
+            let userStore = NSPersistentStoreDescription(url: userStoreURL)
+            userStore.configuration = "UserData"
+
+            // Enable automatic lightweight migration for UserData store
+            userStore.setOption(true as NSNumber, forKey: NSMigratePersistentStoresAutomaticallyOption)
+            userStore.setOption(true as NSNumber, forKey: NSInferMappingModelAutomaticallyOption)
+
+            // Check iCloud availability
+            isUsingiCloud = checkiCloudAvailability()
+
+            if isUsingiCloud {
+                // Enable CloudKit sync for user data only
+                userStore.cloudKitContainerOptions = NSPersistentCloudKitContainerOptions(
+                    containerIdentifier: "iCloud.com.ride.bikecheck"
+                )
+                print("iCloud sync enabled for UserData store")
+            } else {
+                // Just local, no sync
+                userStore.cloudKitContainerOptions = nil
+                print("iCloud sync disabled - using local storage only")
+            }
+
+            container.persistentStoreDescriptions = [stravaStore, userStore]
+        }
 
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error as NSError? {
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
+            print("Loaded persistent store: \(storeDescription)")
         })
 
         container.viewContext.automaticallyMergesChangesFromParent = true
         container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+    }
+
+    private func checkiCloudAvailability() -> Bool {
+        // Not signed into iCloud
+        guard FileManager.default.ubiquityIdentityToken != nil else {
+            print("iCloud unavailable: User not signed in")
+            return false
+        }
+
+        // Disable in simulator for easier testing
+        #if targetEnvironment(simulator)
+        print("iCloud disabled: Running in simulator")
+        return false
+        #endif
+
+        // Could add user preference here in the future
+        // return UserDefaults.standard.bool(forKey: "enableiCloudSync")
+
+        return true
     }
     
     func saveContext() {
@@ -74,7 +128,10 @@ class PersistenceController {
             
             // Reset UserDefaults
             UserDefaults.standard.removeObject(forKey: "hasCompletedOnboarding")
-            
+
+            // Clear Keychain flag so onboarding appears again
+            KeychainHelper.shared.clearHasUsedApp()
+
             // Reset StravaService state on main queue
             DispatchQueue.main.async {
                 let stravaService = StravaService.shared
@@ -85,7 +142,7 @@ class PersistenceController {
                 stravaService.activities = nil
                 stravaService.profileImage = nil
             }
-            
+
             print("Successfully reset all app data")
             
         } catch {

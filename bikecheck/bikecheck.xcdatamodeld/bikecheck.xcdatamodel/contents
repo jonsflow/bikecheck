@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23507" systemVersion="24C5079e" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <configuration name="Strava">
+        <memberEntity name="Activity"/>
+        <memberEntity name="Athlete"/>
+        <memberEntity name="Bike"/>
+        <memberEntity name="TokenInfo"/>
+    </configuration>
+    <configuration name="UserData">
+        <memberEntity name="ServiceInterval"/>
+    </configuration>
     <entity name="Activity" representedClassName=".Activity" syncable="YES">
         <attribute name="averageSpeed" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="distance" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
@@ -33,7 +42,6 @@
         <attribute name="id" attributeType="String" spotlightIndexingEnabled="YES"/>
         <attribute name="name" attributeType="String"/>
         <relationship name="athlete" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Athlete" inverseName="bikes" inverseEntity="Athlete"/>
-        <relationship name="serviceIntervals" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ServiceInterval" inverseName="bike" inverseEntity="ServiceInterval"/>
         <fetchedProperty name="fetchedProperty" optional="YES">
             <fetchRequest name="fetchedPropertyFetchRequest" entity="Bike"/>
         </fetchedProperty>
@@ -44,12 +52,13 @@
         </uniquenessConstraints>
     </entity>
     <entity name="ServiceInterval" representedClassName=".ServiceInterval" syncable="YES">
-        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="bikeId" optional="YES" attributeType="String"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="intervalTime" optional="YES" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="lastNotificationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="lastServiceDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="notify" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="part" optional="YES" attributeType="String"/>
-        <attribute name="lastServiceDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <relationship name="bike" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Bike" inverseName="serviceIntervals" inverseEntity="Bike"/>
     </entity>
     <entity name="TokenInfo" representedClassName="TokenInfo" syncable="YES">
         <attribute name="accessToken" attributeType="String"/>

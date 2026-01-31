@@ -9,11 +9,13 @@
     }
   ],
   "defaultOptions" : {
+    "preferredScreenCaptureFormat" : "screenshot",
     "targetForVariableExpansion" : {
       "containerPath" : "container:bikecheck.xcodeproj",
       "identifier" : "A365AFFC2B44D34900FF712E",
       "name" : "bikecheck"
-    }
+    },
+    "uiTestingScreenshotsLifetime" : "keepNever"
   },
   "testTargets" : [
     {

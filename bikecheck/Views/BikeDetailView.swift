@@ -4,6 +4,7 @@ struct BikeDetailView: View {
     @ObservedObject var bike: Bike
     @StateObject private var viewModel: BikeDetailViewModel
     @Environment(\.presentationMode) var presentationMode
+    @Environment(\.managedObjectContext) private var viewContext
     @EnvironmentObject var serviceViewModel: ServiceViewModel
     @Binding var selectedTab: Int
     @State private var showingIntervalsCreatedAlert = false
@@ -28,8 +29,8 @@ struct BikeDetailView: View {
                 }
                 
                 Section(header: Text("Service Intervals")) {
-                    let intervals = Array(bike.serviceIntervals ?? []).sorted { $0.part < $1.part }
-                    
+                    let intervals = bike.serviceIntervals(from: viewContext).sorted { $0.part < $1.part }
+
                     if intervals.isEmpty {
                         // Empty state - offer both options
                         Button(action: {
@@ -106,7 +107,7 @@ struct BikeDetailView: View {
                         Label("Create Default Service Intervals", systemImage: "plus.circle.fill")
                     }
 
-                    let intervals = Array(bike.serviceIntervals ?? [])
+                    let intervals = bike.serviceIntervals(from: viewContext)
                     if !intervals.isEmpty {
                         Button(action: {
                             selectedDate = Date()
@@ -220,8 +221,11 @@ struct CompactServiceIntervalRow: View {
     @Environment(\.managedObjectContext) private var viewContext
     
     private var currentUsage: Double {
+        guard let bike = serviceInterval.getBike(from: viewContext) else {
+            return 0
+        }
         let lastServiceDate = serviceInterval.lastServiceDate ?? Date()
-        return serviceInterval.bike.rideTimeSince(date: lastServiceDate, context: viewContext)
+        return bike.rideTimeSince(date: lastServiceDate, context: viewContext)
     }
     
     private var statusColor: Color {

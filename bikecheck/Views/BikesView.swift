@@ -58,7 +58,7 @@ struct BikeCardView: View {
     @Environment(\.managedObjectContext) private var viewContext
 
     private var bikeServiceIntervals: [ServiceInterval] {
-        serviceViewModel.serviceIntervals.filter { $0.bike == bike }
+        serviceViewModel.serviceIntervals.filter { $0.bikeId == bike.id }
     }
 
     private var bikeStatus: BikeStatus {
@@ -207,8 +207,11 @@ struct ServiceIntervalMiniRow: View {
     @Environment(\.managedObjectContext) private var viewContext
     
     private func getCurrentUsage(for serviceInterval: ServiceInterval) -> Double {
+        guard let bike = serviceInterval.getBike(from: viewContext) else {
+            return 0
+        }
         let lastServiceDate = serviceInterval.lastServiceDate ?? Date()
-        return serviceInterval.bike.rideTimeSince(date: lastServiceDate, context: viewContext)
+        return bike.rideTimeSince(date: lastServiceDate, context: viewContext)
     }
     
     private func getStatusText() -> String {

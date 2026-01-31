@@ -172,6 +172,10 @@ class StravaService: ObservableObject {
             do {
                 self.tokenInfo = try decoder.decode(TokenInfo.self, from: data)
                 try self.managedObjectContext.save()
+
+                // Mark user as having used the app (persists across reinstalls)
+                KeychainHelper.shared.setHasUsedApp()
+
                 completion(true)
             } catch {
                 print("Decoding or saving error: \(error)")
@@ -438,8 +442,11 @@ class StravaService: ObservableObject {
     }
     
     func calculateTimeUntilService(for serviceInterval: ServiceInterval) -> Double {
+        guard let bike = serviceInterval.getBike(from: managedObjectContext) else {
+            return serviceInterval.intervalTime
+        }
         let lastServiceDate = serviceInterval.lastServiceDate ?? Date()
-        let rideTimeSinceService = serviceInterval.bike.rideTimeSince(date: lastServiceDate, context: self.managedObjectContext)
+        let rideTimeSinceService = bike.rideTimeSince(date: lastServiceDate, context: managedObjectContext)
         return serviceInterval.intervalTime - rideTimeSinceService
     }
     
@@ -561,7 +568,10 @@ class StravaService: ObservableObject {
                 self.activities = nil
                 self.profileImage = nil
             }
-            
+
+            // Clear Keychain flag so onboarding appears again
+            KeychainHelper.shared.clearHasUsedApp()
+
         } catch {
             print("Failed to clear test data: \(error)")
         }
@@ -621,7 +631,7 @@ class StravaService: ObservableObject {
         serviceInterval.part = template.name
         serviceInterval.intervalTime = template.defaultIntervalHours
         serviceInterval.lastServiceDate = Date()
-        serviceInterval.bike = bike
+        serviceInterval.bikeId = bike.id
         serviceInterval.notify = template.notifyDefault
     }
     
