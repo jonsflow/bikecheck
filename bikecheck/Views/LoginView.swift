@@ -58,8 +58,11 @@ struct LoginView: View {
         .onAppear {
             // Clear any test data when showing login screen
             onboardingViewModel.clearTestDataIfNeeded()
-            
-            if !hasCompletedOnboarding {
+
+            // Check if user has used app before (persists across reinstalls)
+            if KeychainHelper.shared.hasUsedApp() {
+                hasCompletedOnboarding = true
+            } else if !hasCompletedOnboarding {
                 onboardingViewModel.startOnboarding()
             }
         }

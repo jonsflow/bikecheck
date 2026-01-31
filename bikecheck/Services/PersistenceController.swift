@@ -128,7 +128,10 @@ class PersistenceController {
             
             // Reset UserDefaults
             UserDefaults.standard.removeObject(forKey: "hasCompletedOnboarding")
-            
+
+            // Clear Keychain flag so onboarding appears again
+            KeychainHelper.shared.clearHasUsedApp()
+
             // Reset StravaService state on main queue
             DispatchQueue.main.async {
                 let stravaService = StravaService.shared
@@ -139,7 +142,7 @@ class PersistenceController {
                 stravaService.activities = nil
                 stravaService.profileImage = nil
             }
-            
+
             print("Successfully reset all app data")
             
         } catch {

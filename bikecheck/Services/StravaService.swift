@@ -172,6 +172,10 @@ class StravaService: ObservableObject {
             do {
                 self.tokenInfo = try decoder.decode(TokenInfo.self, from: data)
                 try self.managedObjectContext.save()
+
+                // Mark user as having used the app (persists across reinstalls)
+                KeychainHelper.shared.setHasUsedApp()
+
                 completion(true)
             } catch {
                 print("Decoding or saving error: \(error)")
@@ -564,7 +568,10 @@ class StravaService: ObservableObject {
                 self.activities = nil
                 self.profileImage = nil
             }
-            
+
+            // Clear Keychain flag so onboarding appears again
+            KeychainHelper.shared.clearHasUsedApp()
+
         } catch {
             print("Failed to clear test data: \(error)")
         }

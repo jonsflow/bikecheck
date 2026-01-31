@@ -55,6 +55,7 @@
 		A3C2EC792C237B7500BA2BC8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A365B0042B44D34A00FF712E /* Assets.xcassets */; };
 		A3C3E63B2E5937B800083A7B /* StravaCredentialsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3C3E63A2E5937B800083A7B /* StravaCredentialsTests.swift */; };
 		A3C3E63D2E594D6D00083A7B /* AdContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3C3E63C2E594D6D00083A7B /* AdContainerView.swift */; };
+		A3D99D6F2F2D821100AE45EE /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D99D6E2F2D821100AE45EE /* KeychainHelper.swift */; };
 		A3E742952B46FDEE00C5191F /* Athlete.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E742922B46FDEE00C5191F /* Athlete.swift */; };
 		A3E742962B46FDEE00C5191F /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E742932B46FDEE00C5191F /* Activity.swift */; };
 		A3E742972B46FDEE00C5191F /* Bike.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E742942B46FDEE00C5191F /* Bike.swift */; };
@@ -129,6 +130,7 @@
 		A3C3E63A2E5937B800083A7B /* StravaCredentialsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StravaCredentialsTests.swift; sourceTree = "<group>"; };
 		A3C3E63C2E594D6D00083A7B /* AdContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdContainerView.swift; sourceTree = "<group>"; };
 		A3C3E63E2E596C6B00083A7B /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
+		A3D99D6E2F2D821100AE45EE /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
 		A3E742922B46FDEE00C5191F /* Athlete.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Athlete.swift; sourceTree = "<group>"; usesTabs = 0; };
 		A3E742932B46FDEE00C5191F /* Activity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Activity.swift; sourceTree = "<group>"; };
 		A3E742942B46FDEE00C5191F /* Bike.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bike.swift; sourceTree = "<group>"; };
@@ -268,6 +270,7 @@
 		A3AB08302DA1EE1300935BB8 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				A3D99D6E2F2D821100AE45EE /* KeychainHelper.swift */,
 				A35AEAD62F0C6B1A009349A3 /* PartTemplateService.swift */,
 				A30220882DBDD56900C3C195 /* BackgroundTaskManager.swift */,
 				A3AB082C2DA1EE1300935BB8 /* DataService.swift */,
@@ -495,6 +498,7 @@
 				A365B0312B44D37300FF712E /* TokenInfo.swift in Sources */,
 				A3E742962B46FDEE00C5191F /* Activity.swift in Sources */,
 				A3C3E63D2E594D6D00083A7B /* AdContainerView.swift in Sources */,
+				A3D99D6F2F2D821100AE45EE /* KeychainHelper.swift in Sources */,
 				A365B00D2B44D34A00FF712E /* bikecheck.xcdatamodeld in Sources */,
 				A35AEAD72F0C6B1A009349A3 /* PartTemplateService.swift in Sources */,
 				A3E742952B46FDEE00C5191F /* Athlete.swift in Sources */,
@@ -572,6 +576,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_ENTITLEMENTS = bikecheck/bikecheck.entitlements;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -635,6 +640,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_ENTITLEMENTS = bikecheck/bikecheck.entitlements;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
@@ -690,10 +696,10 @@
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				"SWIFT_ACTIVE_COMPILATION_CONDITIONS[arch=*]" = SHOW_ADS;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
-				"SWIFT_ACTIVE_COMPILATION_CONDITIONS[arch=*]" = SHOW_ADS;
 			};
 			name = Debug;
 		};
@@ -841,6 +847,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_ENTITLEMENTS = bikecheck/bikecheck.entitlements;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
