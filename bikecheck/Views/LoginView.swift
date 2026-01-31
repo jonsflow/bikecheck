@@ -31,7 +31,7 @@ struct LoginView: View {
                         }) {
                             Text("Sign in with Strava")
                                 .frame(width: 280, height: 60)
-                                .background(Color.blue)
+                                .background(Color.stravaOrange)
                                 .foregroundColor(.white)
                                 .cornerRadius(10)
                         }
@@ -41,10 +41,8 @@ struct LoginView: View {
                             loginViewModel.enterDemoMode()
                         }) {
                             Text("Demo Mode")
-                                .frame(width: 280, height: 60)
-                                .background(Color.green)
-                                .foregroundColor(.white)
-                                .cornerRadius(10)
+                                .underline()
+                                .foregroundColor(.secondary)
                         }
                         .accessibilityIdentifier("DemoMode")
                     }
@@ -100,4 +98,8 @@ struct LoginView: View {
             }
         }
     }
+}
+
+extension Color {
+    static let stravaOrange = Color(red: 252/255, green: 76/255, blue: 2/255)
 }

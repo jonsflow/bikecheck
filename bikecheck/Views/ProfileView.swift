@@ -46,7 +46,7 @@ struct ProfileView: View {
             }) {
                 Text("Sign Out")
                     .frame(width: 280, height: 60)
-                    .background(Color.red)
+                    .background(Color.stravaOrange)
                     .foregroundColor(.white)
                     .cornerRadius(10)
             }
