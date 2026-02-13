@@ -57,14 +57,19 @@ class DataService {
         }
     }
     
-    func createDefaultServiceIntervals(for bike: Bike, lastServiceDate: Date = Date()) {
+    func createDefaultServiceIntervals(
+        for bike: Bike,
+        lastServiceDate: Date = Date(),
+        templateIds: [String]? = nil
+    ) {
         let templateService = PartTemplateService.shared
 
-        // Use templates for common MTB components
-        let defaultTemplateIds = ["chain", "fork_lowers", "rear_shock"]
+        // Use provided templateIds or fall back to default MTB components
+        let ids = templateIds ?? ["chain", "fork_lowers", "rear_shock"]
 
-        for templateId in defaultTemplateIds {
+        for templateId in ids {
             guard let template = templateService.getTemplate(id: templateId) else {
+                print("Warning: Template '\(templateId)' not found, skipping")
                 continue
             }
 

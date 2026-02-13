@@ -34,8 +34,7 @@ struct BikeDetailView: View {
                     if intervals.isEmpty {
                         // Empty state - offer both options
                         Button(action: {
-                            selectedDate = Date()
-                            showingDatePicker = true
+                            viewModel.detectBikeType()
                         }) {
                             HStack {
                                 Image(systemName: "plus.circle.fill")
@@ -45,6 +44,7 @@ struct BikeDetailView: View {
                                 Spacer()
                             }
                         }
+                        .accessibilityIdentifier("CreateDefaultServiceIntervalsButton")
                         
                         NavigationLink(destination: AddServiceIntervalView()) {
                             HStack {
@@ -101,8 +101,7 @@ struct BikeDetailView: View {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Menu {
                     Button(action: {
-                        selectedDate = Date()
-                        showingDatePicker = true
+                        viewModel.detectBikeType()
                     }) {
                         Label("Create Default Service Intervals", systemImage: "plus.circle.fill")
                     }
@@ -152,31 +151,19 @@ struct BikeDetailView: View {
                 secondaryButton: .cancel()
             )
         }
-        .sheet(isPresented: $showingDatePicker) {
-            NavigationView {
-                VStack(spacing: 20) {
-                    Text("When did you last service this bike?")
-                        .font(.headline)
-                        .padding(.top)
-
-                    DatePicker("Last Service Date", selection: $selectedDate, displayedComponents: .date)
-                        .datePickerStyle(.graphical)
-                        .padding()
-
-                    Spacer()
-                }
-                .navigationTitle("Set Service Date")
-                .navigationBarItems(
-                    leading: Button("Cancel") {
-                        showingDatePicker = false
-                    },
-                    trailing: Button("Create") {
-                        viewModel.createDefaultServiceIntervals(lastServiceDate: selectedDate)
-                        showingDatePicker = false
+        .sheet(isPresented: $viewModel.showingPresetConfirmation) {
+            if let result = viewModel.detectionResult {
+                BikePresetConfirmationView(
+                    detectionResult: result,
+                    bike: bike,
+                    viewModel: viewModel
+                )
+                .onDisappear {
+                    if viewModel.showingServiceIntervalsCreatedAlert {
                         showingIntervalsCreatedAlert = true
                         serviceViewModel.loadServiceIntervals()
                     }
-                )
+                }
             }
         }
         .sheet(isPresented: $showingBatchUpdateDatePicker) {

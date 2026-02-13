@@ -1,0 +1,571 @@
+version: "1.0"
+
+# Generic bike type definitions with default service intervals
+bike_types:
+  - type: full_suspension
+    name: "Mountain Bike (Full Suspension)"
+    default_intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+
+  - type: hardtail
+    name: "Mountain Bike (Hardtail)"
+    default_intervals: [chain, fork_lowers, brake_pads]
+
+  - type: rigid
+    name: "Road Bike"
+    default_intervals: [chain, cassette, brake_pads, grips_tape]
+
+  - type: gravel
+    name: "Gravel Bike"
+    default_intervals: [chain, cassette, brake_pads, grips_tape]
+
+# Manufacturer-specific bike presets (50+ popular models)
+manufacturers:
+  # Trek
+  - id: trek
+    name: "Trek"
+    aliases: [trek bikes]
+    models:
+      - id: fuel_ex
+        name: "Fuel EX"
+        aliases: [fuelex, fuel-ex]
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: slash
+        name: "Slash"
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: remedy
+        name: "Remedy"
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: top_fuel
+        name: "Top Fuel"
+        aliases: [topfuel, top-fuel]
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: supercaliber
+        name: "Supercaliber"
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, brake_pads]
+      - id: marlin
+        name: "Marlin"
+        type: hardtail
+        intervals: [chain, fork_lowers, brake_pads]
+      - id: x_caliber
+        name: "X-Caliber"
+        aliases: [xcaliber, x caliber]
+        type: hardtail
+        intervals: [chain, fork_lowers, brake_pads]
+      - id: checkpoint
+        name: "Checkpoint"
+        type: gravel
+        intervals: [chain, cassette, brake_pads, grips_tape]
+      - id: domane
+        name: "Domane"
+        type: rigid
+        intervals: [chain, cassette, brake_pads, grips_tape]
+      - id: emonda
+        name: "Emonda"
+        type: rigid
+        intervals: [chain, cassette, brake_pads, grips_tape]
+      - id: madone
+        name: "Madone"
+        type: rigid
+        intervals: [chain, cassette, brake_pads, grips_tape]
+
+  # Specialized
+  - id: specialized
+    name: "Specialized"
+    aliases: [specialized bikes, spesh]
+    models:
+      - id: stumpjumper
+        name: "Stumpjumper"
+        aliases: [stumpy, stump jumper]
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: enduro
+        name: "Enduro"
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: demo
+        name: "Demo"
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: epic
+        name: "Epic"
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, brake_pads]
+      - id: epic_evo
+        name: "Epic Evo"
+        aliases: [epic-evo, epicevo]
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: chisel
+        name: "Chisel"
+        type: hardtail
+        intervals: [chain, fork_lowers, brake_pads]
+      - id: rockhopper
+        name: "Rockhopper"
+        type: hardtail
+        intervals: [chain, fork_lowers, brake_pads]
+      - id: diverge
+        name: "Diverge"
+        type: gravel
+        intervals: [chain, cassette, brake_pads, grips_tape]
+      - id: tarmac
+        name: "Tarmac"
+        type: rigid
+        intervals: [chain, cassette, brake_pads, grips_tape]
+      - id: roubaix
+        name: "Roubaix"
+        type: rigid
+        intervals: [chain, cassette, brake_pads, grips_tape]
+      - id: turbo_kenevo
+        name: "Turbo Kenevo"
+        aliases: [kenevo]
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: turbo_levo
+        name: "Turbo Levo"
+        aliases: [levo]
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+
+  # Santa Cruz
+  - id: santa_cruz
+    name: "Santa Cruz"
+    aliases: [santacruz, sc, santa-cruz]
+    models:
+      - id: hightower
+        name: "Hightower"
+        aliases: [high tower, high-tower]
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: bronson
+        name: "Bronson"
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: nomad
+        name: "Nomad"
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: megatower
+        name: "Megatower"
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: 5010
+        name: "5010"
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: tallboy
+        name: "Tallboy"
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, brake_pads]
+      - id: blur
+        name: "Blur"
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, brake_pads]
+      - id: chameleon
+        name: "Chameleon"
+        type: hardtail
+        intervals: [chain, fork_lowers, dropper_post, brake_pads]
+      - id: highball
+        name: "Highball"
+        type: hardtail
+        intervals: [chain, fork_lowers, brake_pads]
+      - id: stigmata
+        name: "Stigmata"
+        type: gravel
+        intervals: [chain, cassette, brake_pads, grips_tape]
+
+  # Giant
+  - id: giant
+    name: "Giant"
+    aliases: [giant bikes]
+    models:
+      - id: trance
+        name: "Trance"
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: reign
+        name: "Reign"
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: anthem
+        name: "Anthem"
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, brake_pads]
+      - id: fathom
+        name: "Fathom"
+        type: hardtail
+        intervals: [chain, fork_lowers, brake_pads]
+      - id: talon
+        name: "Talon"
+        type: hardtail
+        intervals: [chain, fork_lowers, brake_pads]
+      - id: revolt
+        name: "Revolt"
+        type: gravel
+        intervals: [chain, cassette, brake_pads, grips_tape]
+      - id: tcr
+        name: "TCR"
+        type: rigid
+        intervals: [chain, cassette, brake_pads, grips_tape]
+      - id: defy
+        name: "Defy"
+        type: rigid
+        intervals: [chain, cassette, brake_pads, grips_tape]
+      - id: propel
+        name: "Propel"
+        type: rigid
+        intervals: [chain, cassette, brake_pads, grips_tape]
+
+  # Canyon
+  - id: canyon
+    name: "Canyon"
+    aliases: [canyon bikes]
+    models:
+      - id: spectral
+        name: "Spectral"
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: neuron
+        name: "Neuron"
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: torque
+        name: "Torque"
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: strive
+        name: "Strive"
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: exceed
+        name: "Exceed"
+        type: hardtail
+        intervals: [chain, fork_lowers, brake_pads]
+      - id: stoic
+        name: "Stoic"
+        type: hardtail
+        intervals: [chain, fork_lowers, brake_pads]
+      - id: grail
+        name: "Grail"
+        type: gravel
+        intervals: [chain, cassette, brake_pads, grips_tape]
+      - id: grizl
+        name: "Grizl"
+        type: gravel
+        intervals: [chain, cassette, brake_pads, grips_tape]
+      - id: aeroad
+        name: "Aeroad"
+        type: rigid
+        intervals: [chain, cassette, brake_pads, grips_tape]
+      - id: ultimate
+        name: "Ultimate"
+        type: rigid
+        intervals: [chain, cassette, brake_pads, grips_tape]
+      - id: endurace
+        name: "Endurace"
+        type: rigid
+        intervals: [chain, cassette, brake_pads, grips_tape]
+
+  # Yeti
+  - id: yeti
+    name: "Yeti"
+    aliases: [yeti cycles]
+    models:
+      - id: sb130
+        name: "SB130"
+        aliases: [sb 130]
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: sb140
+        name: "SB140"
+        aliases: [sb 140]
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: sb150
+        name: "SB150"
+        aliases: [sb 150]
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: sb165
+        name: "SB165"
+        aliases: [sb 165]
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: sb100
+        name: "SB100"
+        aliases: [sb 100]
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, brake_pads]
+      - id: arc
+        name: "ARC"
+        type: hardtail
+        intervals: [chain, fork_lowers, brake_pads]
+
+  # Pivot
+  - id: pivot
+    name: "Pivot"
+    aliases: [pivot cycles]
+    models:
+      - id: switchblade
+        name: "Switchblade"
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: firebird
+        name: "Firebird"
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: mach_6
+        name: "Mach 6"
+        aliases: [mach6, mach-6]
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: trail_429
+        name: "Trail 429"
+        aliases: [trail429, trail-429]
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, brake_pads]
+
+  # Cannondale
+  - id: cannondale
+    name: "Cannondale"
+    aliases: [cannondale bikes]
+    models:
+      - id: habit
+        name: "Habit"
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: jekyll
+        name: "Jekyll"
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: scalpel
+        name: "Scalpel"
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, brake_pads]
+      - id: fsi
+        name: "FSi"
+        aliases: [f-si]
+        type: hardtail
+        intervals: [chain, fork_lowers, brake_pads]
+      - id: trail
+        name: "Trail"
+        type: hardtail
+        intervals: [chain, fork_lowers, brake_pads]
+      - id: topstone
+        name: "Topstone"
+        type: gravel
+        intervals: [chain, cassette, brake_pads, grips_tape]
+      - id: supersix
+        name: "SuperSix"
+        aliases: [super six, super-six]
+        type: rigid
+        intervals: [chain, cassette, brake_pads, grips_tape]
+      - id: caad
+        name: "CAAD"
+        type: rigid
+        intervals: [chain, cassette, brake_pads, grips_tape]
+      - id: synapse
+        name: "Synapse"
+        type: rigid
+        intervals: [chain, cassette, brake_pads, grips_tape]
+
+  # Scott
+  - id: scott
+    name: "Scott"
+    aliases: [scott bikes, scott sports]
+    models:
+      - id: genius
+        name: "Genius"
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: spark
+        name: "Spark"
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, brake_pads]
+      - id: ransom
+        name: "Ransom"
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: gambler
+        name: "Gambler"
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: scale
+        name: "Scale"
+        type: hardtail
+        intervals: [chain, fork_lowers, brake_pads]
+      - id: speedster
+        name: "Speedster"
+        type: rigid
+        intervals: [chain, cassette, brake_pads, grips_tape]
+      - id: addict
+        name: "Addict"
+        type: rigid
+        intervals: [chain, cassette, brake_pads, grips_tape]
+
+  # Ibis
+  - id: ibis
+    name: "Ibis"
+    aliases: [ibis cycles]
+    models:
+      - id: ripmo
+        name: "Ripmo"
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: ripley
+        name: "Ripley"
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: mojo
+        name: "Mojo"
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: exie
+        name: "Exie"
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, brake_pads]
+      - id: dv9
+        name: "DV9"
+        type: hardtail
+        intervals: [chain, fork_lowers, brake_pads]
+
+  # Evil
+  - id: evil
+    name: "Evil"
+    aliases: [evil bikes]
+    models:
+      - id: offering
+        name: "Offering"
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: wreckoning
+        name: "Wreckoning"
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: insurgent
+        name: "Insurgent"
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: following
+        name: "Following"
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: chamois_hagar
+        name: "Chamois Hagar"
+        aliases: [chamois-hagar, chamoishagar]
+        type: hardtail
+        intervals: [chain, fork_lowers, brake_pads]
+
+  # Commencal
+  - id: commencal
+    name: "Commencal"
+    aliases: [commencal bikes]
+    models:
+      - id: meta_am
+        name: "Meta AM"
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: meta_tr
+        name: "Meta TR"
+        aliases: [meta trail]
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: clash
+        name: "Clash"
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: supreme_dh
+        name: "Supreme DH"
+        aliases: [supreme]
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, brake_pads]
+      - id: meta_ht
+        name: "Meta HT"
+        aliases: [meta hardtail]
+        type: hardtail
+        intervals: [chain, fork_lowers, brake_pads]
+      - id: absolute
+        name: "Absolute"
+        type: hardtail
+        intervals: [chain, fork_lowers, brake_pads]
+      - id: ramones
+        name: "Ramones"
+        type: hardtail
+        intervals: [chain, fork_lowers, brake_pads]
+
+  # YT Industries
+  - id: yt
+    name: "YT"
+    aliases: [yt industries, yt bikes]
+    models:
+      - id: decoy
+        name: "Decoy"
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: capra
+        name: "Capra"
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: jeffsy
+        name: "Jeffsy"
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: izzo
+        name: "Izzo"
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: tues
+        name: "Tues"
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: dirt_love
+        name: "Dirt Love"
+        type: hardtail
+        intervals: [chain, fork_lowers, brake_pads]
+
+  # Marin
+  - id: marin
+    name: "Marin"
+    aliases: [marin bikes]
+    models:
+      - id: alpine_trail
+        name: "Alpine Trail"
+        aliases: [alpine trail xr, trail xr]
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: rift_zone
+        name: "Rift Zone"
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: mount_vision
+        name: "Mount Vision"
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: attack_trail
+        name: "Attack Trail"
+        type: full_suspension
+        intervals: [chain, fork_lowers, rear_shock, dropper_post, brake_pads]
+      - id: hawk_hill
+        name: "Hawk Hill"
+        type: hardtail
+        intervals: [chain, fork_lowers, dropper_post, brake_pads]
+      - id: san_quentin
+        name: "San Quentin"
+        type: hardtail
+        intervals: [chain, fork_lowers, brake_pads]
+      - id: pine_mountain
+        name: "Pine Mountain"
+        type: hardtail
+        intervals: [chain, fork_lowers, brake_pads]
+      - id: bobcat_trail
+        name: "Bobcat Trail"
+        type: hardtail
+        intervals: [chain, fork_lowers, brake_pads]
+      - id: nail_trail
+        name: "Nail Trail"
+        type: hardtail
+        intervals: [chain, fork_lowers, brake_pads]

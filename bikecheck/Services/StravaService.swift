@@ -469,12 +469,12 @@ class StravaService: ObservableObject {
         newAthlete.id = 26493868
         newAthlete.profile = "https://dgalywyr863hv.cloudfront.net/pictures/athletes/26493868/8338609/1/large.jpg"
         
-        // Create bikes
+        // Create bikes with real names for bike detection testing
         let bikes = [
-            createBike(id: "b1", name: "Kenevo", distance: 99999, in: viewContext),
-            createBike(id: "b2", name: "StumpJumper", distance: 99999, in: viewContext),
-            createBike(id: "b3", name: "Checkpoint", distance: 99999, in: viewContext),
-            createBike(id: "b4", name: "TimberJACKED", distance: 99999, in: viewContext)
+            createBike(id: "b1", name: "Specialized Turbo Kenevo Expert", distance: 99999, in: viewContext),
+            createBike(id: "b2", name: "Specialized Stumpjumper Evo", distance: 99999, in: viewContext),
+            createBike(id: "b3", name: "Trek Checkpoint SL 5", distance: 99999, in: viewContext),
+            createBike(id: "b4", name: "Santa Cruz Chameleon", distance: 99999, in: viewContext)
         ]
         
         // Create activities for bikes to simulate different usage scenarios
