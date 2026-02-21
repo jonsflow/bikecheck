@@ -407,7 +407,7 @@ final class bikecheckUITests: BikeCheckUITestCase {
     }
 
     func test11_CreateDefaultIntervalsWithDatePicker() throws {
-        // Test creating default service intervals shows date picker first
+        // Test creating default service intervals shows preset confirmation sheet
 
         navigateToTab("Bikes")
         XCTAssertTrue(verifyNavigationBar("Bikes"))
@@ -428,15 +428,12 @@ final class bikecheckUITests: BikeCheckUITestCase {
             if createButton.waitForExistence(timeout: 2) {
                 createButton.tap()
 
-                // Verify date picker sheet appears before creating
-                XCTAssertTrue(app.navigationBars["Set Service Date"].waitForExistence(timeout: 3), "Set Service Date sheet should appear")
+                // Verify preset confirmation sheet appears
+                XCTAssertTrue(app.navigationBars["Service Intervals"].waitForExistence(timeout: 3), "Service Intervals sheet should appear")
 
-                // Verify the question text
-                XCTAssertTrue(app.staticTexts["When did you last service this bike?"].exists, "Question should be displayed")
-
-                // Verify Cancel and Create buttons exist
+                // Verify Cancel and Apply buttons exist
                 XCTAssertTrue(app.buttons["Cancel"].exists, "Cancel button should exist")
-                XCTAssertTrue(app.buttons["Create"].exists, "Create button should exist")
+                XCTAssertTrue(app.buttons["apply_button"].exists, "Apply button should exist")
 
                 // Test canceling
                 app.buttons["Cancel"].tap()
