@@ -17,6 +17,7 @@ struct BikePresetConfirmationView: View {
     @State private var selectedIntervals: Set<String>
     @State private var lastServiceDate: Date = Date()
     @State private var showingTypeSelection = false
+    @State private var manuallySelectedType: BikeType? = nil
 
     init(detectionResult: BikeDetectionResult, bike: Bike, viewModel: BikeDetailViewModel) {
         self.detectionResult = detectionResult
@@ -60,9 +61,9 @@ struct BikePresetConfirmationView: View {
             }
             .sheet(isPresented: $showingTypeSelection) {
                 BikeTypeSelectionView { selectedType in
-                    // Update intervals based on manually selected type
                     let intervals = BikeDetectionService.shared.getDefaultIntervalsForType(selectedType)
                     selectedIntervals = Set(intervals)
+                    manuallySelectedType = selectedType
                     showingTypeSelection = false
                 }
             }
