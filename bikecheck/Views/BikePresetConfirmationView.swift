@@ -75,7 +75,8 @@ struct BikePresetConfirmationView: View {
     private var detectionHeaderSection: some View {
         VStack(spacing: 12) {
             // Bike icon
-            Image(systemName: detectionResult.type.iconName)
+            let iconType = manuallySelectedType ?? detectionResult.type
+            Image(systemName: iconType.iconName)
                 .font(.system(size: 50))
                 .foregroundColor(.blue)
 
@@ -95,6 +96,29 @@ struct BikePresetConfirmationView: View {
 
                 // Confidence badge
                 confidenceBadge
+            } else if let selected = manuallySelectedType {
+                Text(bike.name ?? "")
+                    .font(.title2)
+                    .fontWeight(.bold)
+
+                Text(selected.displayName)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+
+                Button(action: {
+                    showingTypeSelection = true
+                }) {
+                    HStack {
+                        Image(systemName: "bicycle.circle.fill")
+                        Text("Select Bike Type")
+                    }
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .frame(maxWidth: 280)
+                    .padding(.vertical, 14)
+                    .background(Color.blue)
+                    .cornerRadius(12)
+                }
             } else {
                 Text("Unable to detect bike type")
                     .font(.headline)
@@ -105,7 +129,6 @@ struct BikePresetConfirmationView: View {
                     .foregroundColor(.secondary)
                     .padding(.bottom, 8)
 
-                // Primary action button for manual selection
                 Button(action: {
                     showingTypeSelection = true
                 }) {
