@@ -69,7 +69,18 @@ class BikeDetectionService {
             )
         }
 
-        // Stage 2: Check BikeDatabase.json (220+ bikes)
+        // Stage 2: Model-only match (bike name has no manufacturer prefix)
+        if let preset = matchModelOnly(normalized: normalized) {
+            return BikeDetectionResult(
+                manufacturer: preset.manufacturer,
+                model: preset.model,
+                type: preset.type,
+                confidence: .high,
+                suggestedIntervals: preset.intervals
+            )
+        }
+
+        // Stage 3: Check BikeDatabase.json (220+ bikes)
         if let dbMatch = matchBikeDatabase(normalized: normalized) {
             let intervals = getDefaultIntervalsForType(dbMatch.type)
             return BikeDetectionResult(
@@ -182,6 +193,38 @@ class BikeDetectionService {
                     type: matchedModel.type,
                     intervals: intervals
                 )
+            }
+        }
+
+        return nil
+    }
+
+    private func matchModelOnly(normalized: String) -> (manufacturer: String, model: String, type: BikeType, intervals: [String])? {
+        guard let config = presetConfig else { return nil }
+
+        // Collect all models across all manufacturers, sorted by name length descending
+        // to prefer longer/more specific matches (e.g. "Turbo Kenevo" over "Kenevo")
+        var candidates: [(manufacturer: ManufacturerPreset, model: BikeModelPreset)] = []
+        for manufacturer in config.manufacturers {
+            for model in manufacturer.models {
+                candidates.append((manufacturer, model))
+            }
+        }
+        candidates.sort { ($0.model.name + ($0.model.aliases?.joined() ?? "")).count > ($1.model.name + ($1.model.aliases?.joined() ?? "")).count }
+
+        for candidate in candidates {
+            let model = candidate.model
+            if normalized.contains(model.name.lowercased()) {
+                let intervals = model.intervals ?? getDefaultIntervalsForType(model.type.rawValue)
+                return (manufacturer: candidate.manufacturer.name, model: model.name, type: model.type, intervals: intervals)
+            }
+            if let aliases = model.aliases {
+                for alias in aliases {
+                    if normalized.contains(alias.lowercased()) {
+                        let intervals = model.intervals ?? getDefaultIntervalsForType(model.type.rawValue)
+                        return (manufacturer: candidate.manufacturer.name, model: model.name, type: model.type, intervals: intervals)
+                    }
+                }
             }
         }
 

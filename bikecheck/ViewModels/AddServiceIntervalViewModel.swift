@@ -47,6 +47,7 @@ class AddServiceIntervalViewModel: ObservableObject {
         intervalTime = String(format: "%.1f", serviceInterval.intervalTime)
         notify = serviceInterval.notify
         selectedBike = serviceInterval.getBike(from: context)
+        selectedTemplate = PartTemplateService.shared.getAllTemplates().first { $0.name == serviceInterval.part }
 
         // Load the saved last service date, or default to today if not set
         lastServiceDate = serviceInterval.lastServiceDate ?? Date()

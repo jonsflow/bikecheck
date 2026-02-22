@@ -48,12 +48,6 @@ struct BikeTypeSelectionView: View {
             dismiss()
         }) {
             HStack(spacing: 16) {
-                // Icon
-                Image(systemName: type.iconName)
-                    .font(.title2)
-                    .foregroundColor(.blue)
-                    .frame(width: 40)
-
                 // Text content
                 VStack(alignment: .leading, spacing: 4) {
                     Text(type.displayName)

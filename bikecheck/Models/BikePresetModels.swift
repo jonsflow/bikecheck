@@ -19,9 +19,9 @@ enum BikeType: String, Codable, CaseIterable {
     var displayName: String {
         switch self {
         case .fullSuspension:
-            return "Mountain Bike (Full Suspension)"
+            return "Full Suspension MTB"
         case .hardtail:
-            return "Mountain Bike (Hardtail)"
+            return "Hardtail MTB"
         case .rigid:
             return "Road Bike"
         case .gravel:

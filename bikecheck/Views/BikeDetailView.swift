@@ -55,6 +55,7 @@ struct BikeDetailView: View {
                                 Spacer()
                             }
                         }
+
                     } else {
                         // Show existing intervals
                         ForEach(intervals, id: \.id) { serviceInterval in
