@@ -7,11 +7,14 @@ class BikeDetailViewModel: ObservableObject {
     @Published var bike: Bike
     @Published var showingConfirmationDialog = false
     @Published var showingServiceIntervalsCreatedAlert = false
-    
-    private let dataService = DataService.shared
+    @Published var showingPresetConfirmation = false
+    @Published var detectionResult: BikeDetectionResult?
+
+    private let dataService: DataService
     private let context = PersistenceController.shared.container.viewContext
-    
-    init(bike: Bike) {
+
+    init(dataService: DataService = DataService.shared, bike: Bike) {
+        self.dataService = dataService
         self.bike = bike
     }
     
@@ -46,5 +49,22 @@ class BikeDetailViewModel: ObservableObject {
         }
 
         dataService.saveContext()
+    }
+
+    // MARK: - Bike Detection
+
+    func detectBikeType() {
+        let result = BikeDetectionService.shared.detectBike(name: bike.name ?? "")
+        detectionResult = result
+        showingPresetConfirmation = true
+    }
+
+    func createIntervals(templateIds: [String], lastServiceDate: Date) {
+        dataService.createDefaultServiceIntervals(
+            for: bike,
+            lastServiceDate: lastServiceDate,
+            templateIds: templateIds
+        )
+        showingServiceIntervalsCreatedAlert = true
     }
 }

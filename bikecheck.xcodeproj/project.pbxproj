@@ -26,6 +26,11 @@
 		A365B00D2B44D34A00FF712E /* bikecheck.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A365B00B2B44D34A00FF712E /* bikecheck.xcdatamodeld */; };
 		A365B0312B44D37300FF712E /* TokenInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A365B0302B44D37300FF712E /* TokenInfo.swift */; };
 		A365B03A2B44D41000FF712E /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = A365B0392B44D41000FF712E /* Alamofire */; };
+		A380343E2F3ED82500DFBDB6 /* BikePresetModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A380343D2F3ED82400DFBDB6 /* BikePresetModels.swift */; };
+		A38034422F3ED86400DFBDB6 /* BikeDetectionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38034412F3ED86400DFBDB6 /* BikeDetectionService.swift */; };
+		A38034442F3ED86E00DFBDB6 /* BikePresets.yaml in Resources */ = {isa = PBXBuildFile; fileRef = A38034432F3ED86E00DFBDB6 /* BikePresets.yaml */; };
+		A38034472F3ED89000DFBDB6 /* BikePresetConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38034452F3ED89000DFBDB6 /* BikePresetConfirmationView.swift */; };
+		A38034482F3ED89000DFBDB6 /* BikeTypeSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38034462F3ED89000DFBDB6 /* BikeTypeSelectionView.swift */; };
 		A38B307A2DAC5B0000F82FA3 /* bikecheckUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38B30792DAC5B0000F82FA3 /* bikecheckUITests.swift */; };
 		A38B307E2DAC5B2000F82FA3 /* PersistenceControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38B307D2DAC5B2000F82FA3 /* PersistenceControllerTests.swift */; };
 		A38B307F2DAC5B2000F82FA3 /* DataServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38B307B2DAC5B2000F82FA3 /* DataServiceTests.swift */; };
@@ -50,8 +55,6 @@
 		A3AB084F2DA1EE1300935BB8 /* ServiceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AB083E2DA1EE1300935BB8 /* ServiceView.swift */; };
 		A3AB08502DA1EE1300935BB8 /* BikesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AB08342DA1EE1300935BB8 /* BikesViewModel.swift */; };
 		A3B565BE2E69503200C438BD /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B565BB2E69503200C438BD /* ProfileView.swift */; };
-		A3B565C22E6BF9D800C438BD /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = A3B565C12E6BF9D800C438BD /* GoogleMobileAds */; };
-		A3B565C42E6BFBA900C438BD /* AdBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B565C32E6BFBA900C438BD /* AdBannerView.swift */; };
 		A3C2EC792C237B7500BA2BC8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A365B0042B44D34A00FF712E /* Assets.xcassets */; };
 		A3C3E63B2E5937B800083A7B /* StravaCredentialsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3C3E63A2E5937B800083A7B /* StravaCredentialsTests.swift */; };
 		A3C3E63D2E594D6D00083A7B /* AdContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3C3E63C2E594D6D00083A7B /* AdContainerView.swift */; };
@@ -99,6 +102,11 @@
 		A365B01C2B44D34A00FF712E /* bikecheckUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = bikecheckUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A365B0302B44D37300FF712E /* TokenInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenInfo.swift; sourceTree = "<group>"; };
 		A365B03B2B44D93700FF712E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		A380343D2F3ED82400DFBDB6 /* BikePresetModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BikePresetModels.swift; sourceTree = "<group>"; };
+		A38034412F3ED86400DFBDB6 /* BikeDetectionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BikeDetectionService.swift; sourceTree = "<group>"; };
+		A38034432F3ED86E00DFBDB6 /* BikePresets.yaml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = BikePresets.yaml; sourceTree = "<group>"; };
+		A38034452F3ED89000DFBDB6 /* BikePresetConfirmationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BikePresetConfirmationView.swift; sourceTree = "<group>"; };
+		A38034462F3ED89000DFBDB6 /* BikeTypeSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BikeTypeSelectionView.swift; sourceTree = "<group>"; };
 		A38B30792DAC5B0000F82FA3 /* bikecheckUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = bikecheckUITests.swift; sourceTree = "<group>"; };
 		A38B307B2DAC5B2000F82FA3 /* DataServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataServiceTests.swift; sourceTree = "<group>"; };
 		A38B307C2DAC5B2000F82FA3 /* MockPersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPersistenceController.swift; sourceTree = "<group>"; };
@@ -123,7 +131,6 @@
 		A3AB083D2DA1EE1300935BB8 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		A3AB083E2DA1EE1300935BB8 /* ServiceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceView.swift; sourceTree = "<group>"; };
 		A3B565BB2E69503200C438BD /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
-		A3B565C32E6BFBA900C438BD /* AdBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdBannerView.swift; sourceTree = "<group>"; };
 		A3C3E6302E59364B00083A7B /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
 		A3C3E6312E59364B00083A7B /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
 		A3C3E6322E59364B00083A7B /* Test.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Test.xcconfig; sourceTree = "<group>"; };
@@ -142,7 +149,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A3B565C22E6BF9D800C438BD /* GoogleMobileAds in Frameworks */,
 				A35AEADF2F0C9B19009349A3 /* Yams in Frameworks */,
 				A365B03A2B44D41000FF712E /* Alamofire in Frameworks */,
 			);
@@ -170,6 +176,7 @@
 		A35AEADA2F0C6B38009349A3 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				A38034432F3ED86E00DFBDB6 /* BikePresets.yaml */,
 				A35AEAD82F0C6B38009349A3 /* BikeDatabase.json */,
 				A35AEAD92F0C6B38009349A3 /* PartTemplates.yaml */,
 			);
@@ -255,6 +262,7 @@
 		A365B02F2B44D36100FF712E /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				A380343D2F3ED82400DFBDB6 /* BikePresetModels.swift */,
 				A35AEAD42F0C6B0C009349A3 /* PartTemplateModels.swift */,
 				A31DDB4D2DFCEB2600E16E4B /* TourStep.swift */,
 				A31DDB492DFCDA5000E16E4B /* OnboardingStep.swift */,
@@ -270,6 +278,7 @@
 		A3AB08302DA1EE1300935BB8 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				A38034412F3ED86400DFBDB6 /* BikeDetectionService.swift */,
 				A3D99D6E2F2D821100AE45EE /* KeychainHelper.swift */,
 				A35AEAD62F0C6B1A009349A3 /* PartTemplateService.swift */,
 				A30220882DBDD56900C3C195 /* BackgroundTaskManager.swift */,
@@ -298,7 +307,8 @@
 		A3AB083F2DA1EE1300935BB8 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				A3B565C32E6BFBA900C438BD /* AdBannerView.swift */,
+				A38034452F3ED89000DFBDB6 /* BikePresetConfirmationView.swift */,
+				A38034462F3ED89000DFBDB6 /* BikeTypeSelectionView.swift */,
 				A3C3E63C2E594D6D00083A7B /* AdContainerView.swift */,
 				A31DDB512DFCEB4700E16E4B /* OnboardingTourOverlay.swift */,
 				A31DDB472DFCDA4300E16E4B /* OnboardingOverlay.swift */,
@@ -343,7 +353,6 @@
 			name = bikecheck;
 			packageProductDependencies = (
 				A365B0392B44D41000FF712E /* Alamofire */,
-				A3B565C12E6BF9D800C438BD /* GoogleMobileAds */,
 				A35AEADE2F0C9B19009349A3 /* Yams */,
 			);
 			productName = bikecheck;
@@ -420,7 +429,6 @@
 			mainGroup = A365AFF42B44D34900FF712E;
 			packageReferences = (
 				A365B0382B44D41000FF712E /* XCRemoteSwiftPackageReference "Alamofire" */,
-				A3B565C02E6BF9D800C438BD /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
 				A35AEAD12F0C6A38009349A3 /* XCRemoteSwiftPackageReference "Yams" */,
 			);
 			productRefGroup = A365AFFE2B44D34900FF712E /* Products */;
@@ -441,6 +449,7 @@
 			files = (
 				A35AEADB2F0C6B38009349A3 /* BikeDatabase.json in Resources */,
 				A35AEADC2F0C6B38009349A3 /* PartTemplates.yaml in Resources */,
+				A38034442F3ED86E00DFBDB6 /* BikePresets.yaml in Resources */,
 				A3C2EC792C237B7500BA2BC8 /* Assets.xcassets in Resources */,
 				A365B0082B44D34A00FF712E /* Preview Assets.xcassets in Resources */,
 			);
@@ -475,6 +484,8 @@
 				A3AB08432DA1EE1300935BB8 /* PersistenceController.swift in Sources */,
 				A30220892DBDD56900C3C195 /* BackgroundTaskManager.swift in Sources */,
 				A3AB08442DA1EE1300935BB8 /* AddServiceIntervalViewModel.swift in Sources */,
+				A38034472F3ED89000DFBDB6 /* BikePresetConfirmationView.swift in Sources */,
+				A38034482F3ED89000DFBDB6 /* BikeTypeSelectionView.swift in Sources */,
 				A3AB08452DA1EE1300935BB8 /* NotificationService.swift in Sources */,
 				A3AB08462DA1EE1300935BB8 /* AddServiceIntervalView.swift in Sources */,
 				A31DDB482DFCDA4300E16E4B /* OnboardingOverlay.swift in Sources */,
@@ -492,17 +503,18 @@
 				A3AB084F2DA1EE1300935BB8 /* ServiceView.swift in Sources */,
 				A3AB08502DA1EE1300935BB8 /* BikesViewModel.swift in Sources */,
 				A3E742972B46FDEE00C5191F /* Bike.swift in Sources */,
-				A3B565C42E6BFBA900C438BD /* AdBannerView.swift in Sources */,
 				A3B565BE2E69503200C438BD /* ProfileView.swift in Sources */,
 				A365B0012B44D34900FF712E /* bikecheckApp.swift in Sources */,
 				A365B0312B44D37300FF712E /* TokenInfo.swift in Sources */,
 				A3E742962B46FDEE00C5191F /* Activity.swift in Sources */,
+				A38034422F3ED86400DFBDB6 /* BikeDetectionService.swift in Sources */,
 				A3C3E63D2E594D6D00083A7B /* AdContainerView.swift in Sources */,
 				A3D99D6F2F2D821100AE45EE /* KeychainHelper.swift in Sources */,
 				A365B00D2B44D34A00FF712E /* bikecheck.xcdatamodeld in Sources */,
 				A35AEAD72F0C6B1A009349A3 /* PartTemplateService.swift in Sources */,
 				A3E742952B46FDEE00C5191F /* Athlete.swift in Sources */,
 				A31DDB4E2DFCEB2600E16E4B /* TourStep.swift in Sources */,
+				A380343E2F3ED82500DFBDB6 /* BikePresetModels.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -696,7 +708,6 @@
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
-				"SWIFT_ACTIVE_COMPILATION_CONDITIONS[arch=*]" = SHOW_ADS;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1014,14 +1025,6 @@
 				minimumVersion = 5.8.1;
 			};
 		};
-		A3B565C02E6BF9D800C438BD /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 12.10.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1044,11 +1047,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A365B0382B44D41000FF712E /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
-		};
-		A3B565C12E6BF9D800C438BD /* GoogleMobileAds */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = A3B565C02E6BF9D800C438BD /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
-			productName = GoogleMobileAds;
 		};
 /* End XCSwiftPackageProductDependency section */
 

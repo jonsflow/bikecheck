@@ -1,7 +1,6 @@
 import SwiftUI
 import BackgroundTasks
 import os.log
-import GoogleMobileAds
 
 @main
 struct bikecheckApp: App {
@@ -20,10 +19,7 @@ struct bikecheckApp: App {
     init(){
         // Configure background tasks during app initialization
         configureBackgroundTasks()
-        
-        // Initialize AdMob SDK
-        MobileAds.shared.start(completionHandler: nil)
-        
+
         // this is still needed for some reason, stravaService doesnt init without it
     }
     

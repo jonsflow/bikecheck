@@ -159,3 +159,11 @@ part_templates:
     icon: hand.raised
     description: "Grip or handlebar tape replacement"
     notify_default: false
+
+  - id: linkage_bearings
+    name: Linkage Bearings
+    category: suspension
+    default_interval_hours: 100
+    icon: circle.hexagongrid.fill
+    description: "Suspension linkage bearing service"
+    notify_default: true
