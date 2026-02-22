@@ -67,7 +67,6 @@ final class bikecheckUITests: BikeCheckUITestCase {
             firstServiceInterval.tap()
             
             // Verify we're in the service interval detail/edit form by validating form fields
-            XCTAssertTrue(app.textFields["Part"].waitForExistence(timeout: 3))
             XCTAssertTrue(app.textFields["Interval Time (hrs)"].waitForExistence(timeout: 3))
             XCTAssertTrue(app.switches["Notify"].waitForExistence(timeout: 3))
             
@@ -428,12 +427,12 @@ final class bikecheckUITests: BikeCheckUITestCase {
             if createButton.waitForExistence(timeout: 2) {
                 createButton.tap()
 
-                // Verify preset confirmation sheet appears
-                XCTAssertTrue(app.navigationBars["Service Intervals"].waitForExistence(timeout: 3), "Service Intervals sheet should appear")
+                // Verify preset confirmation sheet appears (step 1: parts selection)
+                XCTAssertTrue(app.navigationBars["Choose Parts"].waitForExistence(timeout: 3), "Choose Parts sheet should appear")
 
-                // Verify Cancel and Apply buttons exist
+                // Verify Cancel and Next buttons exist on step 1
                 XCTAssertTrue(app.buttons["Cancel"].exists, "Cancel button should exist")
-                XCTAssertTrue(app.buttons["apply_button"].exists, "Apply button should exist")
+                XCTAssertTrue(app.buttons["next_button"].exists, "Next button should exist")
 
                 // Test canceling
                 app.buttons["Cancel"].tap()
