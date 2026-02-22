@@ -37,6 +37,7 @@
 		A38B30802DAC5B2000F82FA3 /* MockPersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38B307C2DAC5B2000F82FA3 /* MockPersistenceController.swift */; };
 		A3934B0D2DE93F4A003DF2D1 /* BikeCheckUITestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3934B0C2DE93F4A003DF2D1 /* BikeCheckUITestCase.swift */; };
 		A39ADD9E2B54A8CD0038AC55 /* ServiceInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39ADD9D2B54A8CD0038AC55 /* ServiceInterval.swift */; };
+		A3A073D42F4B8A8B007FE2D6 /* PartSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3A073D32F4B8A8B007FE2D6 /* PartSelectionView.swift */; };
 		A3AB08402DA1EE1300935BB8 /* ServiceViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AB08362DA1EE1300935BB8 /* ServiceViewModel.swift */; };
 		A3AB08412DA1EE1300935BB8 /* BikesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AB083B2DA1EE1300935BB8 /* BikesView.swift */; };
 		A3AB08422DA1EE1300935BB8 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AB083D2DA1EE1300935BB8 /* LoginView.swift */; };
@@ -113,6 +114,7 @@
 		A38B307D2DAC5B2000F82FA3 /* PersistenceControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceControllerTests.swift; sourceTree = "<group>"; };
 		A3934B0C2DE93F4A003DF2D1 /* BikeCheckUITestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BikeCheckUITestCase.swift; sourceTree = "<group>"; };
 		A39ADD9D2B54A8CD0038AC55 /* ServiceInterval.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceInterval.swift; sourceTree = "<group>"; };
+		A3A073D32F4B8A8B007FE2D6 /* PartSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartSelectionView.swift; sourceTree = "<group>"; };
 		A3AB082C2DA1EE1300935BB8 /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
 		A3AB082D2DA1EE1300935BB8 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		A3AB082E2DA1EE1300935BB8 /* PersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceController.swift; sourceTree = "<group>"; };
@@ -307,6 +309,7 @@
 		A3AB083F2DA1EE1300935BB8 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				A3A073D32F4B8A8B007FE2D6 /* PartSelectionView.swift */,
 				A38034452F3ED89000DFBDB6 /* BikePresetConfirmationView.swift */,
 				A38034462F3ED89000DFBDB6 /* BikeTypeSelectionView.swift */,
 				A3C3E63C2E594D6D00083A7B /* AdContainerView.swift */,
@@ -510,6 +513,7 @@
 				A38034422F3ED86400DFBDB6 /* BikeDetectionService.swift in Sources */,
 				A3C3E63D2E594D6D00083A7B /* AdContainerView.swift in Sources */,
 				A3D99D6F2F2D821100AE45EE /* KeychainHelper.swift in Sources */,
+				A3A073D42F4B8A8B007FE2D6 /* PartSelectionView.swift in Sources */,
 				A365B00D2B44D34A00FF712E /* bikecheck.xcdatamodeld in Sources */,
 				A35AEAD72F0C6B1A009349A3 /* PartTemplateService.swift in Sources */,
 				A3E742952B46FDEE00C5191F /* Athlete.swift in Sources */,

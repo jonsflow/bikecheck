@@ -1,15 +1,12 @@
 import SwiftUI
 
 struct ProfileView: View {
+    @Environment(\.dismiss) var dismiss
     @EnvironmentObject var stravaService: StravaService
     @State private var showLogoutAlert = false
-    
+
     var body: some View {
         VStack(spacing: 30) {
-            Text("Profile")
-                .font(.largeTitle)
-                .fontWeight(.bold)
-            
             if let profileImage = stravaService.profileImage {
                 Image(uiImage: profileImage)
                     .resizable()
@@ -21,47 +18,66 @@ struct ProfileView: View {
                     .font(.system(size: 100))
                     .foregroundColor(.gray)
             }
-            
+
             if let athlete = stravaService.athlete {
-                Text((athlete.firstname))
+                Text(athlete.firstname)
                     .font(.title2)
                     .fontWeight(.semibold)
             }
-            
+
             VStack(spacing: 12) {
                 Text("Strava Connection")
                     .font(.headline)
-                
+
                 Text("Status: \(connectionStatusText)")
                     .foregroundColor(connectionStatusColor)
-                
+
                 if isDemoMode {
                     Text("Demo Mode Active")
                         .foregroundColor(.orange)
                 }
             }
-            
-            Button(action: {
-                showLogoutAlert = true
-            }) {
-                Text("Sign Out")
-                    .frame(width: 280, height: 60)
-                    .background(Color.stravaOrange)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        .padding(.top, 40)
+        .navigationTitle("Profile")
+        .navigationBarBackButtonHidden(true)
+        .toolbar(.hidden, for: .tabBar)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: { dismiss() }) {
+                    HStack(spacing: 4) {
+                        Image(systemName: "chevron.left")
+                        Text("Back")
+                    }
+                }
+            }
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Menu {
+                    Button(action: {}) {
+                        Label("Export Data", systemImage: "square.and.arrow.up")
+                    }
+
+                    Divider()
+
+                    Button(role: .destructive, action: { showLogoutAlert = true }) {
+                        Label("Sign Out", systemImage: "rectangle.portrait.and.arrow.right")
+                    }
+                } label: {
+                    Image(systemName: "ellipsis.circle")
+                }
             }
         }
-        .navigationBarHidden(true)
         .alert("Sign Out", isPresented: $showLogoutAlert) {
             Button("Cancel", role: .cancel) { }
             Button("Sign Out", role: .destructive) {
-                logout()
+                stravaService.logout()
             }
         } message: {
             Text("Are you sure you want to sign out?")
         }
     }
-    
+
     private var connectionStatusText: String {
         if isDemoMode {
             return "Demo Mode"
@@ -71,7 +87,7 @@ struct ProfileView: View {
             return "Disconnected"
         }
     }
-    
+
     private var connectionStatusColor: Color {
         if isDemoMode {
             return .orange
@@ -81,29 +97,15 @@ struct ProfileView: View {
             return .red
         }
     }
-    
+
     private var isDemoMode: Bool {
         return stravaService.tokenInfo?.expiresAt == 9999999999
-    }
-    
-    private func lastSyncText(tokenInfo: TokenInfo) -> String {
-        if isDemoMode {
-            return "Demo data loaded"
-        } else {
-            let date = Date(timeIntervalSince1970: TimeInterval(tokenInfo.expiresAt))
-            let formatter = DateFormatter()
-            formatter.dateStyle = .medium
-            formatter.timeStyle = .short
-            return formatter.string(from: date)
-        }
-    }
-    
-    private func logout() {
-        stravaService.logout()
     }
 }
 
 #Preview {
-    ProfileView()
-        .environmentObject(StravaService.shared)
+    NavigationView {
+        ProfileView()
+            .environmentObject(StravaService.shared)
+    }
 }

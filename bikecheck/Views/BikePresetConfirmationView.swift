@@ -18,6 +18,7 @@ struct BikePresetConfirmationView: View {
     @State private var lastServiceDate: Date = Date()
     @State private var showingTypeSelection = false
     @State private var manuallySelectedType: BikeType? = nil
+    @State private var step = 1  // 1 = parts selection, 2 = date picker
 
     init(detectionResult: BikeDetectionResult, bike: Bike, viewModel: BikeDetailViewModel) {
         self.detectionResult = detectionResult
@@ -29,33 +30,24 @@ struct BikePresetConfirmationView: View {
     var body: some View {
         NavigationView {
             VStack(spacing: 0) {
-                // Detection Result Header
-                detectionHeaderSection
-
-                Divider()
-
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 20) {
-                        // Date Picker Section
-                        datePickerSection
-
-                        Divider()
-
-                        // Intervals Section
-                        intervalsSection
-                    }
-                    .padding()
+                if step == 1 {
+                    detectionHeaderSection
+                    Divider()
+                    partsList
+                } else {
+                    dateStepContent
                 }
 
-                // Bottom Actions
                 bottomActionButtons
             }
-            .navigationTitle("Service Intervals")
+            .navigationTitle(step == 1 ? "Choose Parts" : "Last Service Date")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Cancel") {
-                        dismiss()
+                    if step == 1 {
+                        Button("Cancel") { dismiss() }
+                    } else {
+                        Button("Back") { step = 1 }
                     }
                 }
             }
@@ -70,83 +62,137 @@ struct BikePresetConfirmationView: View {
         }
     }
 
-    // MARK: - Header Section
+    // MARK: - Step 1: Parts List
 
-    private var detectionHeaderSection: some View {
-        VStack(spacing: 12) {
-            // Bike icon
-            let iconType = manuallySelectedType ?? detectionResult.type
-            Image(systemName: iconType.iconName)
-                .font(.system(size: 50))
-                .foregroundColor(.blue)
-
-            // Detection title
-            if detectionResult.confidence != .fallback {
-                Text("We detected:")
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-
-                Text(detectionResult.displayTitle)
-                    .font(.title2)
-                    .fontWeight(.bold)
-
-                Text(detectionResult.displaySubtitle)
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-
-                // Confidence badge
-                confidenceBadge
-            } else if let selected = manuallySelectedType {
-                Text(bike.name ?? "")
-                    .font(.title2)
-                    .fontWeight(.bold)
-
-                Text(selected.displayName)
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-
-                Button(action: {
-                    showingTypeSelection = true
-                }) {
-                    HStack {
-                        Image(systemName: "bicycle.circle.fill")
-                        Text("Select Bike Type")
+    private var partsList: some View {
+        List {
+            ForEach(PartTemplateService.shared.getAllCategories()) { category in
+                let parts = PartTemplateService.shared.getTemplatesByCategory(category.id)
+                if !parts.isEmpty {
+                    Section(header: Label(category.name, systemImage: category.icon)) {
+                        ForEach(parts) { part in
+                            partRow(for: part)
+                        }
                     }
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .frame(maxWidth: 280)
-                    .padding(.vertical, 14)
-                    .background(Color.blue)
-                    .cornerRadius(12)
-                }
-            } else {
-                Text("Unable to detect bike type")
-                    .font(.headline)
-                    .foregroundColor(.secondary)
-
-                Text("Please select your bike type to continue")
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-                    .padding(.bottom, 8)
-
-                Button(action: {
-                    showingTypeSelection = true
-                }) {
-                    HStack {
-                        Image(systemName: "bicycle.circle.fill")
-                        Text("Select Bike Type")
-                    }
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .frame(maxWidth: 280)
-                    .padding(.vertical, 14)
-                    .background(Color.blue)
-                    .cornerRadius(12)
                 }
             }
         }
-        .padding(.vertical, 20)
-        .frame(maxWidth: .infinity)
+        .listStyle(.insetGrouped)
+    }
+
+    private func partRow(for part: PartTemplate) -> some View {
+        Button(action: {
+            if selectedIntervals.contains(part.id) {
+                selectedIntervals.remove(part.id)
+            } else {
+                selectedIntervals.insert(part.id)
+            }
+        }) {
+            HStack(spacing: 12) {
+                Image(systemName: part.icon)
+                    .font(.body)
+                    .foregroundColor(.blue)
+                    .frame(width: 28, height: 28)
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(part.name)
+                        .font(.body)
+                        .foregroundColor(.primary)
+
+                    Text("Every \(Int(part.defaultIntervalHours)) hours")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+
+                Spacer()
+
+                if selectedIntervals.contains(part.id) {
+                    Image(systemName: "checkmark")
+                        .foregroundColor(.blue)
+                        .fontWeight(.semibold)
+                }
+            }
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityIdentifier("interval_\(part.id)")
+    }
+
+    // MARK: - Step 2: Date Picker
+
+    private var dateStepContent: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 20) {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("When were these components last serviced?")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+
+                    let count = selectedIntervals.count
+                    Text("\(count) part\(count == 1 ? "" : "s") selected")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                .padding(.top, 4)
+
+                DatePicker(
+                    "Last Service Date",
+                    selection: $lastServiceDate,
+                    in: ...Date(),
+                    displayedComponents: .date
+                )
+                .datePickerStyle(.graphical)
+                .labelsHidden()
+            }
+            .padding()
+        }
+    }
+
+    // MARK: - Detection Header
+
+    private var detectionHeaderSection: some View {
+        VStack(spacing: 8) {
+            let iconType = manuallySelectedType ?? detectionResult.type
+            HStack(spacing: 12) {
+                Image(systemName: iconType.iconName)
+                    .font(.system(size: 28))
+                    .foregroundColor(.blue)
+
+                VStack(alignment: .leading, spacing: 2) {
+                    if detectionResult.confidence != .fallback {
+                        Text(detectionResult.displayTitle)
+                            .font(.headline)
+                        Text(detectionResult.displaySubtitle)
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    } else if let selected = manuallySelectedType {
+                        Text(bike.name ?? "")
+                            .font(.headline)
+                        Text(selected.displayName)
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    } else {
+                        Text("Select a bike type to get recommendations")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                    }
+                }
+
+                Spacer()
+
+                if detectionResult.confidence != .fallback {
+                    confidenceBadge
+                } else {
+                    Button("Select Type") {
+                        showingTypeSelection = true
+                    }
+                    .font(.subheadline)
+                    .buttonStyle(.bordered)
+                }
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
+        }
         .background(Color(.systemGroupedBackground))
     }
 
@@ -158,200 +204,55 @@ struct BikePresetConfirmationView: View {
                 .font(.caption)
                 .fontWeight(.medium)
         }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 6)
+        .padding(.horizontal, 10)
+        .padding(.vertical, 5)
         .background(confidenceColor.opacity(0.2))
         .foregroundColor(confidenceColor)
-        .cornerRadius(12)
+        .cornerRadius(10)
     }
 
     private var confidenceIcon: String {
         switch detectionResult.confidence {
-        case .high:
-            return "checkmark.circle.fill"
-        case .medium:
-            return "checkmark.circle"
-        case .low:
-            return "exclamationmark.circle"
-        case .fallback:
-            return "questionmark.circle"
+        case .high: return "checkmark.circle.fill"
+        case .medium: return "checkmark.circle"
+        case .low: return "exclamationmark.circle"
+        case .fallback: return "questionmark.circle"
         }
     }
 
     private var confidenceColor: Color {
         switch detectionResult.confidence {
-        case .high:
-            return .green
-        case .medium:
-            return .blue
-        case .low:
-            return .orange
-        case .fallback:
-            return .gray
+        case .high: return .green
+        case .medium: return .blue
+        case .low: return .orange
+        case .fallback: return .gray
         }
-    }
-
-    // MARK: - Date Picker Section
-
-    private var datePickerSection: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("Last Service Date")
-                .font(.headline)
-
-            Text("When were these components last serviced?")
-                .font(.caption)
-                .foregroundColor(.secondary)
-
-            DatePicker(
-                "Last Service Date",
-                selection: $lastServiceDate,
-                in: ...Date(),
-                displayedComponents: .date
-            )
-            .datePickerStyle(.graphical)
-            .labelsHidden()
-        }
-    }
-
-    // MARK: - Intervals Section
-
-    private var intervalsSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Text("Service Intervals")
-                    .font(.headline)
-
-                Spacer()
-
-                if detectionResult.confidence == .fallback {
-                    Button("Choose Type") {
-                        showingTypeSelection = true
-                    }
-                    .font(.subheadline)
-                }
-            }
-
-            if selectedIntervals.isEmpty {
-                emptyStateView
-            } else {
-                intervalsList
-            }
-        }
-    }
-
-    private var emptyStateView: some View {
-        VStack(spacing: 12) {
-            Image(systemName: "wrench.and.screwdriver")
-                .font(.system(size: 40))
-                .foregroundColor(.gray)
-
-            Text("No intervals selected")
-                .font(.subheadline)
-                .foregroundColor(.secondary)
-
-            Button("Choose Bike Type") {
-                showingTypeSelection = true
-            }
-            .buttonStyle(.bordered)
-        }
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, 30)
-    }
-
-    private var intervalsList: some View {
-        VStack(spacing: 0) {
-            ForEach(Array(selectedIntervals).sorted(), id: \.self) { intervalId in
-                intervalRow(for: intervalId)
-            }
-        }
-        .background(Color(.systemBackground))
-        .cornerRadius(10)
-    }
-
-    private func intervalRow(for intervalId: String) -> some View {
-        HStack {
-            Button(action: {
-                if selectedIntervals.contains(intervalId) {
-                    selectedIntervals.remove(intervalId)
-                } else {
-                    selectedIntervals.insert(intervalId)
-                }
-            }) {
-                HStack(spacing: 12) {
-                    Image(systemName: selectedIntervals.contains(intervalId) ? "checkmark.circle.fill" : "circle")
-                        .font(.title3)
-                        .foregroundColor(selectedIntervals.contains(intervalId) ? .blue : .gray)
-
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(intervalDisplayName(intervalId))
-                            .font(.body)
-                            .foregroundColor(.primary)
-
-                        if let template = PartTemplateService.shared.getTemplate(id: intervalId) {
-                            Text("\(Int(template.defaultIntervalHours)) hours")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                        }
-                    }
-
-                    Spacer()
-                }
-                .padding(.vertical, 12)
-                .padding(.horizontal, 16)
-                .contentShape(Rectangle())
-            }
-            .buttonStyle(.plain)
-        }
-        .background(Color(.systemBackground))
-        .accessibilityIdentifier("interval_\(intervalId)")
-    }
-
-    private func intervalDisplayName(_ id: String) -> String {
-        if let template = PartTemplateService.shared.getTemplate(id: id) {
-            return template.name
-        }
-        return id.replacingOccurrences(of: "_", with: " ").capitalized
     }
 
     // MARK: - Bottom Actions
 
     private var bottomActionButtons: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: 0) {
             Divider()
-
-            if detectionResult.confidence != .fallback {
-                // Normal flow - show both Customize and Apply buttons
-                HStack(spacing: 12) {
-                    Button(action: {
-                        showingTypeSelection = true
-                    }) {
-                        Text("Customize")
-                            .frame(maxWidth: .infinity)
-                    }
-                    .buttonStyle(.bordered)
-                    .accessibilityIdentifier("customize_button")
-
-                    Button(action: applyIntervals) {
-                        Text("Apply")
-                            .frame(maxWidth: .infinity)
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .disabled(selectedIntervals.isEmpty)
-                    .accessibilityIdentifier("apply_button")
+            if step == 1 {
+                Button(action: { step = 2 }) {
+                    Text("Next")
+                        .frame(maxWidth: .infinity)
                 }
+                .buttonStyle(.borderedProminent)
+                .disabled(selectedIntervals.isEmpty)
+                .accessibilityIdentifier("next_button")
                 .padding(.horizontal)
-                .padding(.bottom, 8)
+                .padding(.vertical, 12)
             } else {
-                // Fallback mode - only show Apply button (user must select type first)
                 Button(action: applyIntervals) {
                     Text("Apply")
                         .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.borderedProminent)
-                .disabled(selectedIntervals.isEmpty)
                 .accessibilityIdentifier("apply_button")
                 .padding(.horizontal)
-                .padding(.bottom, 8)
+                .padding(.vertical, 12)
             }
         }
         .background(Color(.systemGroupedBackground))
@@ -360,9 +261,7 @@ struct BikePresetConfirmationView: View {
     // MARK: - Actions
 
     private func applyIntervals() {
-        let templateIds = Array(selectedIntervals)
-        viewModel.createIntervals(templateIds: templateIds, lastServiceDate: lastServiceDate)
+        viewModel.createIntervals(templateIds: Array(selectedIntervals), lastServiceDate: lastServiceDate)
         dismiss()
     }
 }
-
