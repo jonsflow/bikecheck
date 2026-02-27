@@ -205,6 +205,7 @@ struct ServiceView: View {
             }
             .navigationDestination(for: ServiceInterval.self) { serviceInterval in
                 AddServiceIntervalView(serviceInterval: serviceInterval)
+                    .toolbar(.hidden, for: .tabBar)
             }
             .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("ShowServiceIntervalDetail"))) { notification in
                 // Handle navigation to specific service interval detail

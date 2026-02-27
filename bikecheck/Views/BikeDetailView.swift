@@ -46,7 +46,7 @@ struct BikeDetailView: View {
                         }
                         .accessibilityIdentifier("CreateDefaultServiceIntervalsButton")
                         
-                        NavigationLink(destination: AddServiceIntervalView()) {
+                        NavigationLink(destination: AddServiceIntervalView().toolbar(.hidden, for: .tabBar)) {
                             HStack {
                                 Image(systemName: "plus.circle")
                                     .foregroundColor(.blue)
@@ -59,7 +59,7 @@ struct BikeDetailView: View {
                     } else {
                         // Show existing intervals
                         ForEach(intervals, id: \.id) { serviceInterval in
-                            NavigationLink(destination: AddServiceIntervalView(serviceInterval: serviceInterval)) {
+                            NavigationLink(destination: AddServiceIntervalView(serviceInterval: serviceInterval).toolbar(.hidden, for: .tabBar)) {
                                 CompactServiceIntervalRow(serviceInterval: serviceInterval, serviceViewModel: serviceViewModel)
                             }
                         }
@@ -80,7 +80,7 @@ struct BikeDetailView: View {
                         .accessibilityIdentifier("BatchUpdateServiceDatesButton")
 
                         // Add new service interval option
-                        NavigationLink(destination: AddServiceIntervalView()) {
+                        NavigationLink(destination: AddServiceIntervalView().toolbar(.hidden, for: .tabBar)) {
                             HStack {
                                 Image(systemName: "plus.circle")
                                     .foregroundColor(.blue)
@@ -98,6 +98,7 @@ struct BikeDetailView: View {
             }
         }
         .navigationTitle("Bike Details")
+        .toolbar(.hidden, for: .tabBar)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Menu {
