@@ -184,20 +184,6 @@ struct AddServiceIntervalView: View {
                     presentationMode.wrappedValue.dismiss()
                 } : nil
             )
-            .onChange(of: presentationMode.wrappedValue.isPresented) { isPresented in
-                if !isPresented && viewModel.serviceInterval != nil && viewModel.hasUnsavedChanges {
-                    // Auto-save changes when navigating back
-                    viewModel.saveServiceInterval()
-                    viewModel.showUnsavedChangesAlert = true
-                }
-            }
-            .alert(isPresented: $viewModel.showUnsavedChangesAlert) {
-                Alert(
-                    title: Text("Changes Saved"),
-                    message: Text("Your changes have been saved."),
-                    dismissButton: .default(Text("OK"))
-                )
-            }
             .onAppear {
                 viewModel.loadBikes()
             }
@@ -270,6 +256,11 @@ struct AddServiceIntervalView: View {
                         }
                     }
                 }
+            }
+        }
+        .onDisappear {
+            if viewModel.serviceInterval != nil && viewModel.hasUnsavedChanges {
+                viewModel.saveServiceInterval()
             }
         }
     }

@@ -72,7 +72,7 @@ struct ServiceView: View {
         List {
             ForEach(displayServiceIntervals, id: \.self) { serviceInterval in
                 ZStack {
-                    ServiceIntervalCardView(serviceInterval: serviceInterval, viewModel: viewModel)
+                    ServiceIntervalCardView(serviceInterval: serviceInterval, viewModel: viewModel, lastServiceDate: serviceInterval.lastServiceDate)
                     NavigationLink(value: serviceInterval) {
                         EmptyView()
                     }
@@ -249,13 +249,13 @@ struct ServiceIntervalCardView: View {
     @Environment(\.managedObjectContext) private var viewContext
     let serviceInterval: ServiceInterval
     let viewModel: ServiceViewModel
-    
+    let lastServiceDate: Date?
+
     private var currentUsage: Double {
         guard let bike = serviceInterval.getBike(from: viewContext) else {
             return 0
         }
-        let lastServiceDate = serviceInterval.lastServiceDate ?? Date()
-        return bike.rideTimeSince(date: lastServiceDate, context: viewContext)
+        return bike.rideTimeSince(date: lastServiceDate ?? Date(), context: viewContext)
     }
     
     private var fractionColor: Color {

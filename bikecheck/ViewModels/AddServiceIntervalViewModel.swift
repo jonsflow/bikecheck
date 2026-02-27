@@ -103,6 +103,10 @@ class AddServiceIntervalViewModel: ObservableObject {
         interval.notify = notify
         interval.lastServiceDate = lastServiceDate
 
+        if !Calendar.current.isDate(lastServiceDate, inSameDayAs: originalLastServiceDate) {
+            dataService.createServiceRecord(for: interval, date: lastServiceDate, note: nil, isReset: true)
+        }
+
         if let selectedBike = selectedBike {
             interval.bikeId = selectedBike.id
         }
@@ -129,6 +133,7 @@ class AddServiceIntervalViewModel: ObservableObject {
 
         serviceInterval.lastServiceDate = date
         lastServiceDate = date
+        originalLastServiceDate = date
         timeUntilServiceText = String(format: "%.1f", serviceInterval.intervalTime)
 
         dataService.createServiceRecord(for: serviceInterval, date: date, note: note, isReset: true)
