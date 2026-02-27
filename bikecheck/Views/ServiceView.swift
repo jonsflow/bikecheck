@@ -354,7 +354,7 @@ struct ServiceIntervalCardView: View {
         case let p where p.contains("chain"):
             return "link"
         case let p where p.contains("brake"):
-            return "brake.signal"
+            return "hand.raised"
         case let p where p.contains("tire"), let p where p.contains("wheel"):
             return "circle.dotted"
         case let p where p.contains("fork"):

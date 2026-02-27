@@ -19,6 +19,7 @@ public class Bike: NSManagedObject, Codable, Identifiable {
     @NSManaged public var id: String
     @NSManaged public var name: String
     @NSManaged public var distance: Double
+    @NSManaged public var detectedType: String?
    // @NSManaged public var activities: Set<Activity>
     @NSManaged public var athlete: Athlete
     

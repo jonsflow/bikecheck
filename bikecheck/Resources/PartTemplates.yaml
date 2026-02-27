@@ -18,7 +18,7 @@ categories:
 
   - id: brakes
     name: Brakes
-    icon: brake.signal
+    icon: hand.raised
 
   - id: cockpit
     name: Cockpit
@@ -131,7 +131,7 @@ part_templates:
     name: Brake Pads
     category: brakes
     default_interval_hours: 75
-    icon: brake.signal
+    icon: hand.raised
     description: "Brake pad replacement"
     notify_default: true
 

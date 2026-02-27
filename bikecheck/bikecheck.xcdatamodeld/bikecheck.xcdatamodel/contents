@@ -8,6 +8,7 @@
     </configuration>
     <configuration name="UserData">
         <memberEntity name="ServiceInterval"/>
+        <memberEntity name="ServiceRecord"/>
     </configuration>
     <entity name="Activity" representedClassName=".Activity" syncable="YES">
         <attribute name="averageSpeed" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
@@ -38,6 +39,7 @@
         </uniquenessConstraints>
     </entity>
     <entity name="Bike" representedClassName=".Bike" syncable="YES">
+        <attribute name="detectedType" optional="YES" attributeType="String"/>
         <attribute name="distance" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="id" attributeType="String" spotlightIndexingEnabled="YES"/>
         <attribute name="name" attributeType="String"/>
@@ -59,6 +61,15 @@
         <attribute name="lastServiceDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="notify" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="part" optional="YES" attributeType="String"/>
+        <attribute name="templateId" optional="YES" attributeType="String"/>
+        <relationship name="serviceRecords" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ServiceRecord" inverseName="serviceInterval" inverseEntity="ServiceRecord"/>
+    </entity>
+    <entity name="ServiceRecord" representedClassName=".ServiceRecord" syncable="YES">
+        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="isReset" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="note" optional="YES" attributeType="String"/>
+        <relationship name="serviceInterval" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ServiceInterval" inverseName="serviceRecords" inverseEntity="ServiceInterval"/>
     </entity>
     <entity name="TokenInfo" representedClassName="TokenInfo" syncable="YES">
         <attribute name="accessToken" attributeType="String"/>

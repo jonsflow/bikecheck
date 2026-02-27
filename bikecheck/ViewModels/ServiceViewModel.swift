@@ -93,9 +93,10 @@ class ServiceViewModel: ObservableObject {
         loadServiceIntervals()
     }
     
-    func resetInterval(serviceInterval: ServiceInterval) {
-        serviceInterval.lastServiceDate = Date()
-        dataService.saveContext()
+    func resetInterval(serviceInterval: ServiceInterval, note: String? = nil) {
+        let date = Date()
+        serviceInterval.lastServiceDate = date
+        dataService.createServiceRecord(for: serviceInterval, date: date, note: note, isReset: true)
     }
 }
 
