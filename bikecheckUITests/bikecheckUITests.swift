@@ -137,22 +137,21 @@ final class bikecheckUITests: BikeCheckUITestCase {
             XCTAssertTrue(intervalTimeField.waitForExistence(timeout: 3))
             let intervalTimeValue = intervalTimeField.value as? String ?? ""
             
-            // Test reset functionality
+            // Test reset functionality - opens "Log Service" sheet
             XCTAssertTrue(app.buttons["Reset Interval"].waitForExistence(timeout: 3))
             app.buttons["Reset Interval"].tap()
-            
-            let resetAlert = app.alerts["Confirm Reset Interval"]
-            if resetAlert.waitForExistence(timeout: 3) {
-                XCTAssertTrue(resetAlert.buttons["Cancel"].exists)
-                XCTAssertTrue(resetAlert.buttons["Reset"].exists)
-                resetAlert.buttons["Reset"].tap()
-                
+
+            let logServiceNav = app.navigationBars["Log Service"]
+            if logServiceNav.waitForExistence(timeout: 3) {
+                XCTAssertTrue(logServiceNav.buttons["Cancel"].exists)
+                XCTAssertTrue(logServiceNav.buttons["Log Service"].exists)
+                logServiceNav.buttons["Log Service"].tap()
+
                 // After reset, verify time until service equals interval time
-                // The time until service value should now equal the interval time value
                 let timeUntilServiceValue = app.staticTexts[intervalTimeValue]
                 XCTAssertTrue(timeUntilServiceValue.waitForExistence(timeout: 3), "Time until service value (\(intervalTimeValue)) should be displayed after reset")
             }
-            
+
             // Navigate back to service intervals list
             app.navigationBars.buttons.firstMatch.tap()
         }

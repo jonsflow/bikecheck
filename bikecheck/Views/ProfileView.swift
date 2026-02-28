@@ -1,57 +1,56 @@
 import SwiftUI
 
 struct ProfileView: View {
-    @Environment(\.dismiss) var dismiss
     @EnvironmentObject var stravaService: StravaService
     @State private var showLogoutAlert = false
 
     var body: some View {
-        VStack(spacing: 30) {
-            if let profileImage = stravaService.profileImage {
-                Image(uiImage: profileImage)
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: 100, height: 100)
-                    .clipShape(Circle())
-            } else {
-                Image(systemName: "person.circle.fill")
-                    .font(.system(size: 100))
-                    .foregroundColor(.gray)
-            }
+        ScrollView {
+            VStack(spacing: 30) {
+                // Profile header
+                VStack(spacing: 12) {
+                    if let profileImage = stravaService.profileImage {
+                        Image(uiImage: profileImage)
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 100, height: 100)
+                            .clipShape(Circle())
+                    } else {
+                        Image(systemName: "person.circle.fill")
+                            .font(.system(size: 100))
+                            .foregroundColor(.gray)
+                    }
 
-            if let athlete = stravaService.athlete {
-                Text(athlete.firstname)
-                    .font(.title2)
-                    .fontWeight(.semibold)
-            }
+                    if let athlete = stravaService.athlete {
+                        Text(athlete.firstname)
+                            .font(.title2)
+                            .fontWeight(.semibold)
+                    }
 
-            VStack(spacing: 12) {
-                Text("Strava Connection")
-                    .font(.headline)
+                    VStack(spacing: 6) {
+                        Text("Status: \(connectionStatusText)")
+                            .foregroundColor(connectionStatusColor)
 
-                Text("Status: \(connectionStatusText)")
-                    .foregroundColor(connectionStatusColor)
-
-                if isDemoMode {
-                    Text("Demo Mode Active")
-                        .foregroundColor(.orange)
-                }
-            }
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-        .padding(.top, 40)
-        .navigationTitle("Profile")
-        .navigationBarBackButtonHidden(true)
-        .toolbar(.hidden, for: .tabBar)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button(action: { dismiss() }) {
-                    HStack(spacing: 4) {
-                        Image(systemName: "chevron.left")
-                        Text("Back")
+                        if isDemoMode {
+                            Text("Demo Mode Active")
+                                .foregroundColor(.orange)
+                        }
                     }
                 }
+                .padding(.top, 20)
+
+                Divider()
+                    .padding(.horizontal)
+
+                // Stats section
+                ProfileStatsView()
             }
+            .padding(.bottom, 24)
+        }
+        .background(Color(.systemGroupedBackground))
+        .navigationTitle("Profile")
+        .toolbar(.hidden, for: .tabBar)
+        .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Menu {
                     Button(action: {}) {

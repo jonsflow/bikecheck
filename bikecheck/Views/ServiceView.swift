@@ -72,7 +72,7 @@ struct ServiceView: View {
         List {
             ForEach(displayServiceIntervals, id: \.self) { serviceInterval in
                 ZStack {
-                    ServiceIntervalCardView(serviceInterval: serviceInterval, viewModel: viewModel)
+                    ServiceIntervalCardView(serviceInterval: serviceInterval, viewModel: viewModel, lastServiceDate: serviceInterval.lastServiceDate)
                     NavigationLink(value: serviceInterval) {
                         EmptyView()
                     }
@@ -205,6 +205,7 @@ struct ServiceView: View {
             }
             .navigationDestination(for: ServiceInterval.self) { serviceInterval in
                 AddServiceIntervalView(serviceInterval: serviceInterval)
+                    .toolbar(.hidden, for: .tabBar)
             }
             .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("ShowServiceIntervalDetail"))) { notification in
                 // Handle navigation to specific service interval detail
@@ -248,13 +249,13 @@ struct ServiceIntervalCardView: View {
     @Environment(\.managedObjectContext) private var viewContext
     let serviceInterval: ServiceInterval
     let viewModel: ServiceViewModel
-    
+    let lastServiceDate: Date?
+
     private var currentUsage: Double {
         guard let bike = serviceInterval.getBike(from: viewContext) else {
             return 0
         }
-        let lastServiceDate = serviceInterval.lastServiceDate ?? Date()
-        return bike.rideTimeSince(date: lastServiceDate, context: viewContext)
+        return bike.rideTimeSince(date: lastServiceDate ?? Date(), context: viewContext)
     }
     
     private var fractionColor: Color {
@@ -354,7 +355,7 @@ struct ServiceIntervalCardView: View {
         case let p where p.contains("chain"):
             return "link"
         case let p where p.contains("brake"):
-            return "brake.signal"
+            return "hand.raised"
         case let p where p.contains("tire"), let p where p.contains("wheel"):
             return "circle.dotted"
         case let p where p.contains("fork"):

@@ -2,9 +2,11 @@
 
 > Developer and AI Assistant Reference
 
-## Current Development State (as of January 3, 2026)
+## Current Development State (as of February 2026)
 
 ### Recent Major Features Completed
+- **Smart Bike Detection & Part Selection** (February 2026): Three-stage bike detection engine, YAML-driven part templates, two-step preset confirmation flow, standalone part picker — closes #51, #9
+- **Profile View Improvements** (February 2026): Toolbar with back/overflow menu, Sign Out moved to overflow, Export Data placeholder, tab bar hidden on push
 - **Bike Status Indicator** (January 2026): Dynamic bike status based on service interval health (Good/Needs Service)
 - **Notification Throttling** (January 2026): 7-day throttle window prevents notification spam for overdue service intervals
 - **Core Data Migration** (January 2026): Implemented lightweight migration as proof of concept for future schema changes
@@ -20,11 +22,13 @@
 2. **Service Interval Tracking** - CRUD operations with smart notifications
 3. **Bike Management** - Import from Strava and manual management with status indicators
 4. **Bike Status System** - Real-time status calculation based on service interval health
-5. **Activity Tracking** - Automatic sync with ride time calculations
-6. **Onboarding Experience** - Single-step flow with test data tour
-7. **Background Sync** - BackgroundTasks framework for iOS
-8. **Notification System** - Local notifications with 7-day throttling
-9. **UI Testing Suite** - Comprehensive test coverage with mock data injection
+5. **Smart Bike Detection** - Three-stage detection against BikePresets.yaml and BikeDatabase.json
+6. **Part Template System** - 17 parts across 5 categories, YAML-driven with per-type defaults
+7. **Activity Tracking** - Automatic sync with ride time calculations
+8. **Onboarding Experience** - Single-step flow with test data tour
+9. **Background Sync** - BackgroundTasks framework for iOS
+10. **Notification System** - Local notifications with 7-day throttling
+11. **UI Testing Suite** - Comprehensive test coverage with mock data injection
 
 ## Architecture
 
@@ -129,10 +133,22 @@ This approach ensures seamless app updates when schema changes are required.
 - Manual task execution for UI testing via `executeTaskLogicForTesting()`
 - Logging with os.log for debugging
 
+### BikeDetectionService (Singleton)
+- Three-stage detection: `BikePresets.yaml` exact match → model-only match → `BikeDatabase.json` (220+ bikes) → fallback
+- Returns `BikeDetectionResult` with manufacturer, model, `BikeType`, confidence level, and suggested interval IDs
+- `getDefaultIntervalsForType(_:)` returns type-appropriate template ID lists
+- Confidence levels: `.high` (preset match), `.medium` (database match), `.low`, `.fallback`
+
+### PartTemplateService (Singleton)
+- Loads `PartTemplates.yaml` at init via Yams
+- 17 part templates across 5 categories (Drivetrain, Suspension, Wheels, Brakes, Cockpit)
+- Query methods: `getAllTemplates()`, `getAllCategories()`, `getTemplatesByCategory(_:)`, `getTemplate(id:)`
+- Each template: id, name, category, defaultIntervalHours, SF Symbol icon, notifyDefault
+
 ### DataService (Singleton)
 - Core Data fetch operations
 - CRUD operations for all entities
-- Creates default service intervals (Chain, Fork Lowers, Shock)
+- `createDefaultServiceIntervals(for:lastServiceDate:templateIds:)` — creates intervals from template IDs; defaults to `["chain", "fork_lowers", "rear_shock"]` if nil
 - Saves context with error handling
 
 ### PersistenceController (Singleton)
@@ -149,8 +165,8 @@ All ViewModels are `@StateObject` instances created at app level (`bikecheckApp.
 - **BikesViewModel** - Manages bikes data and operations
 - **ActivitiesViewModel** - Handles activity data processing
 - **ServiceViewModel** - Manages service intervals and calculations
-- **AddServiceIntervalViewModel** - Handles service interval creation/editing
-- **BikeDetailViewModel** - Bike-specific data and operations
+- **AddServiceIntervalViewModel** - Handles service interval creation/editing; matches saved part name to `PartTemplate` on load so the picker shows the correct selection
+- **BikeDetailViewModel** - Bike-specific data and operations; `detectBikeType()` triggers detection and presents `BikePresetConfirmationView`; `createIntervals(templateIds:lastServiceDate:)` creates intervals from template IDs
 - **LoginViewModel** - Authentication flow management
 - **OnboardingViewModel** - Onboarding tour state management
 
@@ -240,22 +256,23 @@ if let lastNotificationDate = interval.lastNotificationDate,
 - Test jobs: Unit tests and UI tests on macOS-latest
 - Simulator: Dynamically selected iPhone simulator
 
-## Open Issues (As of January 2026)
+## Open Issues (As of February 2026)
 
 ### High Priority
 - **#30** - OAuth Flow UI Testing with mocked responses
 - **#28** - Detailed onboarding tour for ServiceInterval/BikeDetail views
 
 ### Enhancements
-- **#51** - Smart bike detection with service interval presets
+- **#55** - Multi-select functionality for service intervals list
 - **#50** - Database backup and restore functionality
 - **#18** - Data Provider Abstraction
 - **#17** - Garmin support
 - **#16** - Wahoo API support
-- **#9** - Service interval templates based on bike type
 - **#4** - General enhancement suggestions
 
 ### Recently Closed
+- **#51** - Smart bike detection with service interval presets ✅
+- **#9** - Service interval templates based on bike type ✅ (superseded by #51)
 - **#31** - Core Data migration implementation ✅
 - **#29** - Notification improvements (throttling) ✅
 - **#15** - Background service test framework ✅
@@ -264,11 +281,11 @@ if let lastNotificationDate = interval.lastNotificationDate,
 
 ## Future Improvements
 
-1. **Service History Tracking** - Log completed maintenance with notes/photos
-2. **Component-specific Tracking** - Detailed part specifications and lifecycle
-3. **Multiple Notification Thresholds** - Warn at 90%, 100%, etc.
-4. **Additional Platform Integrations** - Garmin Connect, Wahoo, TrainingPeaks
-5. **Export Functionality** - Export maintenance records to CSV/PDF
+1. **Bike Nerd Stats** - Profile view stats section (bikes, miles, hours, activities, parts tracked, overdue count). Design doc: `bike-nerd-stats.md`. Phase 2 adds reset tracking requiring a Core Data v3 migration.
+2. **Service History Tracking** - Log completed maintenance with notes/photos
+3. **Component-specific Tracking** - Detailed part specifications and lifecycle
+4. **Export Functionality** - Export maintenance records to CSV/PDF (placeholder already in Profile overflow menu)
+5. **Additional Platform Integrations** - Garmin Connect, Wahoo, TrainingPeaks
 6. **Advanced Analytics** - Dashboard with component wear patterns
 7. **Offline Mode** - Manual activity entry when offline
 8. **Push Notifications** - Remote notifications for social features

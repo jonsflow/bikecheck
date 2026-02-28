@@ -490,9 +490,13 @@ class StravaService: ObservableObject {
         // Bike 3 (Checkpoint) - 3 hours total (good scenarios)
         createActivity(id: 6666666, gearId: "b3", speed: 25.0, time: 10800, name: "Road Ride", daysAgo: 1, in: viewContext) // 3 hours
         
-        // Service intervals using templates (chain: 50h, Fork Lowers: 50h, Rear Shock: 50h):
-        // Bike 1 (14 hours) - All good with new intervals
-        createServiceIntervalFromTemplate(templateId: "chain", bike: bikes[0], in: viewContext)
+        // Service intervals — chain for Bike 1 is intentionally overdue:
+        // lastServiceDate is 10 days ago, and Bike 1 has 14h of rides since then
+        // against a 5h interval → 280% usage → "Now" status in the list.
+        // This simulates the user having changed the last service date to a past date,
+        // and is used by UI tests to validate the list update behavior.
+        let tenDaysAgo = Calendar.current.date(byAdding: .day, value: -10, to: Date())!
+        createServiceIntervalFromTemplate(templateId: "chain", bike: bikes[0], lastServiceDate: tenDaysAgo, in: viewContext)
         createServiceIntervalFromTemplate(templateId: "fork_lowers", bike: bikes[0], in: viewContext)
         createServiceIntervalFromTemplate(templateId: "rear_shock", bike: bikes[0], in: viewContext)
 
@@ -621,7 +625,7 @@ class StravaService: ObservableObject {
         activity.type = "Ride"
     }
     
-    private func createServiceIntervalFromTemplate(templateId: String, bike: Bike, in context: NSManagedObjectContext) {
+    private func createServiceIntervalFromTemplate(templateId: String, bike: Bike, lastServiceDate: Date = Date(), in context: NSManagedObjectContext) {
         guard let template = PartTemplateService.shared.getTemplate(id: templateId) else {
             print("Warning: Template '\(templateId)' not found")
             return
@@ -629,8 +633,9 @@ class StravaService: ObservableObject {
 
         let serviceInterval = ServiceInterval(context: context)
         serviceInterval.part = template.name
+        serviceInterval.templateId = templateId
         serviceInterval.intervalTime = template.defaultIntervalHours
-        serviceInterval.lastServiceDate = Date()
+        serviceInterval.lastServiceDate = lastServiceDate
         serviceInterval.bikeId = bike.id
         serviceInterval.notify = template.notifyDefault
     }

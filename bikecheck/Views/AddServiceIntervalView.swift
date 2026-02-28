@@ -3,11 +3,19 @@ import SwiftUI
 struct AddServiceIntervalView: View {
     @Environment(\.presentationMode) var presentationMode
     @StateObject private var viewModel: AddServiceIntervalViewModel
-    
+
+    @State private var showingResetSheet = false
+    @State private var pendingResetNote = ""
+    @State private var pendingResetDate = Date()
+
+    @State private var showingNoteSheet = false
+    @State private var pendingNoteText = ""
+    @State private var pendingNoteDate = Date()
+
     init(serviceInterval: ServiceInterval? = nil) {
         _viewModel = StateObject(wrappedValue: AddServiceIntervalViewModel(serviceInterval: serviceInterval))
     }
-    
+
     var body: some View {
         NavigationView {
             Form {
@@ -81,11 +89,13 @@ struct AddServiceIntervalView: View {
                             viewModel.updateTimeUntilService()
                         }
                 }
-                
+
                 if viewModel.serviceInterval != nil {
                     Section {
                         Button(action: {
-                            viewModel.resetConfirmationDialog = true
+                            pendingResetDate = Date()
+                            pendingResetNote = ""
+                            showingResetSheet = true
                         }) {
                             HStack {
                                 Image(systemName: "arrow.clockwise")
@@ -94,17 +104,49 @@ struct AddServiceIntervalView: View {
                             .foregroundColor(.blue)
                         }
                         .accessibilityIdentifier("ResetIntervalButton")
-                        .alert(isPresented: $viewModel.resetConfirmationDialog) {
-                            Alert(
-                                title: Text("Confirm Reset Interval"),
-                                message: Text("Are you sure you want to reset this service interval?"),
-                                primaryButton: .default(Text("Reset")) {
-                                    viewModel.resetInterval()
-                                },
-                                secondaryButton: .cancel()
-                            )
+                    }
+
+                    Section(header: HStack {
+                        Text("Service History")
+                        Spacer()
+                        Button {
+                            pendingNoteDate = Date()
+                            pendingNoteText = ""
+                            showingNoteSheet = true
+                        } label: {
+                            HStack(spacing: 4) {
+                                Image(systemName: "plus")
+                                Text("Add Note")
+                            }
+                            .font(.caption)
                         }
-                        
+                    }) {
+                        if viewModel.serviceRecords.isEmpty {
+                            Text("No service history yet")
+                                .foregroundColor(.secondary)
+                        } else {
+                            ForEach(viewModel.serviceRecords) { record in
+                                HStack(alignment: .top, spacing: 10) {
+                                    Image(systemName: record.isReset ? "wrench.and.screwdriver" : "note.text")
+                                        .foregroundColor(record.isReset ? .blue : .secondary)
+                                        .frame(width: 20)
+                                        .padding(.top, 2)
+                                    VStack(alignment: .leading, spacing: 2) {
+                                        Text(record.date ?? Date(), format: .dateTime.month(.abbreviated).day().year())
+                                            .font(.subheadline)
+                                        if let note = record.note, !note.isEmpty {
+                                            Text(note)
+                                                .font(.caption)
+                                                .foregroundColor(.secondary)
+                                        }
+                                    }
+                                }
+                                .padding(.vertical, 2)
+                            }
+                        }
+                    }
+
+                    Section {
                         Button(action: {
                             viewModel.deleteConfirmationDialog = true
                         }) {
@@ -128,10 +170,10 @@ struct AddServiceIntervalView: View {
                         }
                     }
                 }
-            
-            Section {
-                AdContainerView()
-            }
+
+                Section {
+                    AdContainerView()
+                }
             }
             .navigationBarItems(
                 leading: viewModel.serviceInterval == nil ? Button("Cancel") {
@@ -142,22 +184,83 @@ struct AddServiceIntervalView: View {
                     presentationMode.wrappedValue.dismiss()
                 } : nil
             )
-            .onChange(of: presentationMode.wrappedValue.isPresented) { isPresented in
-                if !isPresented && viewModel.serviceInterval != nil && viewModel.hasUnsavedChanges {
-                    // Auto-save changes when navigating back
-                    viewModel.saveServiceInterval()
-                    viewModel.showUnsavedChangesAlert = true
-                }
-            }
-            .alert(isPresented: $viewModel.showUnsavedChangesAlert) {
-                Alert(
-                    title: Text("Changes Saved"),
-                    message: Text("Your changes have been saved."),
-                    dismissButton: .default(Text("OK"))
-                )
-            }
             .onAppear {
                 viewModel.loadBikes()
+            }
+            .sheet(isPresented: $showingNoteSheet) {
+                NavigationView {
+                    Form {
+                        Section {
+                            DatePicker(
+                                "Date",
+                                selection: $pendingNoteDate,
+                                in: ...Date(),
+                                displayedComponents: .date
+                            )
+                        }
+                        Section {
+                            TextField("Note", text: $pendingNoteText, axis: .vertical)
+                                .lineLimit(3...6)
+                        }
+                    }
+                    .navigationTitle("Add Note")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarLeading) {
+                            Button("Cancel") {
+                                showingNoteSheet = false
+                            }
+                        }
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            Button("Add") {
+                                viewModel.addNote(note: pendingNoteText, date: pendingNoteDate)
+                                showingNoteSheet = false
+                                pendingNoteText = ""
+                                pendingNoteDate = Date()
+                            }
+                            .disabled(pendingNoteText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                        }
+                    }
+                }
+            }
+            .sheet(isPresented: $showingResetSheet) {
+                NavigationView {
+                    Form {
+                        Section {
+                            DatePicker(
+                                "Service Date",
+                                selection: $pendingResetDate,
+                                in: ...Date(),
+                                displayedComponents: .date
+                            )
+                        }
+                        Section {
+                            TextField("Add a note (optional)", text: $pendingResetNote)
+                        }
+                    }
+                    .navigationTitle("Log Service")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarLeading) {
+                            Button("Cancel") {
+                                showingResetSheet = false
+                            }
+                        }
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            Button("Log Service") {
+                                viewModel.resetInterval(note: pendingResetNote, date: pendingResetDate)
+                                showingResetSheet = false
+                                pendingResetNote = ""
+                                pendingResetDate = Date()
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .onDisappear {
+            if viewModel.serviceInterval != nil && viewModel.hasUnsavedChanges {
+                viewModel.saveServiceInterval()
             }
         }
     }

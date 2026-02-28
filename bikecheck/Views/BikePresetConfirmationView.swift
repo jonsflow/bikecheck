@@ -261,6 +261,11 @@ struct BikePresetConfirmationView: View {
     // MARK: - Actions
 
     private func applyIntervals() {
+        let detectedType = manuallySelectedType ?? detectionResult.type
+        if detectedType != .unknown {
+            bike.detectedType = detectedType.rawValue
+            DataService.shared.saveContext()
+        }
         viewModel.createIntervals(templateIds: Array(selectedIntervals), lastServiceDate: lastServiceDate)
         dismiss()
     }

@@ -16,6 +16,7 @@ public class ServiceInterval: NSManagedObject, Identifiable {
     @NSManaged public var intervalTime: Double
     @NSManaged public var notify: Bool
     @NSManaged public var bikeId: String?
+    @NSManaged public var templateId: String?
 
     public override func awakeFromInsert() {
         super.awakeFromInsert()

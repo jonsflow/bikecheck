@@ -43,21 +43,27 @@ class ServiceViewModel: ObservableObject {
     }
 
     private func setupMergeObserver() {
-        // Listen for when viewContext receives merged changes from CloudKit background context
+        // Reload after any local save (covers edits and resets from detail view)
+        NotificationCenter.default.publisher(for: .NSManagedObjectContextDidSave, object: context)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.loadServiceIntervals()
+            }
+            .store(in: &cancellables)
+
+        // Reload when CloudKit merges remote changes into the view context
         NotificationCenter.default.publisher(for: .NSManagedObjectContextObjectsDidChange, object: context)
             .sink { [weak self] notification in
                 guard let self = self else { return }
 
-                // Check if ServiceInterval entities were inserted or refreshed (from CloudKit merge)
-                let hasIntervalChanges = [NSInsertedObjectsKey, NSRefreshedObjectsKey].contains { key in
+                let hasRefreshedIntervals = [NSInsertedObjectsKey, NSRefreshedObjectsKey].contains { key in
                     if let objects = notification.userInfo?[key] as? Set<NSManagedObject> {
                         return objects.contains(where: { $0 is ServiceInterval })
                     }
                     return false
                 }
 
-                if hasIntervalChanges {
-                    print("ServiceIntervals changed in viewContext - reloading")
+                if hasRefreshedIntervals {
                     DispatchQueue.main.async {
                         self.loadServiceIntervals()
                     }
@@ -93,9 +99,11 @@ class ServiceViewModel: ObservableObject {
         loadServiceIntervals()
     }
     
-    func resetInterval(serviceInterval: ServiceInterval) {
-        serviceInterval.lastServiceDate = Date()
-        dataService.saveContext()
+    func resetInterval(serviceInterval: ServiceInterval, note: String? = nil) {
+        let date = Date()
+        serviceInterval.lastServiceDate = date
+        dataService.createServiceRecord(for: serviceInterval, date: date, note: note, isReset: true)
+        loadServiceIntervals()
     }
 }
 

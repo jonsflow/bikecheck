@@ -105,18 +105,21 @@ class PersistenceController {
         let bikeRequest: NSFetchRequest<NSFetchRequestResult> = Bike.fetchRequest()
         let activityRequest: NSFetchRequest<NSFetchRequestResult> = Activity.fetchRequest()
         let serviceIntervalRequest: NSFetchRequest<NSFetchRequestResult> = ServiceInterval.fetchRequest()
+        let serviceRecordRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "ServiceRecord")
         let athleteRequest: NSFetchRequest<NSFetchRequestResult> = Athlete.fetchRequest()
         let tokenRequest: NSFetchRequest<NSFetchRequestResult> = TokenInfo.fetchRequest()
-        
+
         // Create batch delete requests
         let bikesDelete = NSBatchDeleteRequest(fetchRequest: bikeRequest)
         let activitiesDelete = NSBatchDeleteRequest(fetchRequest: activityRequest)
         let serviceIntervalsDelete = NSBatchDeleteRequest(fetchRequest: serviceIntervalRequest)
+        let serviceRecordsDelete = NSBatchDeleteRequest(fetchRequest: serviceRecordRequest)
         let athleteDelete = NSBatchDeleteRequest(fetchRequest: athleteRequest)
         let tokenDelete = NSBatchDeleteRequest(fetchRequest: tokenRequest)
-        
+
         do {
             // Execute batch deletes
+            try context.execute(serviceRecordsDelete)
             try context.execute(serviceIntervalsDelete)
             try context.execute(activitiesDelete)
             try context.execute(bikesDelete)

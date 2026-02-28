@@ -3,17 +3,17 @@ import CoreData
 
 class DataService {
     static let shared = DataService()
-    
+
     private var context: NSManagedObjectContext
-    
+
     init(context: NSManagedObjectContext = PersistenceController.shared.container.viewContext) {
         self.context = context
     }
-    
+
     func fetchBikes() -> [Bike] {
         let fetchRequest: NSFetchRequest<Bike> = Bike.fetchRequest() as! NSFetchRequest<Bike>
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Bike.name, ascending: false)]
-        
+
         do {
             return try context.fetch(fetchRequest)
         } catch {
@@ -21,12 +21,12 @@ class DataService {
             return []
         }
     }
-    
+
     func fetchActivities() -> [Activity] {
         let fetchRequest: NSFetchRequest<Activity> = Activity.fetchRequest() as! NSFetchRequest<Activity>
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \Activity.startDate, ascending: false)]
         fetchRequest.predicate = NSPredicate(format: "type == %@", "Ride")
-        
+
         do {
             return try context.fetch(fetchRequest)
         } catch {
@@ -34,7 +34,7 @@ class DataService {
             return []
         }
     }
-    
+
     func fetchServiceIntervals() -> [ServiceInterval] {
         let fetchRequest: NSFetchRequest<ServiceInterval> = ServiceInterval.fetchRequest() as! NSFetchRequest<ServiceInterval>
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \ServiceInterval.lastServiceDate, ascending: false)]
@@ -46,7 +46,42 @@ class DataService {
             return []
         }
     }
-    
+
+    func createServiceRecord(for interval: ServiceInterval, date: Date, note: String?, isReset: Bool = false) {
+        let record = ServiceRecord(context: context)
+        record.date = date
+        record.isReset = isReset
+        record.note = note?.isEmpty == false ? note : nil
+        record.serviceInterval = interval
+        saveContext()
+    }
+
+    func fetchServiceRecords(for interval: ServiceInterval) -> [ServiceRecord] {
+        let fetchRequest = NSFetchRequest<ServiceRecord>(entityName: "ServiceRecord")
+        fetchRequest.predicate = NSPredicate(format: "serviceInterval == %@", interval)
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: false)]
+
+        do {
+            return try context.fetch(fetchRequest)
+        } catch {
+            print("Failed to fetch service records: \(error)")
+            return []
+        }
+    }
+
+    func countAllServiceRecords() -> Int {
+        let fetchRequest = NSFetchRequest<NSNumber>(entityName: "ServiceRecord")
+        fetchRequest.resultType = .countResultType
+
+        do {
+            let result = try context.fetch(fetchRequest)
+            return result.first?.intValue ?? 0
+        } catch {
+            print("Failed to count service records: \(error)")
+            return 0
+        }
+    }
+
     func saveContext() {
         if context.hasChanges {
             do {
@@ -56,7 +91,7 @@ class DataService {
             }
         }
     }
-    
+
     func createDefaultServiceIntervals(
         for bike: Bike,
         lastServiceDate: Date = Date(),
@@ -75,6 +110,7 @@ class DataService {
 
             let newInterval = ServiceInterval(context: context)
             newInterval.part = template.name
+            newInterval.templateId = template.id
             newInterval.intervalTime = template.defaultIntervalHours
             newInterval.lastServiceDate = lastServiceDate
             newInterval.bikeId = bike.id
@@ -83,7 +119,7 @@ class DataService {
 
         saveContext()
     }
-    
+
     func deleteBike(_ bike: Bike) {
         context.delete(bike)
         saveContext()
