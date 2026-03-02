@@ -15,8 +15,13 @@ android {
         targetSdk 34
         versionCode 1
         versionName "1.0"
-        
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        // Disable auto-init for WorkManager (using on-demand with Hilt)
+        manifestPlaceholders = [
+            'androidx.work.implementation': 'androidx.work.impl.workers.RemoteCoroutineWorker'
+        ]
         
         // Load from local.properties
         Properties properties = new Properties()
@@ -38,17 +43,22 @@ android {
     }
     
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_20
+        targetCompatibility JavaVersion.VERSION_20
     }
-    
+
     kotlinOptions {
-        jvmTarget = '17'
+        jvmTarget = '20'
     }
     
     buildFeatures {
         viewBinding true
         buildConfig true
+    }
+
+    lint {
+        // On-demand WorkManager initialization with Hilt doesn't require manifest entry
+        disable 'RemoveWorkManagerInitializer'
     }
 
     tasks.register("printJavaVersion") {

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "3249fd67b6647b6f32d5ae8585b52d5c",
+    "identityHash": "6e172ece0af7787bb69525f444fa9fe4",
     "entities": [
       {
         "tableName": "athletes",
@@ -236,7 +236,7 @@
       },
       {
         "tableName": "service_intervals",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `part` TEXT NOT NULL, `startTime` REAL NOT NULL, `intervalTime` REAL NOT NULL, `notify` INTEGER NOT NULL, `bikeId` TEXT NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`bikeId`) REFERENCES `bikes`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `part` TEXT NOT NULL, `startTime` REAL NOT NULL, `intervalTime` REAL NOT NULL, `notify` INTEGER NOT NULL, `bikeId` TEXT NOT NULL, `lastNotificationDate` INTEGER, PRIMARY KEY(`id`), FOREIGN KEY(`bikeId`) REFERENCES `bikes`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -273,6 +273,12 @@
             "columnName": "bikeId",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "lastNotificationDate",
+            "columnName": "lastNotificationDate",
+            "affinity": "INTEGER",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -310,7 +316,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3249fd67b6647b6f32d5ae8585b52d5c')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6e172ece0af7787bb69525f444fa9fe4')"
     ]
   }
 }

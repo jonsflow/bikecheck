@@ -13,25 +13,47 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <TextView
-            android:id="@+id/textViewBikeName"
+        <!-- Header row: Bike name + Status dot + Chevron -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Bike Name"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@color/primary_text" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
-        <TextView
-            android:id="@+id/textViewBikeType"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:text="Type"
-            android:textSize="14sp"
-            android:textColor="@color/secondary_text"
-            android:visibility="gone" />
+            <!-- Status dot: 8dp circle -->
+            <View
+                android:id="@+id/statusDot"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/ic_bike_placeholder"
+                android:layout_gravity="center_vertical" />
 
+            <!-- Bike name -->
+            <TextView
+                android:id="@+id/textViewBikeName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Bike Name"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/primary_text" />
+
+            <!-- Chevron icon -->
+            <ImageView
+                android:id="@+id/chevronIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="8dp"
+                android:src="@drawable/ic_bike_placeholder"
+                android:contentDescription="Expand"
+                android:scaleType="center"
+                app:tint="@color/secondary_text" />
+
+        </LinearLayout>
+
+        <!-- Bike distance -->
         <TextView
             android:id="@+id/textViewBikeDistance"
             android:layout_width="match_parent"
@@ -40,6 +62,15 @@
             android:text="Distance"
             android:textSize="14sp"
             android:textColor="@color/secondary_text" />
+
+        <!-- Expandable section: Mini interval rows -->
+        <LinearLayout
+            android:id="@+id/expandableSection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="12dp"
+            android:visibility="gone" />
 
     </LinearLayout>
 

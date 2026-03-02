@@ -101,28 +101,23 @@ class StravaRepository @Inject constructor(
             if (currentToken == null) {
                 return Result.failure(Exception("No token found"))
             }
-            
-            // Temporarily disable token expiration checking for debugging
-            android.util.Log.d("StravaRepository", "Token refresh check: token exists, skipping expiration check for debugging")
-            return Result.success(true)
-            
-            /*
+
             val currentTime = System.currentTimeMillis() / 1000
             if (currentToken.expiresAt > currentTime) {
                 // Token is still valid
                 return Result.success(true)
             }
-            
+
             // Token is expired, refresh it
             val response = stravaApiService.refreshToken(
                 clientId = Constants.STRAVA_CLIENT_ID,
                 clientSecret = Constants.STRAVA_CLIENT_SECRET,
                 refreshToken = currentToken.refreshToken
             )
-            
+
             if (response.isSuccessful && response.body() != null) {
                 val tokenResponse = response.body()!!
-                
+
                 // Update token with new access token
                 val updatedToken = currentToken.copy(
                     accessToken = tokenResponse.accessToken,
@@ -130,12 +125,11 @@ class StravaRepository @Inject constructor(
                     expiresAt = tokenResponse.expiresAt
                 )
                 tokenInfoDao.insertToken(updatedToken)
-                
+
                 Result.success(true)
             } else {
                 Result.failure(Exception("Token refresh failed: ${response.message()}"))
             }
-            */
         } catch (e: Exception) {
             Result.failure(e)
         }
@@ -340,5 +334,14 @@ class StravaRepository @Inject constructor(
         bikeDao.deleteAllBikes()
         tokenInfoDao.deleteAllTokens()
         athleteDao.deleteAllAthletes()
+    }
+
+    suspend fun deleteBike(bikeId: String): Result<Boolean> {
+        return try {
+            bikeDao.deleteBikeById(bikeId)
+            Result.success(true)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 }

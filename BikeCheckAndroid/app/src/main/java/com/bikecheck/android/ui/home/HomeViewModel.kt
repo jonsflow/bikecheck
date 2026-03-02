@@ -10,6 +10,7 @@ import com.bikecheck.android.data.database.dao.TokenInfoDao
 import com.bikecheck.android.data.database.entities.ActivityEntity
 import com.bikecheck.android.data.database.entities.AthleteEntity
 import com.bikecheck.android.data.database.entities.BikeEntity
+import com.bikecheck.android.data.database.entities.BikeWithServiceIntervals
 import com.bikecheck.android.data.database.entities.ServiceIntervalEntity
 import com.bikecheck.android.data.database.entities.ServiceIntervalWithBike
 import com.bikecheck.android.data.repository.StravaRepository
@@ -35,6 +36,7 @@ class HomeViewModel @Inject constructor(
     
     val currentAthlete: Flow<AthleteEntity?> = athleteDao.getCurrentAthlete()
     val bikes: Flow<List<BikeEntity>> = bikeDao.getAllBikes()
+    val bikesWithIntervals: Flow<List<BikeWithServiceIntervals>> = bikeDao.getAllBikesWithServiceIntervals()
     val serviceIntervals: Flow<List<ServiceIntervalWithBike>> = serviceIntervalDao.getAllServiceIntervalsWithBikes()
     val activities: Flow<List<ActivityEntity>> = activityDao.getAllActivities()
     

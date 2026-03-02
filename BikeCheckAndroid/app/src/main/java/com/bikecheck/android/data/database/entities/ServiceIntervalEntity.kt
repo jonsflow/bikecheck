@@ -25,5 +25,6 @@ data class ServiceIntervalEntity(
     val startTime: Double,
     val intervalTime: Double,
     val notify: Boolean,
-    val bikeId: String
+    val bikeId: String,
+    val lastNotificationDate: Long? = null
 )

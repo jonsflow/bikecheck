@@ -49,15 +49,21 @@ class BikesFragment : Fragment() {
     
     private fun setupObservers() {
         lifecycleScope.launch {
-            viewModel.bikes.collect { bikes ->
-                bikeAdapter.submitList(bikes)
-                binding.textViewBikesCount.text = "${bikes.size} bikes"
+            viewModel.bikesWithIntervals.collect { bikesWithIntervals ->
+                bikeAdapter.submitList(bikesWithIntervals)
+                binding.textViewBikesCount.text = "${bikesWithIntervals.size} bikes"
             }
         }
-        
+
+        lifecycleScope.launch {
+            viewModel.activities.collect { activities ->
+                bikeAdapter.updateActivities(activities)
+            }
+        }
+
         lifecycleScope.launch {
             viewModel.isLoading.collect { isLoading ->
-                binding.progressBar.visibility = if (isLoading) 
+                binding.progressBar.visibility = if (isLoading)
                     View.VISIBLE else View.GONE
             }
         }

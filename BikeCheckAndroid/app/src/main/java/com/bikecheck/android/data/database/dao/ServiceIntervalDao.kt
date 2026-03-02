@@ -26,4 +26,10 @@ interface ServiceIntervalDao {
 
     @Query("DELETE FROM service_intervals WHERE id = :id")
     suspend fun deleteServiceIntervalById(id: String)
+
+    @Query("UPDATE service_intervals SET lastNotificationDate = :date WHERE id = :id")
+    suspend fun updateLastNotificationDate(id: String, date: Long)
+
+    @Query("SELECT * FROM service_intervals WHERE bikeId = :bikeId")
+    fun getServiceIntervalsByBike(bikeId: String): Flow<List<ServiceIntervalEntity>>
 }
