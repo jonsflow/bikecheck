@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Profile header section -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="24dp">
+
+        <!-- Profile image -->
+        <ImageView
+            android:id="@+id/profileImage"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginBottom="12dp"
+            android:scaleType="centerCrop"
+            android:contentDescription="Profile"
+            tools:src="@drawable/profile_placeholder_circle" />
+
+        <!-- Athlete name -->
+        <TextView
+            android:id="@+id/athleteName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Athlete Name"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/primary_text" />
+
+    </LinearLayout>
+
+    <!-- Bike Nerd Stats heading -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Bike Nerd Stats"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@color/primary_text"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Stats grid: 2 columns -->
+    <GridLayout
+        android:id="@+id/statsGrid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="2"
+        android:rowCount="3"
+        android:padding="8dp">
+
+        <!-- Stats will be added programmatically -->
+
+    </GridLayout>
+
+</LinearLayout>

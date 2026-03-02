@@ -1,0 +1,118 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'com.google.devtools.ksp'
+    id 'dagger.hilt.android.plugin'
+}
+
+android {
+    namespace 'com.bikecheck.android'
+    compileSdk 34
+    
+    defaultConfig {
+        applicationId "com.bikecheck.android"
+        minSdk 24
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        // Disable auto-init for WorkManager (using on-demand with Hilt)
+        manifestPlaceholders = [
+            'androidx.work.implementation': 'androidx.work.impl.workers.RemoteCoroutineWorker'
+        ]
+        
+        // Load from local.properties
+        Properties properties = new Properties()
+        properties.load(project.rootProject.file('local.properties').newDataInputStream())
+        
+        buildConfigField "String", "STRAVA_CLIENT_ID", "\"${properties.getProperty('STRAVA_CLIENT_ID', 'YOUR_STRAVA_CLIENT_ID')}\""
+        buildConfigField "String", "STRAVA_CLIENT_SECRET", "\"${properties.getProperty('STRAVA_CLIENT_SECRET', 'YOUR_STRAVA_CLIENT_SECRET')}\""
+        
+        ksp {
+            arg("room.schemaLocation", "$projectDir/schemas")
+        }
+    }
+    
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_20
+        targetCompatibility JavaVersion.VERSION_20
+    }
+
+    kotlinOptions {
+        jvmTarget = '20'
+    }
+    
+    buildFeatures {
+        viewBinding true
+        buildConfig true
+    }
+
+    lint {
+        // On-demand WorkManager initialization with Hilt doesn't require manifest entry
+        disable 'RemoveWorkManagerInitializer'
+    }
+
+    tasks.register("printJavaVersion") {
+        doLast {
+            println "Java version: ${System.getProperty('java.version')}"
+        }
+    }
+}
+
+dependencies {
+    // Core Android
+    implementation 'androidx.core:core-ktx:1.12.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.10.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.activity:activity-ktx:1.8.1'
+    
+    // Architecture Components
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.2'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.2'
+    implementation 'androidx.fragment:fragment-ktx:1.6.2'
+    
+    // Room Database
+    implementation 'androidx.room:room-runtime:2.6.0'
+    implementation 'androidx.room:room-ktx:2.6.0'
+    ksp 'androidx.room:room-compiler:2.6.0'
+    
+    // Networking
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.12.0'
+    
+    // Dependency Injection
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    ksp "com.google.dagger:hilt-compiler:$hilt_version"
+    
+    // Authentication
+    implementation 'androidx.browser:browser:1.6.0'
+    
+    // Coroutines
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
+    
+    // WorkManager
+    implementation 'androidx.work:work-runtime-ktx:2.8.1'
+    implementation 'androidx.hilt:hilt-work:1.0.0'
+    ksp 'androidx.hilt:hilt-compiler:1.0.0'
+
+    // Image loading
+    implementation 'io.coil-kt:coil:2.5.0'
+
+    // Testing
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+}
